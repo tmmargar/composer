@@ -1,0 +1,6 @@
+body {
+  max-width: 500px;
+}
+input[type=number] {
+  width: 40px;
+}

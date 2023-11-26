@@ -1,0 +1,33 @@
+@media all and (max-width: 600px) {
+  body {
+    max-width: unset;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    display: inline-block;
+    font-size: 1.3em;
+    width: 100%;
+  }
+  .responsive-cell-empty {
+    display: none;
+  }
+  .responsive--collapse {
+    display: block;
+  }
+  .responsive--collapse > .responsive-cell--foot {
+    margin-bottom: 1em;
+  }
+  .responsive--3cols > .responsive-cell, .responsive--4cols > .responsive-cell {
+    width: unset;
+  }
+  .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+   text-align: right !important;
+  }
+  #live-dialog, .dialog {
+    width: 80vw;
+  }
+}

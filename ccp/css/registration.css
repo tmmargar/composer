@@ -1,0 +1,46 @@
+body {
+  max-width: 500px;
+}
+.columnHeader, .column {
+  float: left;
+  width: 150px;
+}
+.columnHeader, .column1Header {
+  font-weight: bold;
+}
+.column1Header, .column1 {
+  float: left;
+  width: 120px;
+}
+.column2 {
+  width: 350px;
+}
+.responsive--2cols > .responsive-cell-label {
+  width: 50%;
+}
+.responsive--2cols > .responsive-cell-value {
+  width: 50%;
+}
+.responsive--3cols > .responsive-cell-label {
+  width: 10%;
+}
+.responsive--3cols > .responsive-cell-value {
+  width: 83%;
+}
+.responsive--3cols > .responsive-cell-button {
+  width: 7%;
+}
+@media all and (max-width: 600px) {
+  body {
+    max-width: unset;
+  }
+  #food {
+    width: 20ch;
+  }
+  .responsive-cell-empty {
+    display: none;
+  }
+  .responsive--collapse > .responsive-cell--foot {
+    margin-bottom: 1em;
+  }
+}

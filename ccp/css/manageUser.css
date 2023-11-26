@@ -1,0 +1,15 @@
+body {
+  max-width: 1300px;
+  min-height: unset;
+}
+.responsive--2cols > .responsive-cell-label {
+  width: 35%;
+}
+.responsive--2cols > .responsive-cell-value {
+  width: 65%;
+}
+@media all and (max-width: 1100px) {
+  input[type="text"], input[type="tel"] {
+    width: 20ch;
+  }
+}

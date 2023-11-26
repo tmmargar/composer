@@ -1,0 +1,33 @@
+table {
+  margin: auto;
+}
+.dataTables_filter {
+  float: unset !important;
+}
+.dataTables_info {
+  float: unset !important;
+  margin: 0 auto;
+}
+.responsive {
+  margin: 0;
+}
+.responsive-cell {
+  padding: 0.2em 0.2em;
+}
+.responsive--2cols > .responsive-cell-label {
+  width: 25%;
+}
+.responsive--2cols > .responsive-cell-value {
+  width: 75%;
+}
+@media all and (max-width: 600px) {
+  body {
+    max-width: unset;
+  }
+  .responsive-cell-empty {
+    display: none;
+  }
+  .responsive--collapse > .responsive-cell--foot {
+    margin-bottom: 1em;
+  }
+}

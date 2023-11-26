@@ -1,0 +1,8 @@
+body {
+  max-width: 300px;
+}
+@media all and (max-width: 600px) {
+  body {
+    max-width: unset;
+  }
+}

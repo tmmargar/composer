@@ -1,0 +1,27 @@
+body {
+  max-width: 900px;
+}
+#tournamentId {
+  width: 700px;
+}
+.responsive--3cols > .responsive-cell-label {
+  width: 10%;
+}
+.responsive--3cols > .responsive-cell-value {
+  width: 80%;
+}
+.responsive--3cols > .responsive-cell-button {
+  width: 10%;
+}
+.responsive--3cols > .responsive-cell-label-footer {
+  width: 15%;
+}
+.responsive--3cols > .responsive-cell-value-footer {
+  width: 7%;
+}
+.responsive--3cols > .responsive-cell-value-after-footer {
+  width: 78%;
+}
+input[type=number] {
+  width: 40px;
+}

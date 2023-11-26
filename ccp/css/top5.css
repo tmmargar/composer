@@ -1,0 +1,62 @@
+body {
+  background-color: white;
+  border: double 3px #DDD;
+  border-bottom: none;
+  border-top: none;
+  box-sizing: border-box;
+  font-family: 'Josefin Sans', sans-serif;
+  /*font-size: 1.2em;*/
+  margin: 0 auto;
+  max-width: 450px;
+  min-height: 100%;
+  padding: 1em;
+}
+.link {
+  text-decoration: none;
+}
+.linkText {
+  vertical-align: super;
+}
+#live-dialog::backdrop, .dialog::backdrop {
+  background-color: #5e68df;
+  opacity: 0.7;
+}
+#live-dialog, .dialog {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 30%);
+  /*margin: 100px;*/
+  width: 500px;
+}
+#live-dialog header, .dialog header {
+  align-items: center;
+  background-color: #5e68df;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+#live-dialog header h2, .dialog header h2 {
+  margin-block: 0px;
+}
+#live-dialog button, .dialog button {
+  background: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+#dialog-header--cancel-btn, .dialogButton, .dialogButton:focus {
+  border: 0;
+  color: white;
+  font-weight: bold;
+  height: fit-content;
+  outline: 0;
+}
+.dialog main {
+  padding: 5px;
+}
+@media all and (max-width: 600px) {
+  .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+   text-align: right !important;
+  }
+}

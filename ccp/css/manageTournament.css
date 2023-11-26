@@ -1,0 +1,9 @@
+.responsive--2cols > .responsive-cell-label {
+  width: 35%;
+}
+.responsive--2cols > .responsive-cell-value {
+  width: 65%;
+}
+body {
+  min-height: unset;
+}

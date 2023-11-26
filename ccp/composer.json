@@ -1,0 +1,13 @@
+{
+	"autoload" : {
+		"psr-4" : {
+			"Poker\\Ccp\\" : "src"
+		}
+	},
+	"name" : "poker/ccp",
+	"require" : {
+		"php" : ">=8.2",
+		"phpmailer/phpmailer" : "~6.8",
+		"smarty/smarty" : "~4.3"
+	}
+}
