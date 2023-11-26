@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace ccp\classes\model;
+namespace Poker\Ccp\classes\model;
 use Exception;
 use PDO;
 use PDOException;
