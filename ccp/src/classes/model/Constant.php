@@ -156,7 +156,7 @@ abstract class Constant {
   public const VALUE_DEFAULT_CHECKBOX = "on";
   public const FOLDER_SESSION = "sessions";
   public const FOLDER_MAP = "maps";
-  public const PATH_HOME_LOCAL = "C:/Users/n082832/git/ccp/website";
+  public const PATH_HOME_LOCAL = "C:/Users/n082832/git/composer/ccp";
   public const PATH_HOME_SERVER = "/home/chipch5/public_html";
   public static function CONTEXT_ROOT(): string {
     return self::FLAG_LOCAL() ? "/ccpTest/" : "/new/";
