@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\FormOption;
@@ -19,7 +19,7 @@ define("UNABLE_TO_ATTEND_TEXT", "Unable to attend");
 $smarty->assign("title", "Manage Tournament Absence");
 $smarty->assign("heading", "Manage Tournament Absence");
 $smarty->assign("style", "<link href=\"css/manageTournamentAbsence.css\" rel=\"stylesheet\">");
-$tournamentId = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_ID;
+$tournamentId = (int) (isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_ID);
 $tournamentPlayerStatus = isset($_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME]) ? $tournamentPlayerStatus = $_POST[SELECTED_ROWS_TOURNAMENT_PLAYER_STATUS_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
   $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
@@ -34,10 +34,10 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
     "  let aryMessages = [];\n";
   foreach ($ary as $index => $id) {
     $params = array($id);
-    $resultList = $databaseResult->getUserById(params: $params);
+    $resultList = $databaseResult->getPlayerById(params: $params);
     if (count($resultList) > 0) {
       $cnt = 0;
-      $userId = $resultList[0]->getId();
+      $userId = (int) $resultList[0]->getId();
       $userName = $resultList[0]->getName();
     }
     if ($aryStatus[$index] == ATTENDING_TEXT) {
@@ -60,7 +60,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 }
 if ($mode == Constant::MODE_VIEW) {
   $output .= "<div class=\"responsive responsive--3cols responsive--collapse\">";
-  $params = array("CURRENT_DATE", "DATE_ADD(t.tournamentDate, INTERVAL 28 DAY)");
+  $params = array();
   $paramsNested = array(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
   $resultList = $databaseResult->getTournamentForChampionship(params: $params, paramsNested: $paramsNested);
   if (count($resultList) > 0) {

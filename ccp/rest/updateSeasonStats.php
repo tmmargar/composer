@@ -1,12 +1,7 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DatabaseResult;
-use Poker\Ccp\classes\model\DateTime;
-use Poker\Ccp\classes\model\Tournament;
-use Poker\Ccp\classes\model\User;
-use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";
 $output = "";
 $params = array(Constant::FLAG_YES_DATABASE);

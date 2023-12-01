@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-class User extends Base {
+class Player extends Base {
   private string $firstName;
   private string $lastName;
   private int $idPrevious;
@@ -165,7 +165,7 @@ class User extends Base {
     }
   }
   public function getLink(): string {
-    $link = new HtmlLink(accessKey: NULL, class: NULL, debugP: $this->isDebug(), href: "manageUser.php", id: NULL, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
+    $link = new HtmlLink(accessKey: NULL, class: NULL, debugP: $this->isDebug(), href: "managePlayer.php", id: NULL, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),
       tabIndex: - 1, text: $this->getName(), title: NULL);
     return $link->getHtml();
   }

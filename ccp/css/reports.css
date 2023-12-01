@@ -22,7 +22,8 @@ body {
   body {
     max-width: unset;
   }
-}@media all and (max-width: 600px) {
+}
+@media all and (max-width: 600px) {
   body {
     max-width: unset;
   }

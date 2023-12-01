@@ -13,14 +13,14 @@ export const inputLocal = {
         dataTable.initialize({tableId: "dataTbl" + input.ucwords({value: reportId}), aryColumns: [{ "type" : "name", "width": "75%" }, { "orderSequence": [ "desc", "asc" ], "width": "25%" }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
       } else if ("winnersForSeason" == reportId) {
         dataTable.initialize({tableId: "dataTbl" + input.ucwords({value: reportId}), aryColumns: [{ "type" : "name", "width": "70%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
-      } else if ("finishesForUser" == reportId) {
+      } else if ("finishesForPlayer" == reportId) {
         dataTable.initialize({tableId: "dataTbl" + input.ucwords({value: reportId}), aryColumns: [{ "width": "30%" }, { "orderSequence": [ "desc", "asc" ], "width": "40%" }, { "orderSequence": [ "desc", "asc" ], "width": "30%" }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
-      } else if ("tournamentsPlayedByTypeForUser" == reportId) {
+      } else if ("tournamentsPlayedByTypeForPlayer" == reportId) {
         dataTable.initialize({tableId: "dataTbl" + input.ucwords({value: reportId}), aryColumns: [{ "width": "25%" }, { "width": "25%" }, { "orderSequence": [ "desc", "asc" ], "width": "17%" }, { "orderSequence": [ "desc", "asc" ], "width": "18%" }, { "orderSequence": [ "desc", "asc" ], "width": "15%" }], aryOrder: [[4, "desc"], [1, "asc"], [0, "asc"], [2, "desc"], [3, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
-      } else if ("nemesisForUser" == reportId) {
+      } else if ("nemesisForPlayer" == reportId) {
         //tableSelector, aryColumns = null, aryOrder = [], searching = true, aryRowGroup = false, scrollY = "", autoWidth = false, paging = false, scrollResize = true, scrollCollapse = true) {
         dataTable.initializeBySelector({tableSelector: "table[id*='Nemesis']", aryColumns: [{ "type" : "name", }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
-      } else if ("bullyForUser" == reportId) {
+      } else if ("bullyForPlayer" == reportId) {
         dataTable.initializeBySelector({tableSelector: "table[id*='Bully']", aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[1, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
       }
     });

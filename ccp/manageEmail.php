@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\Email;
 use Poker\Ccp\classes\model\FormControl;
@@ -33,7 +33,7 @@ if (Constant::MODE_EMAIL == $mode) {
   $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
 }
 $params = array();
-$resultList = $databaseResult->getUsersActive(params: $params);
+$resultList = $databaseResult->getPlayersActive(params: $params);
 if (count($resultList) == 0) {
   echo "No active users";
 }
@@ -62,8 +62,8 @@ $output .= "  <a href=\"#\" id=\"selectAll\">Select all</a>&nbsp;<a id=\"deselec
 //     $debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value
 $selectTo = new FormSelect(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_TO, class: array("tom-select"), disabled: false, id: TO_FIELD_NAME, multiple: true, name: TO_FIELD_NAME . "[]", onClick: NULL, readOnly: false, size: 5, suffix: NULL, value: NULL);
 $output .= $selectTo->getHtml();
-foreach ($resultList as $user) {
-  $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: NULL, suffix: NULL, text: $user->getName(), value: $user->getName() . ":" . $user->getEmail());
+foreach ($resultList as $player) {
+  $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: NULL, suffix: NULL, text: $player->getName(), value: $player->getName() . ":" . $player->getEmail());
   $output .= $option->getHtml();
 }
 $output .= "  </select>\n";

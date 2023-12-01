@@ -42,19 +42,19 @@ abstract class SessionUtility {
       $security = unserialize(data: $_SESSION[self::OBJECT_NAME_SECURITY]);
       switch ($name) {
         case self::OBJECT_NAME_ADMINISTRATOR:
-          $value = $security->getUser()->getAdministrator();
+          $value = $security->getPlayer()->getAdministrator();
           break;
         case self::OBJECT_NAME_DEBUG:
           $value = false; // $security->isDebug();
           break;
         case self::OBJECT_NAME_NAME:
-          $value = $security->getUser()->getName();
+          $value = $security->getPlayer()->getName();
           break;
         case self::OBJECT_NAME_USERID:
-          $value = $security->getUser()->getId();
+          $value = $security->getPlayer()->getId();
           break;
         case self::OBJECT_NAME_USERNAME:
-          $value = $security->getUser()->getUsername();
+          $value = $security->getPlayer()->getUsername();
           break;
       }
     }

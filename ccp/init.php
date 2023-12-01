@@ -1,10 +1,9 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "vendor/autoload.php";
-//require_once "autoload.php";
 // check if site is down
 $file_handle = fopen(filename: "status.txt", mode: "a+");
 $contents = file_get_contents(filename: "status.txt");

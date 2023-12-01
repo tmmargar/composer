@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\BooleanString;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\FormControl;
@@ -40,9 +40,9 @@ $tournamentKnockoutBys = isset($_POST[SELECTED_ROWS_TOURNAMENT_KNOCKOUT_BY_FIELD
 $tournamentIdString = isset($_POST[TOURNAMENT_ID_FIELD_NAME]) ? $_POST[TOURNAMENT_ID_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_ID;
 // id::rebuy count::addon amount (100:1:0)
 $tournamentIdVals = explode("::", $tournamentIdString);
-$tournamentId = $tournamentIdVals[0];
-$tournamentPlace = isset($_POST[TOURNAMENT_PLACE_FIELD_NAME]) ? $_POST[TOURNAMENT_PLACE_FIELD_NAME] : DEFAULT_VALUE_BLANK;
-$tournamentRebuyCount = isset($_POST[TOURNAMENT_REBUY_FIELD_NAME]) ? $_POST[TOURNAMENT_REBUY_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_REBUY_COUNT;
+$tournamentId = (int) $tournamentIdVals[0];
+$tournamentPlace = (int) isset($_POST[TOURNAMENT_PLACE_FIELD_NAME]) ? $_POST[TOURNAMENT_PLACE_FIELD_NAME] : DEFAULT_VALUE_BLANK;
+$tournamentRebuyCount = (int) isset($_POST[TOURNAMENT_REBUY_FIELD_NAME]) ? $_POST[TOURNAMENT_REBUY_FIELD_NAME] : DEFAULT_VALUE_TOURNAMENT_REBUY_COUNT;
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
   $params = array($tournamentId);
   $paramsNested = array(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
@@ -53,16 +53,9 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
     $addonFlag = $resultList2[0]->getAddonAmount() == 0 ? true : false;
     $maxRebuys = $resultList2[0]->getMaxRebuys();
   }
-  $orderBy = "";
-  if ($mode == Constant::MODE_CREATE) {
-    $orderBy .= " WHERE enteredCount IS NULL AND buyinsPaid > 0 AND t.tournamentId NOT IN (SELECT DISTINCT tournamentId FROM poker_result WHERE place <> 0)";
-  } else if ($mode == Constant::MODE_MODIFY) {
-    $orderBy .= " WHERE enteredCount > 0";
-  }
-  $orderBy .= " ORDER BY t.tournamentDate DESC, t.startTime DESC";
-  $params = array($orderBy, false);
+  $params = array(NULL, false);
   $paramsNested = array(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
-  $resultList2 = $databaseResult->getTournament(params: $params, paramsNested: $paramsNested);
+  $resultList2 = $databaseResult->getTournament(params: $params, paramsNested: $paramsNested, mode: $mode);
   if (count($resultList2) > 0) {
     if ($mode == Constant::MODE_CREATE) {
       $rowCount = 1;
@@ -171,7 +164,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
             $index = 0;
             while ($index < count($resultList7)) {
               $result = $resultList7[$index];
-              $aryPlayerInfo[$index] = array($result->getUser()->getId(), $result->getUser()->getName(), $result->getUser()->getId() . "::" . ($result->isRebuyPaid() ? Constant::FLAG_YES : Constant::FLAG_NO) . "::" . $result->getRebuyCount() . "::" . ($result->isAddonPaid() ? Constant::FLAG_YES : Constant::FLAG_NO));
+              $aryPlayerInfo[$index] = array($result->getPlayer()->getId(), $result->getPlayer()->getName(), $result->getPlayer()->getId() . "::" . ($result->isRebuyPaid() ? Constant::FLAG_YES : Constant::FLAG_NO) . "::" . $result->getRebuyCount() . "::" . ($result->isAddonPaid() ? Constant::FLAG_YES : Constant::FLAG_NO));
               $index ++;
             }
           }
@@ -263,7 +256,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 } elseif ($mode == Constant::MODE_SAVE_CREATE || $mode == Constant::MODE_SAVE_MODIFY) {
   $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
   // clear all rows
-  $params = array(NULL, NULL, NULL, Constant::CODE_STATUS_PAID, 0, NULL, $tournamentId); // , $maxPlace);
+  $params = array(NULL, NULL, NULL, Constant::CODE_STATUS_PAID, (int) 0, NULL, $tournamentId); // , $maxPlace);
   $rowCount = $databaseResult->updateResultByTournamentIdAndPlace(params: $params);
   $numRows = count($ary) + 1;
   $ctr = 1;
@@ -272,7 +265,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
       // knockout value is id, rebuyPaid, rebuyCount, addonPaid (100::N::0::N)
       $knockout = $_POST[TOURNAMENT_KNOCKOUT_BY_FIELD_NAME . "_" . $ctr];
       $aryKnockout = explode("::", $knockout);
-      $tournamentTempKnockout = ($aryKnockout[0] == "") ? NULL : $aryKnockout[0];
+      $tournamentTempKnockout = ($aryKnockout[0] == "") ? NULL : (int) $aryKnockout[0];
     } else {
       $tournamentTempKnockout = NULL;
     }
@@ -280,9 +273,9 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
       // player value is id, rebuyPaid, rebuyCount, addonPaid (100::N::0::N)
       $player = $_POST[TOURNAMENT_PLAYER_ID_FIELD_NAME . "_" . $ctr];
       $aryPlayer = explode("::", $player);
-      $tournamentTempPlayerId = $aryPlayer[0];
+      $tournamentTempPlayerId = (int) $aryPlayer[0];
     }
-    $tournamentRebuyCount = isset($_POST[TOURNAMENT_REBUY_COUNT_FIELD_NAME . "_" . $ctr]) ? $_POST[TOURNAMENT_REBUY_COUNT_FIELD_NAME . "_" . $ctr] : DEFAULT_VALUE_TOURNAMENT_REBUY_COUNT;
+    $tournamentRebuyCount = (int) (isset($_POST[TOURNAMENT_REBUY_COUNT_FIELD_NAME . "_" . $ctr]) ? $_POST[TOURNAMENT_REBUY_COUNT_FIELD_NAME . "_" . $ctr] : DEFAULT_VALUE_TOURNAMENT_REBUY_COUNT);
     if (isset($_POST[TOURNAMENT_ADDON_FIELD_NAME . "_" . $ctr])) {
       $tournamentAddonAmount = $_POST[TOURNAMENT_ADDON_FIELD_NAME . "_" . $ctr];
       if ($tournamentAddonAmount == Constant::VALUE_DEFAULT_CHECKBOX || $tournamentAddonAmount == Constant::FLAG_YES) {
@@ -293,7 +286,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
     } else {
       $tournamentAddonAmount = Constant::FLAG_NO;
     }
-    $tournamentPlace = isset($_POST[TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctr]) ? $_POST[TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctr] : DEFAULT_VALUE_BLANK;
+    $tournamentPlace = (int) (isset($_POST[TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctr]) ? $_POST[TOURNAMENT_PLACE_FIELD_NAME . "_" . $ctr] : 0);
     // registration creates the record so just need to update the record for CREATE
     // instead of a normal INSERT so CREATE AND MODIFY are the same
     $params = array($tournamentRebuyCount, ($tournamentRebuyCount == 0 ? Constant::FLAG_NO : Constant::FLAG_YES), $tournamentAddonAmount, Constant::CODE_STATUS_FINISHED, $tournamentPlace, $tournamentTempKnockout, $tournamentId, $tournamentTempPlayerId);
@@ -306,7 +299,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 if ($mode == Constant::MODE_VIEW || $mode == Constant::MODE_DELETE || $mode == Constant::MODE_CONFIRM) {
   if ($mode == Constant::MODE_CONFIRM) {
     if ($tournamentId != DEFAULT_VALUE_TOURNAMENT_ID) {
-      $params = array(NULL, NULL, NULL, Constant::CODE_STATUS_PAID, 0, NULL, $tournamentId, NULL);
+      $params = array(NULL, NULL, NULL, Constant::CODE_STATUS_PAID, (int) 0, NULL, $tournamentId, NULL);
       $rowCount = $databaseResult->updateResult(params: $params);
       $ids = DEFAULT_VALUE_BLANK;
       // $tournamentPayoutIds = DEFAULT_VALUE_BLANK;

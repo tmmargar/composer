@@ -80,8 +80,8 @@ abstract class Constant {
   public const FIELD_NAME_EMAIL = "email";
   public const FIELD_NAME_ID = "id";
   public const FIELD_NAME_MODE = "mode";
+  public const FIELD_NAME_PLAYER = "player";
   public const FIELD_NAME_SUFFIX_CHECKBOX_ALL = "CheckAll";
-  public const FIELD_NAME_USER = "user";
   public const FIELD_NAME_USERNAME = "username";
   public const FLAG_NO = "N";
   public const FLAG_YES = "Y";

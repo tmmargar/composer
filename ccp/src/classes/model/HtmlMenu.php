@@ -10,8 +10,7 @@ class HtmlMenu extends HtmlBase {
     $output = str_repeat(string: " ", times: 1) . "<nav id=\"main-nav\">\n";
     $output .= str_repeat(string: " ", times: 2) . "<input type=\"checkbox\" id=\"menu\" name=\"menu\" class=\"m-menu__checkbox\">\n";
     $output .= str_repeat(string: " ", times: 2) . "<label class=\"m-menu__toggle\" for=\"menu\">\n";
-    $output .= str_repeat(string: " ", times: 3) .
-      "<svg width=\"35\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"butt\" stroke-linejoin=\"arcs\">\n";
+    $output .= str_repeat(string: " ", times: 3) . "<svg width=\"35\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"butt\" stroke-linejoin=\"arcs\">\n";
     $output .= str_repeat(string: " ", times: 4) . "<line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"></line>\n";
     $output .= str_repeat(string: " ", times: 4) . "<line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"></line>\n";
     $output .= str_repeat(string: " ", times: 4) . "<line x1=\"3\" y1=\"18\" x2=\"21\" y2=\"18\"></line>\n";
@@ -21,8 +20,7 @@ class HtmlMenu extends HtmlBase {
     $output .= str_repeat(string: " ", times: 2) . "<div class=\"m-menu\">\n";
     $output .= str_repeat(string: " ", times: 3) . "<div class=\"m-menu__header\">\n";
     $output .= str_repeat(string: " ", times: 4) . "<label class=\"m-menu__toggle\" for=\"menu\">\n";
-    $output .= str_repeat(string: " ", times: 5) .
-      "<svg width=\"35\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"butt\" stroke-linejoin=\"arcs\">\n";
+    $output .= str_repeat(string: " ", times: 5) . "<svg width=\"35\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"butt\" stroke-linejoin=\"arcs\">\n";
     $output .= str_repeat(string: " ", times: 6) . "<line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"></line>\n";
     $output .= str_repeat(string: " ", times: 6) . "<line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"></line>\n";
     $output .= str_repeat(string: " ", times: 5) . "</svg>\n";
@@ -59,8 +57,7 @@ class HtmlMenu extends HtmlBase {
         $output .= str_repeat(string: " ", times: $counter + 2) . "<div class=\"m-menu\">\n";
         $output .= str_repeat(string: " ", times: $counter + 3) . "<div class=\"m-menu__header\">\n";
         $output .= str_repeat(string: " ", times: $counter + 4) . "<label class=\"m-menu__toggle\" for=\"item-" . $item->getText() . "\">\n";
-        $output .= str_repeat(string: " ", times: $counter + 5) .
-          "<svg width=\"35\" height=\"20\" viewBox=\"0 0 15 22\" fill=\"none\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"butt\" stroke-linejoin=\"arcs\">\n";
+        $output .= str_repeat(string: " ", times: $counter + 5) . "<svg width=\"35\" height=\"20\" viewBox=\"0 0 15 22\" fill=\"none\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"butt\" stroke-linejoin=\"arcs\">\n";
         $output .= str_repeat(string: " ", times: $counter + 6) . "<path d=\"M19 12H6M12 5l-7 7 7 7\"/>\n";
         $output .= str_repeat(string: " ", times: $counter + 5) . "</svg>\n";
         $output .= str_repeat(string: " ", times: $counter + 4) . "</label>\n";

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";
 echo SessionUtility::destroy();

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Base;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\DateTime;
@@ -29,7 +29,6 @@ define("SORT_ID_PARAM_NAME", "sort");
 define("GROUP_PARAM_NAME", "group");
 define("SEASON_START_DATE_PARAM_NAME", "seasonStartDate");
 define("SEASON_END_DATE_PARAM_NAME", "seasonEndDate");
-define("ALL_USERS_INFO", "allUsersInfo");
 define("REPORT_ID_FIELD_NAME", "reportId");
 define("SEASON_START_DATE_FIELD_NAME", "seasonStartDate");
 define("SEASON_END_DATE_FIELD_NAME", "seasonEndDate");
@@ -235,7 +234,7 @@ if (!isset($reportId)) {
       break;
     case REPORT_ID_FINISHES:
       $params = array($userId, $startDate == NULL ? NULL : $startDate->getDatabaseFormat(), $endDate == NULL ? NULL : $endDate->getDatabaseFormat());
-      $pdoStatementAndQuery = $databaseResult->getFinishesForUser(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getFinishesForPlayer(params: $params);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(0, "number", 0), array(1, "number", 0), array(2, "percentage", 2));
@@ -243,7 +242,7 @@ if (!isset($reportId)) {
       $width = "100%";
       break;
     case REPORT_ID_CHAMPIONSHIP:
-      $params = array(NULL, NULL, $group ? "id" : "yr, id", $group); // from date, to date, sort, group
+      $params = array(NULL, NULL, $group ? "player_id" : "yr, player_id", $group); // from date, to date, sort, group
       $pdoStatementAndQuery = $databaseResult->getChampionshipByYearByEarnings(params: $params);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];

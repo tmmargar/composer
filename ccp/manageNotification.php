@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\model\FormControl;
@@ -17,7 +17,7 @@ $smarty->assign("title", "Manage Notification");
 $smarty->assign("heading", "Manage Notification");
 $smarty->assign("style", "<link href=\"css/manageNotification.css\" rel=\"stylesheet\">");
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
-  $params = Constant::MODE_MODIFY == $mode ? array($ids) : array(0);
+  $params = Constant::MODE_MODIFY == $mode ? array((int) $ids) : array((int) 0);
   $resultList = $databaseResult->getNotificationById(params: $params);
   $output .= " <div class=\"buttons center\">\n";
   $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::TEXT_SAVE . "_2", maxLength: NULL, name: Constant::TEXT_SAVE . "_2", onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL);
@@ -63,7 +63,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 } elseif (Constant::MODE_SAVE_CREATE == $mode || Constant::MODE_SAVE_MODIFY == $mode) {
   $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
   foreach ($ary as $id) {
-    $notificationId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+    $notificationId = (int) ((isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : 0);
     $notificationDescription = (isset($_POST[NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id])) ? $_POST[NOTIFICATION_DESCRIPTION_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $notificationStartDate = isset($_POST[NOTIFICATION_START_DATE_FIELD_NAME . "_" . $id]) ? $_POST[NOTIFICATION_START_DATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $notificationEndDate = isset($_POST[NOTIFICATION_END_DATE_FIELD_NAME . "_" . $id]) ? $_POST[NOTIFICATION_END_DATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
@@ -90,7 +90,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::MODE_CONFIRM == $mode) {
   if (Constant::MODE_CONFIRM == $mode) {
     if ($ids != DEFAULT_VALUE_BLANK) {
-      $params = array($ids);
+      $params = array((int) $ids);
       $rowCount = $databaseResult->deleteNotification(params: $params);
       if (! is_numeric($rowCount)) {
         $output .=
@@ -122,7 +122,7 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(NULL, "" == $ids ? NULL : $ids);
+  $params = array(NULL, "" == $ids ? NULL : (int) $ids);
   $pdoStatementAndQuery = $databaseResult->getNotification(params: $params, returnQuery: true);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];

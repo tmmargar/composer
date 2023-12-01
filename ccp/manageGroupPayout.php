@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\FormOption;
@@ -17,14 +17,14 @@ define("PAYOUT_NAME_FIELD_NAME", "payoutName");
 define("SELECTED_ROW_FIELD_NAME", "tempGroupPayoutId");
 define("ORIGINAL_PAYOUT_ID_FIELD_NAME", "payoutIdOriginal");
 define("ORIGINAL_GROUP_ID_FIELD_NAME", "groupIdOriginal");
-define("DEFAULT_VALUE_GROUP_ID", "-1");
-define("DEFAULT_VALUE_PAYOUT_ID", "-1");
+define("DEFAULT_VALUE_GROUP_ID", 0);
+define("DEFAULT_VALUE_PAYOUT_ID", 0);
 $smarty->assign("title", "Manage Group Payout");
 $smarty->assign("heading", "Manage Group Payout");
 $smarty->assign("style", "<link href=\"css/manageGroupPayout.css\" rel=\"stylesheet\">");
 $aryGroupPayoutIds = explode("::", $ids);
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
-  $params = Constant::MODE_MODIFY == $mode ? array($aryGroupPayoutIds[0], $aryGroupPayoutIds[1]) : array(0, 0);
+  $params = Constant::MODE_MODIFY == $mode ? array((int) $aryGroupPayoutIds[0], (int) $aryGroupPayoutIds[1]) : array((int) 0, (int) 0);
   $resultList = $databaseResult->getGroupPayoutById(params: $params);
   if (Constant::MODE_CREATE == $mode || (Constant::MODE_MODIFY == $mode && $ids != DEFAULT_VALUE_BLANK)) {
     $output .= " <div class=\"buttons center\">\n";
@@ -104,16 +104,17 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
   $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
   foreach ($ary as $id) {
     $arySplit = explode("::", $id);
-    $groupId = (isset($_POST[GROUP_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[GROUP_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_GROUP_ID;
-    $payoutId = (isset($_POST[PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_PAYOUT_ID;
-    $originalGroupId = (isset($_POST[ORIGINAL_GROUP_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[ORIGINAL_GROUP_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_GROUP_ID;
-    $originalPayoutId = (isset($_POST[ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_PAYOUT_ID;
+    $groupId = (int) ((isset($_POST[GROUP_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[GROUP_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_GROUP_ID);
+    $payoutId = (int) ((isset($_POST[PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_PAYOUT_ID);
+    $originalGroupId = (int) ((isset($_POST[ORIGINAL_GROUP_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[ORIGINAL_GROUP_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_GROUP_ID);
+    $originalPayoutId = (int) ((isset($_POST[ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]])) ? $_POST[ORIGINAL_PAYOUT_ID_FIELD_NAME . "_" . $arySplit[0]] : DEFAULT_VALUE_PAYOUT_ID);
     if (Constant::MODE_SAVE_CREATE == $mode) {
       $params = array($groupId, $payoutId);
       $databaseResult->insertGroupPayout(params: $params);
     } elseif (Constant::MODE_SAVE_MODIFY == $mode) {
       $params = array($groupId, $payoutId, $originalGroupId, $originalPayoutId);
       $databaseResult->updateGroupPayout(params: $params);
+      $aryGroupPayoutIds = array("", "");
     }
   }
   $ids = DEFAULT_VALUE_BLANK;
@@ -122,7 +123,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::MODE_CONFIRM == $mode) {
   if (Constant::MODE_CONFIRM == $mode) {
     if (DEFAULT_VALUE_BLANK != $ids) {
-      $params = array($aryGroupPayoutIds[0], $aryGroupPayoutIds[1]);
+      $params = array((int) $aryGroupPayoutIds[0], (int) $aryGroupPayoutIds[1]);
       $databaseResult->deleteGroupPayout(params: $params);
       $ids = DEFAULT_VALUE_BLANK;
       $aryGroupPayoutIds = array(DEFAULT_VALUE_BLANK);
@@ -149,12 +150,12 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array("" == $aryGroupPayoutIds[0] ? NULL : $aryGroupPayoutIds[0], "" == $aryGroupPayoutIds[0] ? NULL : $aryGroupPayoutIds[1]);
+  $params = array("" == $aryGroupPayoutIds[0] ? NULL : (int) $aryGroupPayoutIds[0], "" == $aryGroupPayoutIds[0] ? NULL : (int) $aryGroupPayoutIds[1]);
   $pdoStatementAndQuery = $databaseResult->getGroupPayout($params);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];
   //0$href, 1$paramName, 2/3$paramValue, 4$text
-//   $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
+//   $link = array(array(3), array("managePlayer.php", array("userId", "mode"), 2, "modify", 3));
   //$link = array(array(1, 3), array("manageGroup.php", array("groupId", "mode"), 0, "modify", 1), array("managePayout.php", array("payoutId", "mode"), 2, "modify", 3));
   $link = array(array(1, 3), array("manageGroup.php", array("groupId", "mode"), array(0, "modify"), 1), array("managePayout.php", array("payoutId", "mode"), array(2, "modify"), 3));
   $htmlTable = new HtmlTable(caption: NULL, class: NULL, colspan: NULL, columnFormat: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: Constant::DELIMITER_DEFAULT, foreignKeys: NULL, header: true, hiddenAdditional: NULL, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: NULL, html: NULL, id: NULL, link: $link, note: true, pdoStatement: $pdoStatement, query: $query, selectedRow: $ids, suffix: NULL, width: "100%");

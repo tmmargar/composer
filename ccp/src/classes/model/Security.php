@@ -4,7 +4,7 @@ namespace Poker\Ccp\classes\model;
 use Poker\Ccp\classes\utility\SessionUtility;
 class Security extends Base {
   private Season $season;
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Login $login, protected User $user) {
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Login $login, protected Player $player) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getLogin(): Login {
@@ -13,8 +13,8 @@ class Security extends Base {
   public function getSeason(): Season {
     return $this->season;
   }
-  public function getUser(): User {
-    return $this->user;
+  public function getPlayer(): Player {
+    return $this->player;
   }
   public function login(): bool {
     if ($this->validatePassword()) {
@@ -27,9 +27,9 @@ class Security extends Base {
   private function loginSuccess() {
     $databaseResult = new DatabaseResult(debug: $this->isDebug());
     $params = array($this->login->getUsername());
-    $resultList = $databaseResult->getUserByUsername(params: $params);
+    $resultList = $databaseResult->getPlayerByUsername(params: $params);
     if (0 < count(value: $resultList)) {
-      $this->setUser(user: $resultList[0]);
+      $this->setPlayer(player: $resultList[0]);
       SessionUtility::setValue(name: SessionUtility::OBJECT_NAME_SECURITY, value: $this);
     }
     $params = array(Constant::FLAG_YES_DATABASE);
@@ -47,7 +47,7 @@ class Security extends Base {
    * // $cookie_expiration_time = $current_time + (30 * 24 * 60 * 60); // for 1 month
    * // $isLoggedIn = false;
    * // Check if loggedin session and redirect if session exists
-   * echo "<Br>session user id -> " . $_SESSION["userid"];
+   * echo "<Br>session player id -> " . $_SESSION["player"];
    * echo "<Br>cookie user id -> " . $_COOKIE["remember_username"];
    * echo "<Br>cookie selector -> " . $_COOKIE["remember_selector"];
    * echo "<Br>cookie token -> " . $_COOKIE["remember_token"];
@@ -65,7 +65,7 @@ class Security extends Base {
    * $params = array(
    * $_COOKIE["remember_username"]
    * );
-   * $resultList = $databaseResult->getUserByUsername($params);
+   * $resultList = $databaseResult->getPlayerByUsername($params);
    * if (0 < count($resultList)) {
    * // Validate random password cookie with database
    * if (password_verify($_COOKIE["remember_selector"], $resultList[0]->getRememberSelector())) {
@@ -104,13 +104,13 @@ class Security extends Base {
   public function setSeason(Season $season) {
     $this->season = $season;
   }
-  public function setUser(User $user) {
-    $this->user = $user;
+  public function setPlayer(Player $player) {
+    $this->player = $player;
   }
   public function __toString(): string {
     $output = parent::__toString();
     $output .= ", login = [" . $this->login;
-    $output .= "], user = [" . $this->user . "]";
+    $output .= "], player = [" . $this->player . "]";
     return $output;
   }
   private function validatePassword(): bool {

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\HtmlTable;
@@ -16,7 +16,7 @@ $smarty->assign("title", "Manage Special Type");
 $smarty->assign("heading", "Manage Special Type");
 $smarty->assign("style", "<link href=\"css/manageSpecialType.css\" rel=\"stylesheet\">");
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
-  $params = Constant::MODE_MODIFY == $mode ? array($ids) : array(0);
+  $params = Constant::MODE_MODIFY == $mode ? array((int) $ids) : array((int) 0);
   $resultList = $databaseResult->getSpecialTypeById(params: $params);
   $output .= " <div class=\"buttons center\">\n";
   $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::TEXT_SAVE . "_2", maxLength: NULL, name: Constant::TEXT_SAVE . "_2", onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL);
@@ -58,9 +58,9 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 } elseif (Constant::MODE_SAVE_CREATE == $mode || Constant::MODE_SAVE_MODIFY == $mode) {
   $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
   foreach ($ary as $id) {
-    $specialTypeId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_SPECIAL_TYPE_ID;
+    $specialTypeId = (int) ((isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_SPECIAL_TYPE_ID);
     $specialTypeDescription = (isset($_POST[SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id])) ? $_POST[SPECIAL_TYPE_DESCRIPTION_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $specialTypeMultiplier = (isset($_POST[SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id])) ? $_POST[SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id] : 1;
+    $specialTypeMultiplier = (int) ((isset($_POST[SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id])) ? $_POST[SPECIAL_TYPE_MULTIPLIER_FIELD_NAME . "_" . $id] : 1);
     if (Constant::MODE_SAVE_CREATE == $mode) {
       $params = array(addslashes($specialTypeDescription), $specialTypeMultiplier);
       $rowCount = $databaseResult->insertSpecialType(params: $params);
@@ -82,7 +82,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::MODE_CONFIRM == $mode) {
   if (Constant::MODE_CONFIRM == $mode) {
     if ($ids != DEFAULT_VALUE_BLANK) {
-      $params = array($ids);
+      $params = array((int) $ids);
       $rowCount = $databaseResult->deleteSpecialType(params: $params);
       if (!is_numeric($rowCount)) {
         $output .=
@@ -114,7 +114,7 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(NULL, true, array(false, "" == $ids ? NULL : $ids));
+  $params = array(NULL, true, array(false, "" == $ids ? NULL : (int) $ids));
   $pdoStatementAndQuery = $databaseResult->getSpecialType(params: $params);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];

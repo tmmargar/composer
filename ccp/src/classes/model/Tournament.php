@@ -4,7 +4,7 @@ namespace Poker\Ccp\classes\model;
 class Tournament extends Base {
   public function __construct(protected bool $debug, protected string|int|NULL $id, protected string|NULL $description, protected string|NULL $comment, protected LimitType|NULL $limitType,
     protected GameType|NULL $gameType, protected SpecialType|NULL $specialType, protected int $chipCount, protected Location|NULL $location, protected DateTime|NULL $date,
-    protected DateTime|NULL $startTime, protected DateTime|NULL $endTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount,
+    protected DateTime|NULL $startTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount,
     protected int $addonAmount, protected int $addonChipCount, protected GroupPayout|NULL $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid,
     protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount, protected int $earnings = 0) {
     parent::__construct(debug: $debug, id: $id);
@@ -35,9 +35,6 @@ class Tournament extends Base {
   }
   public function getStartTime(): DateTime|NULL {
     return $this->startTime;
-  }
-  public function getEndTime(): DateTime|NULL {
-    return $this->endTime;
   }
   public function getBuyinAmount(): int {
     return $this->buyinAmount;
@@ -126,9 +123,6 @@ class Tournament extends Base {
   public function setStartTime(DateTime $startTime) {
     $this->startTime = $startTime;
   }
-  public function setEndTime(DateTime $endTime) {
-    $this->endTime = $endTime;
-  }
   public function setBuyinAmount(int $buyinAmount) {
     $this->buyinAmount = $buyinAmount;
   }
@@ -216,8 +210,6 @@ class Tournament extends Base {
     $output .= $this->date->getDisplayFormat();
     $output .= ", startTime = ";
     $output .= $this->startTime->getDisplayAmPmFormat();
-    $output .= ", endTime = ";
-    $output .= $this->endTime->getDisplayAmPmFormat();
     $output .= ", buyinAmount = ";
     $output .= $this->buyinAmount;
     $output .= ", maxPlayers = ";

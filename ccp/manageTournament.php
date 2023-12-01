@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\model\FormControl;
@@ -52,12 +52,12 @@ define("SELECTED_ROWS_TOURNAMENT_GROUP_ID_FIELD_NAME", "tournamentGroupIds");
 define("HIDDEN_ROW_TOURNAMENT_LOCATION_ID_FIELD_NAME", "rowTournamentLocationId");
 define("HIDDEN_ROW_TOURNAMENT_GROUP_ID_FIELD_NAME", "rowTournamentGroupId");
 define("SELECT_COLUMN_PREFIX_FIELD_NAME", "select");
-define("DEFAULT_VALUE_TOURNAMENT_ID", "-1");
+define("DEFAULT_VALUE_TOURNAMENT_ID", -1);
 $smarty->assign("title", "Manage Tournament");
 $smarty->assign("heading", "Manage Tournament");
 $smarty->assign("style", "<link href=\"css/manageTournament.css\" rel=\"stylesheet\">");
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
-  $params = Constant::MODE_MODIFY == $mode ? array($ids) : array(0);
+  $params = Constant::MODE_MODIFY == $mode ? array((int) $ids) : array((int) 0);
   $paramsNested = array(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
   $resultList = $databaseResult->getTournamentById(params: $params, paramsNested: $paramsNested);
   $output .= " <div class=\"buttons center\">\n";
@@ -81,7 +81,8 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
       $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>";
       // $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . TOURNAMENT_MAP_FIELD_NAME . "_" . $id . "\">Map link " . $id . ": </label></div>\n";
       // $output .= HtmlUtility::buildTextbox(Constant::ACCESSKEY_MAP, NULL, false, Base::build(TOURNAMENT_MAP_FIELD_NAME . "_" . $id, NULL), 255, Base::build(TOURNAMENT_MAP_FIELD_NAME . "_" . $id, NULL), false, 100, ((count($resultList) > 0) ? $resultList[$ctr]->getDirections() : ""), NULL);
-      $resultList2 = $databaseResult->getLimitType();
+      $params = array(NULL, false, array(false, NULL));
+      $resultList2 = $databaseResult->getLimitType(params: $params);
       if (count($resultList2) > 0) {
         $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . TOURNAMENT_LIMIT_TYPE_ID_FIELD_NAME . "_" . $id . "\">" . TOURNAMENT_LIMIT_TYPE_ID_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
         //     $debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value
@@ -97,7 +98,8 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
         $output .= "     </select>\n";
         $output .= "    </div>\n";
       }
-      $resultList2 = $databaseResult->getGameType();
+      $params = array(NULL, false, array(false, NULL));
+      $resultList2 = $databaseResult->getGameType($params);
       if (count($resultList2) > 0) {
         $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . TOURNAMENT_GAME_TYPE_ID_FIELD_NAME . "_" . $id . "\">" . TOURNAMENT_GAME_TYPE_ID_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
         $selectLimitType = new FormSelect(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_GAME_TYPE, class: NULL, disabled: false, id: TOURNAMENT_GAME_TYPE_ID_FIELD_NAME . "_" . $id, multiple: false, name: TOURNAMENT_GAME_TYPE_ID_FIELD_NAME . "_" . $id, onClick: NULL, readOnly: false, size: 1, suffix: NULL, value: NULL);
@@ -207,36 +209,46 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 } elseif (Constant::MODE_SAVE_CREATE == $mode || Constant::MODE_SAVE_MODIFY == $mode) {
   $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
   foreach ($ary as $id) {
-    $tournamentId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_TOURNAMENT_ID;
+    $tournamentId = (int) ((isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_TOURNAMENT_ID);
     $tournamentDescription = (isset($_POST[TOURNAMENT_DESCRIPTION_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_DESCRIPTION_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $tournamentComment = (isset($_POST[TOURNAMENT_COMMENT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_COMMENT_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $tournamentMap = (isset($_POST[TOURNAMENT_MAP_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_MAP_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentLimitTypeId = (isset($_POST[TOURNAMENT_LIMIT_TYPE_ID_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_LIMIT_TYPE_ID_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentGameTypeId = (isset($_POST[TOURNAMENT_GAME_TYPE_ID_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_GAME_TYPE_ID_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+    $tournamentLimitTypeId = (int) ((isset($_POST[TOURNAMENT_LIMIT_TYPE_ID_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_LIMIT_TYPE_ID_FIELD_NAME . "_" . $id] : 0);
+    $tournamentGameTypeId = (int) ((isset($_POST[TOURNAMENT_GAME_TYPE_ID_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_GAME_TYPE_ID_FIELD_NAME . "_" . $id] : 0);
     $tournamentSpecialTypeId = (isset($_POST[TOURNAMENT_SPECIAL_TYPE_ID_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_SPECIAL_TYPE_ID_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentChipCount = (isset($_POST[TOURNAMENT_CHIP_COUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_CHIP_COUNT_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentLocationId = (isset($_POST[TOURNAMENT_LOCATION_ID_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_LOCATION_ID_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+    $tournamentChipCount = (int) ((isset($_POST[TOURNAMENT_CHIP_COUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_CHIP_COUNT_FIELD_NAME . "_" . $id] : 0);
+    $tournamentLocationId = (int) ((isset($_POST[TOURNAMENT_LOCATION_ID_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_LOCATION_ID_FIELD_NAME . "_" . $id] : 0);
     $tournamentDateTime = isset($_POST[TOURNAMENT_DATE_TIME_FIELD_NAME . "_" . $id]) ? $_POST[TOURNAMENT_DATE_TIME_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $aryTournamentDateTime = explode("T", $tournamentDateTime);
     $tournamentDate = $aryTournamentDateTime[0];
     $tournamentStartTime = $aryTournamentDateTime[1];
-    $tournamentBuyinAmount = (isset($_POST[TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentMaxPlayers = (isset($_POST[TOURNAMENT_MAX_PLAYERS_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_MAX_PLAYERS_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentMaxRebuys = (isset($_POST[TOURNAMENT_MAX_REBUYS_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_MAX_REBUYS_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentRebuyAmount = (isset($_POST[TOURNAMENT_REBUY_AMOUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_REBUY_AMOUNT_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_TOURNAMENT_REBUYS_AMOUNT;
-    $tournamentAddonAmount = (isset($_POST[TOURNAMENT_ADDON_AMOUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_ADDON_AMOUNT_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentAddonChipCount = (isset($_POST[TOURNAMENT_ADDON_CHIP_COUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_ADDON_CHIP_COUNT_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentGroupId = (isset($_POST[TOURNAMENT_GROUP_ID_FIELD_NAME . "_" . $id])) ? $tournamentGroupId = $_POST[TOURNAMENT_GROUP_ID_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-    $tournamentRake = (isset($_POST[TOURNAMENT_RAKE_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_RAKE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+    $tournamentBuyinAmount = (int) ((isset($_POST[TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id] : 0);
+    $tournamentMaxPlayers = (int) ((isset($_POST[TOURNAMENT_MAX_PLAYERS_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_MAX_PLAYERS_FIELD_NAME . "_" . $id] : 0);
+    $tournamentMaxRebuys = (int) ((isset($_POST[TOURNAMENT_MAX_REBUYS_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_MAX_REBUYS_FIELD_NAME . "_" . $id] : 0);
+    $tournamentRebuyAmount = (int) ((isset($_POST[TOURNAMENT_REBUY_AMOUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_REBUY_AMOUNT_FIELD_NAME . "_" . $id] : 0);
+    $tournamentAddonAmount = (int) ((isset($_POST[TOURNAMENT_ADDON_AMOUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_ADDON_AMOUNT_FIELD_NAME . "_" . $id] : 0);
+    $tournamentAddonChipCount = (int) ((isset($_POST[TOURNAMENT_ADDON_CHIP_COUNT_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_ADDON_CHIP_COUNT_FIELD_NAME . "_" . $id] : 0);
+    $tournamentGroupId = (int) ((isset($_POST[TOURNAMENT_GROUP_ID_FIELD_NAME . "_" . $id])) ? $tournamentGroupId = $_POST[TOURNAMENT_GROUP_ID_FIELD_NAME . "_" . $id] : 0);
+    $tournamentRake = (isset($_POST[TOURNAMENT_RAKE_FIELD_NAME . "_" . $id])) ? $_POST[TOURNAMENT_RAKE_FIELD_NAME . "_" . $id] : 0;
     $dateTime = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $tournamentDate);
     $dateTimeStart = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $tournamentDate . " " . $tournamentStartTime);
     if (Constant::MODE_SAVE_CREATE == $mode) {
-      $params = array($tournamentDescription, $tournamentComment, $tournamentLimitTypeId, $tournamentGameTypeId, $tournamentChipCount, $tournamentLocationId, $dateTime->getDatabaseFormat(), $dateTimeStart->getDatabaseTimeFormat(), NULL, $tournamentBuyinAmount, $tournamentMaxPlayers, $tournamentMaxRebuys, $tournamentRebuyAmount, $tournamentAddonAmount, $tournamentAddonChipCount, $tournamentGroupId, (trim($tournamentRake, "%") / 100), $tournamentMap, $tournamentSpecialTypeId);
+      $params = array($tournamentDescription, $tournamentComment, $tournamentLimitTypeId, $tournamentGameTypeId, $tournamentChipCount, $tournamentLocationId, $dateTime->getDatabaseFormat(), $dateTimeStart->getDatabaseTimeFormat(), $tournamentBuyinAmount, $tournamentMaxPlayers, $tournamentMaxRebuys, $tournamentRebuyAmount, $tournamentAddonAmount, $tournamentAddonChipCount, $tournamentGroupId, (float) (trim($tournamentRake, "%") / 100), $tournamentMap, $tournamentSpecialTypeId);
       $rowCount = $databaseResult->insertTournament(params: $params);
+      // check if first tournament for season if so add fees
+      $resultList = $databaseResult->getSeasonMaxId();
+      $params = array((int) $resultList[0]);
+      $resultList2 = $databaseResult->getTournamentIdMax(params: $params);
+      if (!isset($resultList2[0]) || $resultList2[0] == 0) {
+        $params = array((int) ($resultList[0] - 1));
+        $resultList3 = $databaseResult->getTournamentIdMax(params: $params);
+        $params = array((int) $resultList[0], (int) ($resultList3[0] + 1));
+        $rowCount = $databaseResult->insertFeePlayersForYear(params: $params);
+      }
     } elseif (Constant::MODE_SAVE_MODIFY == $mode) {
-      $params = array($tournamentId, $tournamentDescription, $tournamentComment, $tournamentLimitTypeId, $tournamentGameTypeId, $tournamentChipCount, $tournamentLocationId, $dateTime->getDatabaseFormat(), $dateTimeStart->getDatabaseTimeFormat(), NULL, $tournamentBuyinAmount, $tournamentMaxPlayers, $tournamentMaxRebuys, $tournamentRebuyAmount, $tournamentAddonAmount, $tournamentAddonChipCount, $tournamentGroupId, ($tournamentRake / 100), $tournamentMap, $tournamentSpecialTypeId);
+      $params = array($tournamentId, $tournamentDescription, $tournamentComment, $tournamentLimitTypeId, $tournamentGameTypeId, $tournamentChipCount, $tournamentLocationId, $dateTime->getDatabaseFormat(), $dateTimeStart->getDatabaseTimeFormat(), $tournamentBuyinAmount, $tournamentMaxPlayers, $tournamentMaxRebuys, $tournamentRebuyAmount, $tournamentAddonAmount, $tournamentAddonChipCount, $tournamentGroupId, ($tournamentRake / 100), $tournamentMap, $tournamentSpecialTypeId);
       $rowCount = $databaseResult->updateTournament(params: $params);
-      $params = array($tournamentMaxRebuys == 0 ? 0 : NULL, $tournamentMaxRebuys == 0 ? Constant::FLAG_NO : NULL, $tournamentAddonAmount == 0 ? Constant::FLAG_NO : NULL, $tournamentAddonAmount == 0 ? Constant::FLAG_NO : NULL, $tournamentId);
+      $params = array($tournamentMaxRebuys == 0 ? (int) 0 : NULL, $tournamentMaxRebuys == 0 ? Constant::FLAG_NO : NULL, $tournamentAddonAmount == 0 ? Constant::FLAG_NO : NULL, $tournamentAddonAmount == 0 ? Constant::FLAG_NO : NULL, $tournamentId);
       if (isset($params[0]) || isset($params[1]) || isset($params[2]) || isset($params[3])) {
         $rowCount = $databaseResult->updateResultByTournamentId(params: $params);
       }
@@ -254,7 +266,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 }
 if (Constant::MODE_MODIFY == $mode || Constant::MODE_DELETE == $mode) {
   $resultsExist = 0;
-  $params = array($ids, false);
+  $params = array((int) $ids, false);
   $resultList = $databaseResult->getResultFinishedByTournamentId(params: $params);
   if (count($resultList) > 0) {
     $resultsExist = Constant::FLAG_YES_DATABASE;
@@ -265,15 +277,25 @@ if (Constant::MODE_MODIFY == $mode || Constant::MODE_DELETE == $mode) {
 if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::MODE_CONFIRM == $mode) {
   if (Constant::MODE_CONFIRM == $mode) {
     if ($ids != DEFAULT_VALUE_BLANK) {
-      $params = array($ids);
-      $rowCount = $databaseResult->deleteResult(params: $params);
-      $rowCount = $databaseResult->deleteTournament(params: $params);
-      if (!is_numeric($rowCount)) {
+      $params = array((int) $ids);
+      $resultList = $databaseResult->getFeeCountByTournamentId(params: $params);
+      if ($resultList[0] > 0) {
         $output .=
-        "<script type=\"module\">\n" .
-        "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
-        "  display.showErrors({errors: [ \"" . $rowCount . "\" ]});\n" .
-        "</script>\n";
+          "<script type=\"module\">\n" .
+          "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+          "  display.showErrors({errors: [ \"You cannot delete tournament id " . $ids . " becauses fees exist for that tournament\" ]});\n" .
+          "</script>\n";
+      } else {
+        $params = array((int) $ids);
+        $rowCount = $databaseResult->deleteResult(params: $params);
+        $rowCount = $databaseResult->deleteTournament(params: $params);
+        if (!is_numeric($rowCount)) {
+          $output .=
+          "<script type=\"module\">\n" .
+          "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+          "  display.showErrors({errors: [ \"" . $rowCount . "\" ]});\n" .
+          "</script>\n";
+        }
       }
       $ids = DEFAULT_VALUE_BLANK;
     }
@@ -298,14 +320,14 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(NULL, true, "" == $ids ? NULL : $ids);
+  $params = array(NULL, true, "" == $ids ? NULL : (int) $ids);
   $paramsNested = array(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat(), SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY));
-  $pdoStatementAndQuery = $databaseResult->getTournament(params: $params, paramsNested: $paramsNested);
+  $pdoStatementAndQuery = $databaseResult->getTournament(params: $params, paramsNested: $paramsNested, mode: NULL);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];
-  $colFormats = array(array(19, "time", NULL), array(21, "number", NULL), array(22, "number", 0), array(23, "currency", 0), array(24, "number", 0), array(25, "currency", 0), array(26, "currency", 0), array(27, "number", 0), array(30, "percentage", 0));
-  $hideColIndexes = array(3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16, 20, 28, 31, 32, 33, 34, 35, 36, 37, 39);
-  $colSpan = array(array("Game", "Rebuy", "Addon", "Group"), array(6, 24, 26, 29), array(array(8), array(25), array(27), array(30)));
+  $colFormats = array(array(19, "time", NULL), array(20, "number", NULL), array(21, "number", 0), array(22, "currency", 0), array(23, "number", 0), array(24, "currency", 0), array(25, "currency", 0), array(26, "number", 0), array(29, "percentage", 0));
+  $hideColIndexes = array(3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 16, 27, 30, 31, 32, 33, 34, 35, 36, 38);
+  $colSpan = array(array("Game", "Rebuy", "Addon", "Group"), array(6, 23, 25, 28), array(array(8), array(24), array(26), array(29)));
   $htmlTable = new HtmlTable(caption: NULL, class: NULL, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: Constant::DELIMITER_DEFAULT, foreignKeys: NULL, header: true, hiddenAdditional: NULL, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: $hideColIndexes, html: NULL, id: NULL, link: NULL, note: true, pdoStatement: $pdoStatement, query: $query, selectedRow: $ids, suffix: NULL, width: "100%");
   $output .= $htmlTable->getHtml();
 }

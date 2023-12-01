@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\utility\SessionUtility;

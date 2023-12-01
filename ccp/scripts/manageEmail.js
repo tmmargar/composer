@@ -78,18 +78,18 @@ export const inputLocal = {
   },
   validate : function(event) {
     let result = true;
-    const users = document.querySelectorAll(".ts-control");
-    const user = document.querySelector("#to-ts-control");
+    const players = document.querySelectorAll(".ts-control");
+    const player = document.querySelector("#to-ts-control");
     const subject = document.querySelector("#subject");
-    if (users) {
-      user.setCustomValidity(users[0].children[0].textContent == "" ? "You must select a user" : "");
-      if (users[0].children[0].textContent == "") {
+    if (players) {
+      player.setCustomValidity(players[0].children[0].textContent == "" ? "You must select a player" : "");
+      if (players[0].children[0].textContent == "") {
         document.querySelector(".ts-control").classList.add("errors");
       }
       subject.setCustomValidity(subject.validity.valueMissing ? "You must enter a subject" : "");
       const bodyInvalid = document.querySelector(".tox-edit-area__iframe")?.classList.contains("invalid");
-      if (users[0].children[0].textContent == "" || subject.validity.valueMissing || bodyInvalid) {
-        if (users[0].children[0].textContent != "" && !subject.validity.valueMissing && bodyInvalid) {
+      if (players[0].children[0].textContent == "" || subject.validity.valueMissing || bodyInvalid) {
+        if (players[0].children[0].textContent != "" && !subject.validity.valueMissing && bodyInvalid) {
           if (event) {
             event.preventDefault();
           }
@@ -102,7 +102,7 @@ export const inputLocal = {
   },
 };
 let documentReadyCallback = () => {
-  inputLocal.initializeTomSelect({placeholder: "Select user(s)..."});
+  inputLocal.initializeTomSelect({placeholder: "Select player(s)..."});
   inputLocal.initalizeEditor();
   inputLocal.validate();
   input.storePreviousValue({selectors: ["[id^='to']", "[id^='subject']", "[id^='body']"]});
@@ -117,7 +117,7 @@ document.addEventListener("click", (event) => {
   if (event.target && event.target.id == "selectAll") {
     return input.selectAllTomSelect({objId: "to", event: event});
   } else if (event.target && event.target.id.includes("deselectAll")) {
-    return input.deselectAllTomSelect({objId: "to", placeholder: "Select user(s)...", event: event});
+    return input.deselectAllTomSelect({objId: "to", placeholder: "Select player(s)...", event: event});
   } else if (event.target && event.target.id.includes("email")) {
     if (result) {
       document.querySelector("#mode").value = event.target.value.toLowerCase();

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\HtmlTable;
@@ -22,13 +22,13 @@ define("PLACE_FIELD_NAME", "place");
 define("PERCENTAGE_FIELD_NAME", "percentage");
 define("PERCENTAGE_TOTAL_FIELD_NAME", "percentageTotal");
 define("SELECTED_ROW_FIELD_NAME", "tempPayoutId");
-define("DEFAULT_VALUE_PAYOUT_ID", "-1");
+define("DEFAULT_VALUE_PAYOUT_ID", 0);
 $smarty->assign("title", "Manage Payout");
 $smarty->assign("heading", "Manage Payout");
 $smarty->assign("style", "<link href=\"css/managePayout.css\" rel=\"stylesheet\">");
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
   $ids = isset($_GET[PAYOUT_ID_FIELD_NAME]) ? $_GET[PAYOUT_ID_FIELD_NAME] : $ids;
-  $params = Constant::MODE_MODIFY == $mode ? array($ids) : array(0);
+  $params = Constant::MODE_MODIFY == $mode ? array((int) $ids) : array((int) 0);
   $resultList = $databaseResult->getPayoutById(params: $params);
   $output .= " <div class=\"buttons center\">\n";
   $buttonAddRow = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_ADD_ROW, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::TEXT_ADD_ROW . "_2", maxLength: NULL, name: Constant::TEXT_ADD_ROW . "_2", onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_BUTTON, value: Constant::TEXT_ADD_ROW, wrap: NULL);
@@ -123,15 +123,15 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
   foreach ($ary as $id) {
     if (Constant::MODE_SAVE_CREATE == $mode || Constant::MODE_SAVE_MODIFY == $mode) {
       $payoutName = (isset($_POST[PAYOUT_NAME_FIELD_NAME . "_" . $id])) ? $_POST[PAYOUT_NAME_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-      $minPlayers = isset($_POST[MIN_PLAYERS_FIELD_NAME . "_" . $id]) ? $_POST[MIN_PLAYERS_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
-      $maxPlayers = isset($_POST[MAX_PLAYERS_FIELD_NAME . "_" . $id]) ? $_POST[MAX_PLAYERS_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+      $minPlayers = (int) (isset($_POST[MIN_PLAYERS_FIELD_NAME . "_" . $id]) ? $_POST[MIN_PLAYERS_FIELD_NAME . "_" . $id] : 0);
+      $maxPlayers = (int) (isset($_POST[MAX_PLAYERS_FIELD_NAME . "_" . $id]) ? $_POST[MAX_PLAYERS_FIELD_NAME . "_" . $id] : 0);
       if (Constant::MODE_SAVE_CREATE == $mode) {
         $params = array($payoutName, $minPlayers, $maxPlayers);
         $databaseResult->insertPayout(params: $params);
         $resultList = $databaseResult->getPayoutMaxId();
-        $tempPayoutId = $resultList[0];
+        $tempPayoutId = (int) $resultList[0];
       } else {
-        $tempPayoutId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+        $tempPayoutId = (int) ((isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : 0);
       }
       if (Constant::MODE_SAVE_MODIFY == $mode) {
         $params = array($payoutName, $minPlayers, $maxPlayers, $tempPayoutId);
@@ -145,7 +145,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
         $place = (isset($_POST[PLACE_FIELD_NAME . "_" . (Constant::MODE_SAVE_MODIFY == $mode ? $tempPayoutId : "") . "_" . $ctr2])) ? $_POST[PLACE_FIELD_NAME . "_" . (Constant::MODE_SAVE_MODIFY == $mode ? $tempPayoutId : "") . "_" . $ctr2] : NULL;
         $percentage = (isset($_POST[PERCENTAGE_FIELD_NAME . "_" . (Constant::MODE_SAVE_MODIFY == $mode ? $tempPayoutId : "") . "_" . $ctr2])) ? $_POST[PERCENTAGE_FIELD_NAME . "_" . (Constant::MODE_SAVE_MODIFY == $mode ? $tempPayoutId : "") . "_" . $ctr2] : NULL;
         if (isset($place) && isset($percentage)) {
-          $params = array($tempPayoutId, $place, $percentage / 100);
+          $params = array($tempPayoutId, (int) $place, (float) $percentage / 100);
           $databaseResult->insertStructure(params: $params);
           $ctr2 ++;
         } else {
@@ -160,7 +160,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::MODE_CONFIRM == $mode) {
   if (Constant::MODE_CONFIRM == $mode) {
     if (DEFAULT_VALUE_BLANK != $ids) {
-      $params = array($ids);
+      $params = array((int) $ids);
       $databaseResult->deleteStructure(params: $params);
       $databaseResult->deletePayout(params: $params);
       $ids = DEFAULT_VALUE_BLANK;
@@ -187,12 +187,12 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(true, "" == $ids ? NULL : $ids);
+  $params = array(true, "" == $ids ? NULL : (int) $ids);
   $pdoStatementAndQuery = $databaseResult->getPayoutsAll($params);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];
   $colFormats = array(array(5, "percentage", 0));
-  // $link = array(array(3), array("manageUser.php", array("userId", "mode"), 2, "modify", 3));
+  // $link = array(array(3), array("managePlayer.php", array("userId", "mode"), 2, "modify", 3));
   $htmlTable = new HtmlTable(caption: NULL, class: NULL, colspan: NULL, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: Constant::DELIMITER_DEFAULT, foreignKeys: NULL, header: true, hiddenAdditional: NULL, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: NULL, html: NULL, id: NULL, link: NULL, note: true, pdoStatement: $pdoStatement, query: $query, selectedRow: $ids, suffix: NULL, width: "100%");
   $output .= $htmlTable->getHtml();
   $output .= "<div class=\"buttons center\">\n";

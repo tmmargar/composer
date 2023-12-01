@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\Email;
 use Poker\Ccp\classes\model\FormControl;
@@ -25,7 +25,7 @@ $autoFocusUserName = false;
 $autoFocusEmail = false;
 if (Constant::MODE_SIGNUP == $mode) {
   $params = array($username);
-  $resultList = $databaseResult->getUserByUsername(params: $params);
+  $resultList = $databaseResult->getPlayerByUsername(params: $params);
   if (0 < count($resultList)) {
     $failMessage = "Username <span class='bold'>" . $username . "</span> already exists. Please choose another.";
     $classUsername = "errors";
@@ -33,7 +33,7 @@ if (Constant::MODE_SIGNUP == $mode) {
     $autoFocusName = false;
   } else {
     $params = array($emailAddress);
-    $resultList = $databaseResult->getUserByEmail(params: $params);
+    $resultList = $databaseResult->getPlayerByEmail(params: $params);
     if (0 < count($resultList)) {
       $failMessage = "Email <span class='bold'>" . $emailAddress . "</span> already exists. Please choose another.";
       $classEmail = "errors";
@@ -46,7 +46,7 @@ if (Constant::MODE_SIGNUP == $mode) {
         "  let aryMessages = [];\n";
       $nameValues = explode(" ", $name);
       $params = array(NULL, $nameValues[0], $nameValues[1], $username, $password, $emailAddress, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL);
-      $databaseResult->insertUser(params: $params);
+      $databaseResult->insertPlayer(params: $params);
       $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), toName: array(Constant::NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), fromName: array($name), fromEmail: array($emailAddress), ccName: array(Constant::NAME_STAFF), ccEmail: array(Constant::EMAIL_STAFF()), bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
       $output .= "  aryMessages.push(\"" . $email->sendSignUpEmail() . "\");";
       // send email to staff for approval
@@ -61,8 +61,8 @@ if (Constant::MODE_SIGNUP == $mode) {
     }
   }
 }
-$smarty->assign("title", "Chip Chair and a Prayer New User Sign Up");
-$smarty->assign("heading", "New User Sign Up");
+$smarty->assign("title", "Chip Chair and a Prayer New Player Sign Up");
+$smarty->assign("heading", "New Player Sign Up");
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"] . "?" . $_SERVER["QUERY_STRING"]);
 $smarty->assign("formName", "frmSignup");
 if (isset($failMessage)) {

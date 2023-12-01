@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 require_once "init.php";
 $smarty->assign("title", "Chip Chair and a Prayer Change Log");
 $smarty->assign("heading", "");

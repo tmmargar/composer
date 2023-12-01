@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\Email;
 use Poker\Ccp\classes\model\FormControl;
@@ -25,13 +25,13 @@ $emailAddress = isset($_POST[EMAIL_FIELD_NAME]) ? $_POST[EMAIL_FIELD_NAME] : (is
 $username = isset($_POST[USERNAME_FIELD_NAME]) ? $_POST[USERNAME_FIELD_NAME] : (isset($_GET[USERNAME_FIELD_NAME]) ? $_GET[USERNAME_FIELD_NAME] : DEFAULT_VALUE_BLANK);
 $password = isset($_POST[PASSWORD_FIELD_NAME]) ? $_POST[PASSWORD_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 if (Constant::MODE_RESET_PASSWORD_REQUEST == $mode) {
-  $output .= 
+  $output .=
     "<script type=\"module\">\n" .
     "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
     "  let aryMessages = [];\n" .
     "  let aryErrors = [];\n";
   $params = array($username, $emailAddress, time());
-  $resultList = $databaseResult->updateUserReset(params: $params);
+  $resultList = $databaseResult->updatePlayerReset(params: $params);
   if (!is_array($resultList)) {
     $output .= "  aryErrors.push(\"Unable to change password for username <span class='bold'>" . $username . "</span> and email <span class='bold'>" . $emailAddress . "</span>. Please try again.\");";
     $mode = Constant::MODE_VIEW;
@@ -48,7 +48,7 @@ if (Constant::MODE_RESET_PASSWORD_REQUEST == $mode) {
   if (false !== ctype_xdigit($selector) && false !== ctype_xdigit($validator)) {
     $calc = hash('sha256', hex2bin($validator));
     $params = array($username, $emailAddress);
-    $resultList = $databaseResult->getUserPasswordReset(params: $params);
+    $resultList = $databaseResult->getPlayerPasswordReset(params: $params);
     if (hash_equals($calc, $resultList[0])) {
       $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
       $textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_PASSWORD, autoComplete: "new-password", autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: PASSWORD_FIELD_NAME, maxLength: NULL, name: PASSWORD_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: 20, suffix: NULL, type: FormControl::TYPE_INPUT_PASSWORD, value: $password, wrap: NULL);
@@ -66,13 +66,13 @@ if (Constant::MODE_RESET_PASSWORD_REQUEST == $mode) {
     }
   }
 } else if (Constant::MODE_RESET_PASSWORD_CONFIRM == $mode) {
-  $output .= 
+  $output .=
     "<script type=\"module\">\n" .
     "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
     "  let aryMessages = [];\n" .
     "  let aryErrors = [];\n";
   $params = array($username, $emailAddress, $password);
-  $resultList = $databaseResult->updateUserChangePassword(params: $params);
+  $resultList = $databaseResult->updatePlayerChangePassword(params: $params);
   if (0 == $resultList) {
     $output .= "  aryErrors.push(\"Unable to change password for username <span class='bold'>" . $username . "</span> and email <span class='bold'>" . $emailAddress . "</span>. Please try again.\");";
     $mode = "";

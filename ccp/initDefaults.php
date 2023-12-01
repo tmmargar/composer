@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\utility\SessionUtility;
+require_once "vendor/autoload.php";
 $header = "";
 $databaseResult = new DatabaseResult(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG));
 // $databaseResult = new DatabaseResult(true);

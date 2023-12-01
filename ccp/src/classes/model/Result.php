@@ -2,16 +2,16 @@
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
 class Result extends Base {
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Tournament $tournament, protected User $user, protected Status $status, protected int $registerOrder,
-    protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected User $knockedOutBy,
+  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Tournament $tournament, protected Player $player, protected Status $status, protected int $registerOrder,
+    protected bool $buyinPaid, protected bool $rebuyPaid, protected bool $addonPaid, protected int $rebuyCount, protected bool $addonFlag, protected int $place, protected Player $knockedOutBy,
     protected string|NULL $food, protected string|NULL $feeStatus) {
     parent::__construct(debug: $debug, id: $id);
   }
   public function getTournament(): Tournament {
     return $this->tournament;
   }
-  public function getUser(): User {
-    return $this->user;
+  public function getPlayer(): Player {
+    return $this->player;
   }
   public function getStatus(): Status {
     return $this->status;
@@ -37,7 +37,7 @@ class Result extends Base {
   public function getPlace(): int {
     return $this->place;
   }
-  public function getKnockedOutBy(): User {
+  public function getKnockedOutBy(): Player {
     return $this->knockedOutBy;
   }
   public function getFood(): string {
@@ -49,8 +49,8 @@ class Result extends Base {
   public function setTournament(Tournament $tournament) {
     $this->tournament = $tournament;
   }
-  public function setUser(User $user) {
-    $this->user = $user;
+  public function setPlayer(Player $player) {
+    $this->player = $player;
   }
   public function setStatus(Status $status) {
     $this->status = $status;
@@ -76,7 +76,7 @@ class Result extends Base {
   public function setPlace(int $place) {
     $this->place = $place;
   }
-  public function setKnockedOutBy(User $knockedOutBy) {
+  public function setKnockedOutBy(Player $knockedOutBy) {
     $this->knockedOutBy = $knockedOutBy;
   }
   public function setFood(string $food) {
@@ -94,8 +94,8 @@ class Result extends Base {
     $output = parent::__toString();
     $output .= "tournament = [";
     $output .= $this->tournament;
-    $output .= "], user = [";
-    $output .= $this->user;
+    $output .= "], player = [";
+    $output .= $this->player;
     $output .= "], status = [";
     $output .= $this->status;
     $output .= "], registerOrder = ";

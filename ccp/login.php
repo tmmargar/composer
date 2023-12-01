@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\Login;
 use Poker\Ccp\classes\model\Security;
-use Poker\Ccp\classes\model\User;
+use Poker\Ccp\classes\model\Player;
 use Poker\Ccp\classes\utility\SessionUtility;
 use tidy;
 require_once "init.php";
@@ -21,8 +21,8 @@ $output = "";
 $mode = isset($_POST[Constant::FIELD_NAME_MODE]) ? $_POST[Constant::FIELD_NAME_MODE] : "";
 if (Constant::MODE_LOGIN == $mode) {
   $login = new Login(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, username: $_POST["username"], password: $_POST["password"]);
-  $user = new User(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name:"", username: "", password: "", email: "", phone: NULL, administrator: 0, registrationDate: NULL, approvalDate: NULL, approvalUserid: 0, approvalName: NULL, rejectionDate: NULL, rejectionUserid: 0, rejectionName: NULL, active: 0, address: NULL, resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
-  $security = new Security(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, login: $login, user: $user);
+  $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name:"", username: "", password: "", email: "", phone: NULL, administrator: 0, registrationDate: NULL, approvalDate: NULL, approvalUserid: 0, approvalName: NULL, rejectionDate: NULL, rejectionUserid: 0, rejectionName: NULL, active: 0, address: NULL, resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
+  $security = new Security(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, login: $login, player: $player);
   if ($security->login()) {
     $pageName = "home.php";
     if (! empty($_SERVER["QUERY_STRING"])) {
@@ -53,7 +53,7 @@ $output .= " <div class=\"responsive-cell\">" . $textBoxPassword->getHtml() . "<
 $buttonLogin = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_LOGIN, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("button-icon button-icon-separator icon-border-caret-right"), cols: NULL, disabled: false, id: NAME_FIELD_LOGIN, maxLength: NULL, name: NAME_FIELD_LOGIN, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: ucwords(NAME_FIELD_LOGIN), wrap: NULL);
 $output .= $buttonLogin->getHtml();
 $output .= " <div class=\"responsive-cell\"></div>";
-$output .= " <div class=\"responsive-cell\"><a href=\"resetPassword.php\">Forgot Password</a>&nbsp;&nbsp;&nbsp;<a href=\"signup.php\">New User</a></div>";
+$output .= " <div class=\"responsive-cell\"><a href=\"resetPassword.php\">Forgot Password</a>&nbsp;&nbsp;&nbsp;<a href=\"signup.php\">New Player</a></div>";
 $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: NULL, name: Constant::FIELD_NAME_MODE, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: NULL);
 $output .= $hiddenMode->getHtml();
 $output .= "</div>";

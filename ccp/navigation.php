@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\model\HtmlLink;
@@ -33,7 +33,7 @@ foreach ($queryResultYears as $rowYears) {
   $htmlMenuResultSeasonArray[$counterResultSeason] = $htmlMenuResultSeason;
   $counterResultSeason ++;
   $htmlMenuResultSeasonGroup->setItems($htmlMenuResultSeasonArray);
-  $params = array($rowYears);
+  $params = array((int) $rowYears);
   $queryResultAll = $databaseResult->getTournamentAll(params: $params);
   if (0 < count($queryResultAll)) {
     foreach ($queryResultAll as $rowAll) {
@@ -56,33 +56,33 @@ $htmlMenuResults->setItems($htmlMenuResultSeasonGroupArray);
 $htmlMenuStats = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Stats");
 $htmlLinkMyStats = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "personalize.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "My Stats", title: NULL);
 $params = array(false);
-$resultListUsers = $databaseResult->getUsersAll(params: $params);
+$resultListPlayers = $databaseResult->getPlayersAll(params: $params);
 $counterOverall = 1;
 $counterLoop = 1;
-$counterUserGroup = 0;
-foreach ($resultListUsers as $user) {
+$counterPlayerGroup = 0;
+foreach ($resultListPlayers as $player) {
   if ($counterLoop == 1) {
-    $htmlLinkUserArray = array();
-    $htmlLinkUserArrayCounter = 0;
-    $htmlMenuUserGroup = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Users " . $counterOverall . " to " . ($counterOverall + 9));
-    $htmlMenuUserGroupArray[$counterUserGroup] = $htmlMenuUserGroup;
-    $counterUserGroup ++;
+    $htmlLinkPlayerArray = array();
+    $htmlLinkPlayerArrayCounter = 0;
+    $htmlMenuPlayerGroup = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Players " . $counterOverall . " to " . ($counterOverall + 9));
+    $htmlMenuPlayerGroupArray[$counterPlayerGroup] = $htmlMenuPlayerGroup;
+    $counterPlayerGroup++;
   }
-  $htmlLinkUser = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "personalize.php", id: NULL, paramName: array("userId"), paramValue: array($user->getId()), tabIndex: - 1, text: $user->getName() . "'s stats", title: NULL);
-  $htmlLinkUserArray[$htmlLinkUserArrayCounter] = $htmlLinkUser;
-  $htmlLinkUserArrayCounter ++;
-  if ($counterLoop == 10 || $counterOverall == count($resultListUsers)) {
-    $htmlMenuUserGroup->setItems($htmlLinkUserArray);
+  $htmlLinkPlayer = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "personalize.php", id: NULL, paramName: array("userId"), paramValue: array($player->getId()), tabIndex: - 1, text: $player->getName() . "'s stats", title: NULL);
+  $htmlLinkPlayerArray[$htmlLinkPlayerArrayCounter] = $htmlLinkPlayer;
+  $htmlLinkPlayerArrayCounter ++;
+  if ($counterLoop == 10 || $counterOverall == count($resultListPlayers)) {
+    $htmlMenuPlayerGroup->setItems($htmlLinkPlayerArray);
     $counterLoop = 1;
   } else {
-    $counterLoop ++;
+    $counterLoop++;
   }
-  $counterOverall ++;
+  $counterOverall++;
 }
-// echo "<br>" . print_r($htmlLinkUsers, true);
-// echo "<br>" . print_r($htmlLinkUserArray, true);
-$htmlMenuOtherStats = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Other Users");
-$htmlMenuOtherStats->setItems($htmlMenuUserGroupArray);
+// echo "<br>" . print_r($htmlLinkPlayers, true);
+// echo "<br>" . print_r($htmlLinkPlayerArray, true);
+$htmlMenuOtherStats = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Other Players");
+$htmlMenuOtherStats->setItems($htmlMenuPlayerGroupArray);
 $htmlStatsArray = array($htmlLinkMyStats,$htmlMenuOtherStats);
 $htmlMenuStats->setItems($htmlStatsArray);
 $htmlMenuReports = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Reports");
@@ -118,20 +118,20 @@ $htmlLinkByNameByEarnings = new HtmlLink(accessKey: NULL, class: NULL, debug: Se
 $htmlLinkChampionshipArray = array($htmlLinkByYearByEarnings,$htmlLinkByNameByYear,$htmlLinkByNameByEarningsByYear,$htmlLinkByNameByEarnings);
 $htmlMenuReportChampionship->setItems($htmlLinkChampionshipArray);
 $htmlMenuReportRanking = new HtmlMenu(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Ranking");
-$htmlLinkTotalPoints = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("pointsTotalForUser","Y"), tabIndex: - 1, text: "Total pts", title: NULL);
-$htmlLinkAveragePoints = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("pointsAverageForUser","Y"), tabIndex: - 1, text: "Average points", title: NULL);
-$htmlLinkTotalKnockouts = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("knockoutsTotalForUser","Y"), tabIndex: - 1, text: "Total KOs", title: NULL);
-$htmlLinkAverageKnockouts = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("knockoutsAverageForUser","Y"), tabIndex: - 1, text: "Average KOs", title: NULL);
-$htmlLinkTotalEarnings = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("earningsTotalForUser","Y"), tabIndex: - 1, text: "Total earnings", title: NULL);
-$htmlLinkAverageEarnings = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("earningsAverageForUser","Y"), tabIndex: - 1, text: "Avg earnings", title: NULL);
-$htmlLinkWins = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("winsForUser","Y"), tabIndex: - 1, text: "Wins", title: NULL);
-$htmlLinkNemesis = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("nemesisForUser","Y"), tabIndex: - 1, text: "Nemesis", title: NULL);
-$htmlLinkBully = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("bullyForUser","Y"), tabIndex: - 1, text: "Bully", title: NULL);
-$htmlLinkWon = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("tournamentsWonForUser","Y"), tabIndex: - 1, text: "Won", title: NULL);
-$htmlLinkFinishes = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("finishesForUser","Y"), tabIndex: - 1, text: "Finishes", title: NULL);
-$htmlLinkPlayedCount = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("tournamentsPlayedForUser","Y"), tabIndex: - 1, text: "Played count", title: NULL);
-$htmlLinkPlayedByType = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("tournamentsPlayedByTypeForUser","Y"), tabIndex: - 1, text: "Played by type", title: NULL);
-$htmlLinkMemberSince = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("tournamentsPlayedFirstForUser","Y"), tabIndex: - 1, text: "Member since", title: NULL);
+$htmlLinkTotalPoints = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("pointsTotalForPlayer","Y"), tabIndex: - 1, text: "Total pts", title: NULL);
+$htmlLinkAveragePoints = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("pointsAverageForPlayer","Y"), tabIndex: - 1, text: "Average points", title: NULL);
+$htmlLinkTotalKnockouts = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("knockoutsTotalForPlayer","Y"), tabIndex: - 1, text: "Total KOs", title: NULL);
+$htmlLinkAverageKnockouts = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("knockoutsAverageForPlayer","Y"), tabIndex: - 1, text: "Average KOs", title: NULL);
+$htmlLinkTotalEarnings = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("earningsTotalForPlayer","Y"), tabIndex: - 1, text: "Total earnings", title: NULL);
+$htmlLinkAverageEarnings = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("earningsAverageForPlayer","Y"), tabIndex: - 1, text: "Avg earnings", title: NULL);
+$htmlLinkWins = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("winsForPlayer","Y"), tabIndex: - 1, text: "Wins", title: NULL);
+$htmlLinkNemesis = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("nemesisForPlayer","Y"), tabIndex: - 1, text: "Nemesis", title: NULL);
+$htmlLinkBully = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("bullyForPlayer","Y"), tabIndex: - 1, text: "Bully", title: NULL);
+$htmlLinkWon = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("tournamentsWonForPlayer","Y"), tabIndex: - 1, text: "Won", title: NULL);
+$htmlLinkFinishes = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("finishesForPlayer","Y"), tabIndex: - 1, text: "Finishes", title: NULL);
+$htmlLinkPlayedCount = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("tournamentsPlayedForPlayer","Y"), tabIndex: - 1, text: "Played count", title: NULL);
+$htmlLinkPlayedByType = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("tournamentsPlayedByTypeForPlayer","Y"), tabIndex: - 1, text: "Played by type", title: NULL);
+$htmlLinkMemberSince = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "top5.php", id: NULL, paramName: array("reportId","navigation"), paramValue: array("tournamentsPlayedFirstForPlayer","Y"), tabIndex: - 1, text: "Member since", title: NULL);
 $htmlLinkRankingArray = array($htmlLinkTotalPoints,$htmlLinkAveragePoints,$htmlLinkTotalKnockouts,$htmlLinkAverageKnockouts,$htmlLinkTotalEarnings,$htmlLinkAverageEarnings,$htmlLinkWins,$htmlLinkNemesis,$htmlLinkBully,$htmlLinkWon,$htmlLinkFinishes,$htmlLinkPlayedCount,$htmlLinkPlayedByType,$htmlLinkMemberSince);
 $htmlMenuReportRanking->setItems($htmlLinkRankingArray);
 $htmlReportsArray = array($htmlMenuReportStandard,$htmlMenuReportSeason,$htmlMenuReportChampionship,$htmlMenuReportRanking);
@@ -153,12 +153,12 @@ if (SessionUtility::getValue(SessionUtility::OBJECT_NAME_ADMINISTRATOR) != 0) {
   $htmlLinkLimitType = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageLimitType.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Limit type", title: NULL);
   $htmlLinkGamesArray = array($htmlLinkNotifications,$htmlLinkSeasons,$htmlLinkTournaments,$htmlLinkTournamentAbsences,$htmlLinkRegistration,$htmlLinkBuyins,$htmlLinkResults,$htmlLinkGameType,$htmlLinkLimitType,$htmlLinkSpecialType);
   $htmlMenuReportGames->setItems($htmlLinkGamesArray);
-  $htmlMenuReportUsers = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Users");
+  $htmlMenuReportPlayers = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Players");
   $htmlLinkLocations = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageLocation.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Locations", title: NULL);
-  $htmlLinkUsers = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageUser.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Users", title: NULL);
-  $htmlLinkNewUserApproval = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageSignupApproval.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "New user approval", title: NULL);
-  $htmlLinkUsersArray = array($htmlLinkLocations,$htmlLinkUsers,$htmlLinkNewUserApproval);
-  $htmlMenuReportUsers->setItems($htmlLinkUsersArray);
+  $htmlLinkPlayers = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "managePlayer.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Players", title: NULL);
+  $htmlLinkNewPlayerApproval = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageSignupApproval.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "New player approval", title: NULL);
+  $htmlLinkPlayersArray = array($htmlLinkLocations,$htmlLinkPlayers,$htmlLinkNewPlayerApproval);
+  $htmlMenuReportPlayers->setItems($htmlLinkPlayersArray);
   $htmlMenuReportPayouts = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Payouts");
   $htmlLinkGroup = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageGroup.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Groups", title: NULL);
   $htmlLinkGroupPayout = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageGroupPayout.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Payout groups", title: NULL);
@@ -171,12 +171,12 @@ if (SessionUtility::getValue(SessionUtility::OBJECT_NAME_ADMINISTRATOR) != 0) {
   $htmlLinkAutoReminder = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "autoReminder.php", id: NULL, paramName: array(Constant::FIELD_NAME_MODE), paramValue: array(Constant::MODE_VIEW), tabIndex: - 1, text: "Run auto reminder", title: NULL);
   $htmlLinkScheduledJobsArray = array($htmlLinkAutoRegisterHost,$htmlLinkAutoReminder);
   $htmlMenuReportScheduledJobs->setItems($htmlLinkScheduledJobsArray);
-  $htmlLinkAdministrationArray = array($htmlMenuReportGames,$htmlMenuReportUsers,$htmlMenuReportPayouts,$htmlLinkEmail,$htmlMenuReportScheduledJobs);
+  $htmlLinkAdministrationArray = array($htmlMenuReportGames,$htmlMenuReportPlayers,$htmlMenuReportPayouts,$htmlLinkEmail,$htmlMenuReportScheduledJobs);
   $htmlMenuReportAdministration->setItems($htmlLinkAdministrationArray);
   array_push($levels, $htmlMenuReportAdministration);
 }
 $htmlMenuReportMyProfile = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "My profile");
-$htmlLinkEdit = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageUser.php", id: NULL, paramName: array("mode","userId"), paramValue: array("modify",SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID)), tabIndex: - 1, text: "Edit my profile", title: NULL);
+$htmlLinkEdit = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "managePlayer.php", id: NULL, paramName: array("mode","userId"), paramValue: array("modify",SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID)), tabIndex: - 1, text: "Edit my profile", title: NULL);
 $htmlLinkLogout = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "logout.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Logout", title: NULL);
 $htmlLinkResetPassword = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "resetPassword.php", id: NULL, paramName: array("nav"), paramValue: array("Y"), tabIndex: - 1, text: "Password reset", title: NULL);
 $htmlLinkMyProfileArray = array($htmlLinkEdit,$htmlLinkLogout,$htmlLinkResetPassword);

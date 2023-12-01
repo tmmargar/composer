@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\model\FormControl;
@@ -31,7 +31,7 @@ $smarty->assign("title", "Manage Season");
 $smarty->assign("heading", "Manage Season");
 $smarty->assign("style", "<link href=\"css/manageSeason.css\" rel=\"stylesheet\">");
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
-  $params = Constant::MODE_MODIFY == $mode ? array($ids) : array(0);
+  $params = Constant::MODE_MODIFY == $mode ? array((int) $ids) : array((int) 0);
   $resultList = $databaseResult->getSeasonById(params: $params);
   $output .= " <div class=\"buttons center\">\n";
   $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::TEXT_SAVE . "_2", maxLength: NULL, name: Constant::TEXT_SAVE . "_2", onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL);
@@ -92,7 +92,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 } elseif (Constant::MODE_SAVE_CREATE == $mode || Constant::MODE_SAVE_MODIFY == $mode) {
   $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
   foreach ($ary as $id) {
-    $seasonId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
+    $seasonId = (int) ((isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK);
     $seasonDescription = (isset($_POST[SEASON_DESCRIPTION_FIELD_NAME . "_" . $id])) ? $_POST[SEASON_DESCRIPTION_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $seasonStartDate = isset($_POST[SEASON_START_DATE_FIELD_NAME . "_" . $id]) ? $_POST[SEASON_START_DATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
     $seasonEndDate = isset($_POST[SEASON_END_DATE_FIELD_NAME . "_" . $id]) ? $_POST[SEASON_END_DATE_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_BLANK;
@@ -114,15 +114,15 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
         "</script>\n";
     } else {
       if (Constant::MODE_SAVE_CREATE == $mode) {
-        $params = array($seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, $seasonFinalTablePlayers, $seasonFinalTablePlayersBonusPoints, $seasonFee, isset($seasonActive) ? $seasonActive : 0);
+        $params = array($seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), (int) $seasonChampionshipQualify, (int) $seasonFinalTablePlayers, (int) $seasonFinalTablePlayersBonusPoints, (int) $seasonFee, (int) (isset($seasonActive) ? $seasonActive : 0));
         $rowCount = $databaseResult->insertSeason(params: $params);
-        $resultList = $databaseResult->getSeasonMaxId();
-        $params = array($resultList[0] - 1);
-        $resultList2 = $databaseResult->getTournamentIdMax(params: $params);
-        $params = array($resultList[0], $resultList2[0] + 1);
-        $rowCount = $databaseResult->insertFeeUsersForYear(params: $params);
+//         $resultList = $databaseResult->getSeasonMaxId();
+//         $params = array($resultList[0] - 1);
+//         $resultList2 = $databaseResult->getTournamentIdMax(params: $params);
+//         $params = array($resultList[0], $resultList2[0] + 1);
+//         $rowCount = $databaseResult->insertFeePlayersForYear(params: $params);
       } elseif (Constant::MODE_SAVE_MODIFY == $mode) {
-        $params = array($seasonId, $seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), $seasonChampionshipQualify, $seasonFinalTablePlayers, $seasonFinalTablePlayersBonusPoints, $seasonFee, isset($seasonActive) ? $seasonActive : 0);
+        $params = array($seasonId, $seasonDescription, $seasonStartDateTime->getDatabaseFormat(), $seasonEndDateTime->getDatabaseFormat(), (int) $seasonChampionshipQualify, (int) $seasonFinalTablePlayers, (int) $seasonFinalTablePlayersBonusPoints, (int) $seasonFee, (int) (isset($seasonActive) ? $seasonActive : 0));
         $rowCount = $databaseResult->updateSeason(params: $params);
       }
       if (!is_numeric($rowCount)) {
@@ -135,7 +135,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
     }
     $ids = DEFAULT_VALUE_BLANK;
   }
-  $params = array(1);
+  $params = array((int) 1);
   $resultList = $databaseResult->getSeasonByActive(params: $params);
   if (count($resultList) > 0) {
     SessionUtility::regenerateAllSessions(seasonNew: $resultList[0]);
@@ -145,7 +145,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::MODE_CONFIRM == $mode) {
   if (Constant::MODE_CONFIRM == $mode) {
     if ($ids != DEFAULT_VALUE_BLANK) {
-      $params = array($ids);
+      $params = array((int) $ids);
       $rowCount = $databaseResult->deleteFeeBySeason(params: $params);
       $rowCount = $databaseResult->deleteSeason(params: $params);
       if (!is_numeric($rowCount)) {
@@ -179,7 +179,7 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(NULL, true, Constant::MODE_DELETE == $mode ? false : true, "" == $ids ? NULL : $ids);
+  $params = array(NULL, true, Constant::MODE_DELETE == $mode ? false : true, "" == $ids ? NULL : (int) $ids);
   $pdoStatementAndQuery = $databaseResult->getSeason(params: $params);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];

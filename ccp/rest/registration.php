@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 require_once "init.php";
 define("TOURNAMENT_ID_PARAMETER_NAME", "tournamentId");

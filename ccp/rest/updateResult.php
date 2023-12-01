@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 require_once "init.php";
 $params = array(Constant::FLAG_YES_DATABASE);
@@ -22,27 +22,27 @@ foreach ($_POST["firstName"] as $firstName) {
   echo "<br>" . chr(13) . chr(10) . "idx->" . $index;
   $fullName = $firstName . " " . $_POST["lastName"][$index];
   $params = array($fullName);
-  $resultList = $databaseResult->getUserByName(params: $params);
+  $resultList = $databaseResult->getPlayerByName(params: $params);
   if (0 < count($resultList)) {
-    $user = $resultList[0];
+    $player = $resultList[0];
   }
   if ("N/A" != $_POST["feePaid"][$index]) {
-    $params = array($_POST["feePaid"][$index],$season->getId(),$user->getId(),$tournament->getId());
+    $params = array($_POST["feePaid"][$index],$season->getId(),$player->getId(),$tournament->getId());
     $rowCount = $databaseResult->updateFees(params: $params);
   }
   $fullNameKO = $_POST["knockedOut"][$index];
   $params = array($fullNameKO);
-  $resultList = $databaseResult->getUserByName(params: $params);
+  $resultList = $databaseResult->getPlayerByName(params: $params);
   if (0 < count($resultList)) {
     $userKO = $resultList[0];
   } else {
     $userKO = NULL;
   }
-  $params = array($tournament->getId(),$user->getId());
+  $params = array($tournament->getId(),$player->getId());
   $resultList = $databaseResult->getResultByTournamentIdAndPlayerId(params: $params);
   $userResult = $resultList[0];
   // rebuycount, rebuypaid, addonpaid, statuscode, place, kobyid, playerid
-  $params = array($_POST["rebuyCount"][$index],$_POST["rebuy"][$index],$_POST["addon"][$index],Constant::CODE_STATUS_FINISHED,$_POST["place"][$index],NULL == $userKO ? NULL : $userKO->getId(),$tournament->getId(),$user->getId());
+  $params = array($_POST["rebuyCount"][$index],$_POST["rebuy"][$index],$_POST["addon"][$index],Constant::CODE_STATUS_FINISHED,$_POST["place"][$index],NULL == $userKO ? NULL : $userKO->getId(),$tournament->getId(),$player->getId());
   $rowCount = $databaseResult->updateResult(params: $params);
-  echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to finished for tournament id " . $tournament->getId() . " and user id " . $user->getId();
+  echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to finished for tournament id " . $tournament->getId() . " and player id " . $player->getId();
 }

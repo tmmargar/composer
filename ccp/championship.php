@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\utility\SessionUtility;
@@ -35,7 +35,7 @@ $countWinners = isset($aryWinners) ? count($aryWinners) : 0;
 $aryAbsentIds = array();
 $aryAbsentNames = array();
 $params = array($now->getYearFormat());
-$resultList = $databaseResult->getUserAbsencesByTournamentId(params: $params);
+$resultList = $databaseResult->getPlayerAbsencesByTournamentId(params: $params);
 $ctr = - 1;
 foreach ($resultList as $values) {
   $ctr ++;

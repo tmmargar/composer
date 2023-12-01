@@ -53,8 +53,8 @@ export const input = {
     }
   },
   deselectAllTomSelect : function({objId, placeholder, event} = {}) {
-    const selectUser = document.querySelector("#" + objId);
-    const tomSelect = selectUser.tomselect;
+    const selectPlayer = document.querySelector("#" + objId);
+    const tomSelect = selectPlayer.tomselect;
     tomSelect.clear();
     tomSelect.settings.placeholder = placeholder;
     tomSelect.inputState();
@@ -120,9 +120,9 @@ export const input = {
     selectors.forEach(selector => { document.querySelectorAll(selector)?.forEach(obj => { obj.value = obj.dataset.previousValue; }); });
   },
   selectAllTomSelect: function({objId, event} = {}) {
-    const selectUser = document.querySelector("#" + objId);
-    const tomSelect = selectUser.tomselect;
-    selectUser.querySelectorAll("option").forEach((opt) => { tomSelect.addItem(opt.value); });
+    const selectPlayer = document.querySelector("#" + objId);
+    const tomSelect = selectPlayer.tomselect;
+    selectPlayer.querySelectorAll("option").forEach((opt) => { tomSelect.addItem(opt.value); });
     tomSelect.settings.placeholder = "";
     tomSelect.inputState();
     event.target.removeAttribute("href");

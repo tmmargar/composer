@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\FormControl;
@@ -25,88 +25,88 @@ if (!defined("POINTS_TOTAL_FOR_SEASON")) {
   define("POINTS_TOTAL_FOR_SEASON", "pointsTotalForSeason");
 }
 if (!defined("POINTS_TOTAL_FOR_SEASON_FOR_USER")) {
-  define("POINTS_TOTAL_FOR_SEASON_FOR_USER", "pointsTotalForSeasonForUser");
+  define("POINTS_TOTAL_FOR_SEASON_FOR_USER", "pointsTotalForSeasonForPlayer");
 }
 if (!defined("POINTS_TOTAL_FOR_USER")) {
-  define("POINTS_TOTAL_FOR_USER", "pointsTotalForUser");
+  define("POINTS_TOTAL_FOR_USER", "pointsTotalForPlayer");
 }
 if (!defined("POINTS_AVERAGE_FOR_SEASON")) {
   define("POINTS_AVERAGE_FOR_SEASON", "pointsAverageForSeason");
 }
 if (!defined("POINTS_AVERAGE_FOR_SEASON_FOR_USER")) {
-  define("POINTS_AVERAGE_FOR_SEASON_FOR_USER", "pointsAverageForSeasonForUser");
+  define("POINTS_AVERAGE_FOR_SEASON_FOR_USER", "pointsAverageForSeasonForPlayer");
 }
 if (!defined("POINTS_AVERAGE_FOR_USER")) {
-  define("POINTS_AVERAGE_FOR_USER", "pointsAverageForUser");
+  define("POINTS_AVERAGE_FOR_USER", "pointsAverageForPlayer");
 }
 if (!defined("KNOCKOUTS_TOTAL_FOR_SEASON")) {
   define("KNOCKOUTS_TOTAL_FOR_SEASON", "knockoutsTotalForSeason");
 }
 if (!defined("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER")) {
-  define("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER", "knockoutsTotalForSeasonForUser");
+  define("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER", "knockoutsTotalForSeasonForPlayer");
 }
 if (!defined("KNOCKOUTS_TOTAL_FOR_USER")) {
-  define("KNOCKOUTS_TOTAL_FOR_USER", "knockoutsTotalForUser");
+  define("KNOCKOUTS_TOTAL_FOR_USER", "knockoutsTotalForPlayer");
 }
 if (!defined("KNOCKOUTS_AVERAGE_FOR_SEASON")) {
   define("KNOCKOUTS_AVERAGE_FOR_SEASON", "knockoutsAverageForSeason");
 }
 if (!defined("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER")) {
-  define("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER", "knockoutsAverageForSeasonForUser");
+  define("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER", "knockoutsAverageForSeasonForPlayer");
 }
 if (!defined("KNOCKOUTS_AVERAGE_FOR_USER")) {
-  define("KNOCKOUTS_AVERAGE_FOR_USER", "knockoutsAverageForUser");
+  define("KNOCKOUTS_AVERAGE_FOR_USER", "knockoutsAverageForPlayer");
 }
 if (!defined("EARNINGS_TOTAL_FOR_SEASON")) {
   define("EARNINGS_TOTAL_FOR_SEASON", "earningsTotalForSeason");
 }
 if (!defined("EARNINGS_TOTAL_FOR_SEASON_FOR_USER")) {
-  define("EARNINGS_TOTAL_FOR_SEASON_FOR_USER", "earningsTotalForSeasonForUser");
+  define("EARNINGS_TOTAL_FOR_SEASON_FOR_USER", "earningsTotalForSeasonForPlayer");
 }
 if (!defined("EARNINGS_TOTAL_FOR_USER")) {
-  define("EARNINGS_TOTAL_FOR_USER", "earningsTotalForUser");
+  define("EARNINGS_TOTAL_FOR_USER", "earningsTotalForPlayer");
 }
 if (!defined("EARNINGS_AVERAGE_FOR_SEASON")) {
   define("EARNINGS_AVERAGE_FOR_SEASON", "earningsAverageForSeason");
 }
 if (!defined("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER")) {
-  define("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER", "earningsAverageForSeasonForUser");
+  define("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER", "earningsAverageForSeasonForPlayer");
 }
 if (!defined("EARNINGS_AVERAGE_FOR_USER")) {
-  define("EARNINGS_AVERAGE_FOR_USER", "earningsAverageForUser");
+  define("EARNINGS_AVERAGE_FOR_USER", "earningsAverageForPlayer");
 }
 if (!defined("WINNERS_FOR_SEASON")) {
   define("WINNERS_FOR_SEASON", "winnersForSeason");
 }
 if (!defined("WINS_FOR_USER")) {
-  define("WINS_FOR_USER", "winsForUser");
+  define("WINS_FOR_USER", "winsForPlayer");
 }
 if (!defined("WINS_TOTAL_FOR_SEASON_FOR_USER")) {
-  define("WINS_TOTAL_FOR_SEASON_FOR_USER", "winsTotalForSeasonForUser");
+  define("WINS_TOTAL_FOR_SEASON_FOR_USER", "winsTotalForSeasonForPlayer");
 }
 if (!defined("WINS_AVERAGE_FOR_SEASON_FOR_USER")) {
-  define("WINS_AVERAGE_FOR_SEASON_FOR_USER", "winsAverageForSeasonForUser");
+  define("WINS_AVERAGE_FOR_SEASON_FOR_USER", "winsAverageForSeasonForPlayer");
 }
 if (!defined("NEMESIS_FOR_USER")) {
-  define("NEMESIS_FOR_USER", "nemesisForUser");
+  define("NEMESIS_FOR_USER", "nemesisForPlayer");
 }
 if (!defined("BULLY_FOR_USER")) {
-  define("BULLY_FOR_USER", "bullyForUser");
+  define("BULLY_FOR_USER", "bullyForPlayer");
 }
 if (!defined("TOURNAMENTS_WON_FOR_USER")) {
-  define("TOURNAMENTS_WON_FOR_USER", "tournamentsWonForUser");
+  define("TOURNAMENTS_WON_FOR_USER", "tournamentsWonForPlayer");
 }
 if (!defined("FINISHES_FOR_USER")) {
-  define("FINISHES_FOR_USER", "finishesForUser");
+  define("FINISHES_FOR_USER", "finishesForPlayer");
 }
 if (!defined("TOURNAMENTS_PLAYED_FOR_USER")) {
-  define("TOURNAMENTS_PLAYED_FOR_USER", "tournamentsPlayedForUser");
+  define("TOURNAMENTS_PLAYED_FOR_USER", "tournamentsPlayedForPlayer");
 }
 if (!defined("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER")) {
-  define("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER", "tournamentsPlayedByTypeForUser");
+  define("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER", "tournamentsPlayedByTypeForPlayer");
 }
 if (!defined("TOURNAMENTS_PLAYED_FIRST_FOR_USER")) {
-  define("TOURNAMENTS_PLAYED_FIRST_FOR_USER", "tournamentsPlayedFirstForUser");
+  define("TOURNAMENTS_PLAYED_FIRST_FOR_USER", "tournamentsPlayedFirstForPlayer");
 }
 $smarty->assign("title", "Chip Chair and a Prayer Top 5");
 $smarty->assign("heading", "");
@@ -139,73 +139,73 @@ switch ($reportId) {
     $title = "Total points for season";
     break;
   case POINTS_TOTAL_FOR_SEASON_FOR_USER:
-    $title = "Total points for season for user";
+    $title = "Total points for season for player";
     break;
   case POINTS_TOTAL_FOR_USER:
-    $title = "Total points for user";
+    $title = "Total points for player";
     break;
   case POINTS_AVERAGE_FOR_SEASON:
     $title = "Average points for season";
     break;
   case POINTS_AVERAGE_FOR_SEASON_FOR_USER:
-    $title = "Average points for season for user";
+    $title = "Average points for season for player";
     break;
   case POINTS_AVERAGE_FOR_USER:
-    $title = "Average points for user";
+    $title = "Average points for player";
     break;
   case EARNINGS_TOTAL_FOR_SEASON:
     $title = "Total earnings for season";
     break;
   case EARNINGS_TOTAL_FOR_SEASON_FOR_USER:
-    $title = "Total earnings for season for user";
+    $title = "Total earnings for season for player";
     break;
   case EARNINGS_TOTAL_FOR_USER:
-    $title = "Total earnings for user";
+    $title = "Total earnings for player";
     break;
   case EARNINGS_AVERAGE_FOR_SEASON:
     $title = "Average earnings for season";
     break;
   case EARNINGS_AVERAGE_FOR_SEASON_FOR_USER:
-    $title = "Average earnings for season for user";
+    $title = "Average earnings for season for player";
     break;
   case EARNINGS_AVERAGE_FOR_USER:
-    $title = "Average earnings for user";
+    $title = "Average earnings for player";
     break;
   case KNOCKOUTS_AVERAGE_FOR_SEASON:
     $title = "Average knockouts for season";
     break;
   case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER:
-    $title = "Average knockouts for season for user";
+    $title = "Average knockouts for season for player";
     break;
   case KNOCKOUTS_AVERAGE_FOR_USER:
-    $title = "Average knockouts for user";
+    $title = "Average knockouts for player";
     break;
   case KNOCKOUTS_TOTAL_FOR_SEASON:
     $title = "Total knockouts for season";
     break;
   case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER:
-    $title = "Total knockouts for season for user";
+    $title = "Total knockouts for season for player";
     break;
   case KNOCKOUTS_TOTAL_FOR_USER:
-    $title = "Total knockouts for user";
+    $title = "Total knockouts for player";
     break;
   case WINNERS_FOR_SEASON:
     $title = "Winners for season";
     break;
   case WINS_FOR_USER:
-    $title = "Wins for User";
+    $title = "Wins for Player";
     break;
   case WINS_TOTAL_FOR_SEASON_FOR_USER:
-    $title = "Total Wins for season for user";
+    $title = "Total Wins for season for player";
     break;
   case WINS_AVERAGE_FOR_SEASON_FOR_USER:
-    $title = "Average Wins for season for user";
+    $title = "Average Wins for season for player";
     break;
   case NEMESIS_FOR_USER:
-    $title = "Nemesis for user";
+    $title = "Nemesis for player";
     break;
   case BULLY_FOR_USER:
-    $title = "Bully for user";
+    $title = "Bully for player";
     break;
   case TOURNAMENTS_WON_FOR_USER:
     $title = "Tournaments won";
@@ -326,7 +326,7 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $pdoStatementAndQuery = $databaseResult->getPointsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getPointsTotalAndAverageForSeasonForPlayer(params: $params, orderBy: $orderBy, rank: true);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(4, "number", $formatPlaces), "Points", $valueIndex);
@@ -344,7 +344,7 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $pdoStatementAndQuery = $databaseResult->getKnockoutsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getKnockoutsTotalAndAverageForSeasonForPlayer(params: $params, orderBy: $orderBy, rank: true);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
@@ -362,7 +362,7 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $pdoStatementAndQuery = $databaseResult->getEarningsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getEarningsTotalAndAverageForSeasonForPlayer(params: $params, orderBy: $orderBy, rank: true);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $hideColIndexes = array(0, 1, 2, 3, 5);
@@ -383,7 +383,7 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $pdoStatementAndQuery = $databaseResult->getWinsTotalAndAverageForSeasonForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getWinsTotalAndAverageForSeasonForPlayer(params: $params, orderBy: $orderBy, rank: true);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $hideColIndexes = array(0, 1, 2, 3, 5);
@@ -402,7 +402,7 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $pdoStatementAndQuery = $databaseResult->getPointsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getPointsTotalAndAverageForPlayer(params: $params, orderBy: $orderBy, rank: true);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Points", $valueIndex);
@@ -420,7 +420,7 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $pdoStatementAndQuery = $databaseResult->getKnockoutsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getKnockoutsTotalAndAverageForPlayer(params: $params, orderBy: $orderBy, rank: true);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
@@ -438,7 +438,7 @@ if (!isset($reportId) || "" == $reportId) {
         $valueIndex = 4;
         $formatPlaces = 2;
       }
-      $pdoStatementAndQuery = $databaseResult->getEarningsTotalAndAverageForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getEarningsTotalAndAverageForPlayer(params: $params, orderBy: $orderBy, rank: true);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $value = array(array("currency", "center"), array(3, "currency", $formatPlaces), "Earnings", $valueIndex);
@@ -447,7 +447,7 @@ if (!isset($reportId) || "" == $reportId) {
     case WINS_FOR_USER:
       $params = array($startDate, $endDate, $userId);
       $orderBy = array(1);
-      $pdoStatementAndQuery = $databaseResult->getWinsForUser(params: $params, orderBy: $orderBy, rank: true);
+      $pdoStatementAndQuery = $databaseResult->getWinsForPlayer(params: $params, orderBy: $orderBy, rank: true);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $value = array(array("number", "center"), array(3, "number", 0), "Wins", 3);
@@ -455,7 +455,7 @@ if (!isset($reportId) || "" == $reportId) {
       break;
     case NEMESIS_FOR_USER:
       $params = array($userId);
-      $pdoStatementAndQuery = $databaseResult->getNemesisForUser(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getNemesisForPlayer(params: $params);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(1, "number", 0));
@@ -464,7 +464,7 @@ if (!isset($reportId) || "" == $reportId) {
       break;
     case BULLY_FOR_USER:
       $params = array($userId);
-      $pdoStatementAndQuery = $databaseResult->getBullyForUser(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getBullyForPlayer(params: $params);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(1, "number", 0));
@@ -473,7 +473,7 @@ if (!isset($reportId) || "" == $reportId) {
       break;
     case FINISHES_FOR_USER:
       $params = array($userId);
-      $pdoStatementAndQuery = $databaseResult->getFinishesForUser(params: $params);
+      $pdoStatementAndQuery = $databaseResult->getFinishesForPlayer(params: $params);
       $pdoStatement = $pdoStatementAndQuery[0];
       $query = $pdoStatementAndQuery[1];
       $colFormats = array(array(2, "percentage", 2));
@@ -495,7 +495,7 @@ if (!isset($reportId) || "" == $reportId) {
       $colFormats = array(array(4, "number", 0));
       $hideColIndexes = array(0, 2);
       // $width = Constant::FLAG_LOCAL() ? "30%" : "100%";
-      $titleText = "Played by type by user";
+      $titleText = "Played by type by player";
       break;
   }
   if (PRIZE_POOL_FOR_SEASON != $reportId) {
@@ -631,23 +631,23 @@ if (!isset($reportId) || "" == $reportId) {
           $pdoStatement->execute();
         }
         if (0 < $pdoStatement->rowCount()) {
-          // unable to get ranking to use where clause so loop through and find matching user
+          // unable to get ranking to use where clause so loop through and find matching player
           while ($row = $pdoStatement->fetch(PDO::FETCH_BOTH)) {
-            // find user and exit
+            // find player and exit
             if ($row[2] == $userId) {
-              $rowUser = $row;
+              $rowPlayer = $row;
             }
           }
-          $valueClasses = HtmlUtility::buildClasses(aryClasses: $value[0], value: $rowUser[$value[3]]);
-          $rowUser[$value[3]] = HtmlUtility::formatData(format: $value[1], value: $rowUser[$value[3]]);
-          $output .= "<div " . (($valueClasses != "") ? "class=\"" . $valueClasses . "\"" : "") . " id=\"value\">" . $rowUser[$value[3]] . "</div>\n";
-          $rankClasses = HtmlUtility::buildClasses(aryClasses: $rank[0], value: $rowUser[$rank[3]]);
+          $valueClasses = HtmlUtility::buildClasses(aryClasses: $value[0], value: $rowPlayer[$value[3]]);
+          $rowPlayer[$value[3]] = HtmlUtility::formatData(format: $value[1], value: $rowPlayer[$value[3]]);
+          $output .= "<div " . (($valueClasses != "") ? "class=\"" . $valueClasses . "\"" : "") . " id=\"value\">" . $rowPlayer[$value[3]] . "</div>\n";
+          $rankClasses = HtmlUtility::buildClasses(aryClasses: $rank[0], value: $rowPlayer[$rank[3]]);
           $output .=
             "<script type=\"module\">\n" .
             "  import { inputLocal } from \"./scripts/top5.js\";\n" .
             "  document.querySelector(\"#rank_" . str_replace(" ", "", $titleText) . "_link\").addEventListener(\"click\", (evt) => inputLocal.showFullList({title: '" . $dialogParameters[0] . "', userFullName: '" . SessionUtility::getValue(SessionUtility::OBJECT_NAME_NAME) . "'}));\n" .
             "</script>\n";
-          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"#\" id=\"rank_" . str_replace(" ", "", $titleText) . "_link\">" . $rank[2] . ": " . $rowUser[$rank[3]] . "</a></div>\n";
+          $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"#\" id=\"rank_" . str_replace(" ", "", $titleText) . "_link\">" . $rank[2] . ": " . $rowPlayer[$rank[3]] . "</a></div>\n";
           $output .=
             "<dialog class=\"dialog\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "\">\n" .
             " <form method=\"dialog\">\n" .

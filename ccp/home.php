@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 require_once "init.php";
 $smarty->assign("title", "Chip Chair and a Prayer Home");
 $parentObjectId = "";
 $outputHome = " <div class=\"responsive responsive--3cols responsive--collapse\">\n";
 $reportId = "prizePoolForSeason";
-$outputHome .= 
+$outputHome .=
   "  <div class=\"responsive-cell\">\n" .
   "  </div>\n" .
   "  <div class=\"responsive-cell\">\n" .
@@ -37,10 +37,10 @@ $outputHome .=
   "  </div>\n" .
   "  <div class=\"responsive-cell\">\n" .
   include "chartGauge.php";
-$outputHome .= 
+$outputHome .=
   " </div>\n" .
   "  <div class=\"center responsive-cell\">\n";
-// $reportId = "earningsTotalForSeasonForUser";
+// $reportId = "earningsTotalForSeasonForPlayer";
 // $parentObjectId = "widget6";
 $limitCount = 4;
 $outputHome .= include "registrationList.php";

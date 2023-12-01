@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
-namespace Poker\Ccp;
+namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\HtmlTable;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";
-define("GAME_TYPE_NAME_FIELD_LABEL", "NAme");
+define("GAME_TYPE_NAME_FIELD_LABEL", "Name");
 define("GAME_TYPE_ID_FIELD_NAME", "gameTypeId");
 define("GAME_TYPE_NAME_FIELD_NAME", "gameTypeName");
 define("DEFAULT_VALUE_GAME_TYPE_ID", "-1");
@@ -14,7 +14,7 @@ $smarty->assign("title", "Manage Game Type");
 $smarty->assign("heading", "Manage Game Type");
 $smarty->assign("style", "<link href=\"css/manageGameType.css\" rel=\"stylesheet\">");
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
-  $params = Constant::MODE_MODIFY == $mode ? array($ids) : array(0);
+  $params = Constant::MODE_MODIFY == $mode ? array((int) $ids) : array((int) 0);
   $resultList = $databaseResult->getGameTypeById(params: $params);
   $output .= " <div class=\"buttons center\">\n";
   $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::TEXT_SAVE . "_2", maxLength: NULL, name: Constant::TEXT_SAVE . "_2", onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL);
@@ -53,7 +53,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 } elseif (Constant::MODE_SAVE_CREATE == $mode || Constant::MODE_SAVE_MODIFY == $mode) {
   $ary = explode(Constant::DELIMITER_DEFAULT, $ids);
   foreach ($ary as $id) {
-    $gameTypeId = (isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_GAME_TYPE_ID;
+    $gameTypeId = (int) ((isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : DEFAULT_VALUE_GAME_TYPE_ID);
     $gameTypeName = (isset($_POST[GAME_TYPE_NAME_FIELD_NAME . "_" . $id])) ? $_POST[GAME_TYPE_NAME_FIELD_NAME . "_" . $id] : "";
     if (Constant::MODE_SAVE_CREATE == $mode) {
       $params = array($gameTypeName);
@@ -76,7 +76,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
 if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::MODE_CONFIRM == $mode) {
   if (Constant::MODE_CONFIRM == $mode) {
     if ($ids != DEFAULT_VALUE_BLANK) {
-      $params = array($ids);
+      $params = array((int) $ids);
       $rowCount = $databaseResult->deleteGameType(params: $params);
       if (!is_numeric($rowCount)) {
         $output .=
@@ -108,7 +108,7 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
   $output .= $hiddenMode->getHtml();
   $hiddenSelectedRows = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SELECTED_ROWS_FIELD_NAME, maxLength: NULL, name: SELECTED_ROWS_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $ids, wrap: NULL);
   $output .= $hiddenSelectedRows->getHtml();
-  $params = array(NULL, true, array(false, "" == $ids ? NULL : $ids));
+  $params = array(NULL, true, array(false, "" == $ids ? NULL : (int) $ids));
   $pdoStatementAndQuery = $databaseResult->getGameType(params: $params);
   $pdoStatement = $pdoStatementAndQuery[0];
   $query = $pdoStatementAndQuery[1];
