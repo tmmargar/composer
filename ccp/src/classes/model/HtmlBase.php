@@ -22,15 +22,19 @@ abstract class HtmlBase extends Base {
   }
   public function setAccessKey(string $acccessKey) {
     $this->accessKey = $acccessKey;
+    return $this;
   }
   public function setClass(array $class) {
     $this->class = $class;
+    return $this;
   }
   public function setTabIndex(int $tabIndex) {
     $this->tabIndex = $tabIndex;
+    return $this;
   }
   public function setTitle(string $title) {
     $this->title = $title;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

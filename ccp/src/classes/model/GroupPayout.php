@@ -13,9 +13,11 @@ class GroupPayout extends Base {
   }
   public function setGroup(Group $group) {
     $this->group = $group;
+    return $this;
   }
   public function setPayouts(array $payouts) {
     $this->payouts = $payouts;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

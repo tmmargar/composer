@@ -106,51 +106,67 @@ class FormControl extends FormBase {
   }
   public function setAccessKey(string|NULL $accessKey) {
     $this->accessKey = $accessKey;
+    return $this;
   }
   public function setAutoComplete($autoComplete) {
     $this->autoComplete = $autoComplete;
+    return $this;
   }
   public function setAutoFocus(bool $autoFocus) {
     $this->autoFocus = $autoFocus;
+    return $this;
   }
   public function setChecked(bool|NULL $checked) {
     $this->checked = $checked;
+    return $this;
   }
   public function setCols(int|NULL $cols) {
     $this->cols = $cols;
+    return $this;
   }
   public function setImport(string|NULL $import) {
     $this->import = $import;
+    return $this;
   }
   public function setMaxLength(int|NULL $maxLength) {
     $this->maxLength = $maxLength;
+    return $this;
   }
   public function setNoValidate(bool|NULL $noValidate) {
     $this->noValidate = $noValidate;
+    return $this;
   }
   public function setOnClick(string|NULL $onClick) {
     $this->onClick = $onClick;
+    return $this;
   }
   public function setPlaceholder(string|NULL $placeholder) {
     $this->placeholder = $placeholder;
+    return $this;
   }
   public function setReadOnly(bool $readOnly) {
     $this->readOnly = $readOnly;
+    return $this;
   }
   public function setRequired(bool|NULL $required) {
     $this->required = $required;
+    return $this;
   }
   public function setRows(int|NULL $rows) {
     $this->rows = $rows;
+    return $this;
   }
   public function setSize(int|NULL $size) {
     $this->size = $size;
+    return $this;
   }
   public function setType(string|NULL $type) {
     $this->type = $type;
+    return $this;
   }
   public function setWrap(string|NULL $wrap) {
     $this->wrap = $wrap;
+    return $this;
   }
   public function toString(): string {
     $output = parent::__toString();

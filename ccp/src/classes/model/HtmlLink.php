@@ -36,15 +36,19 @@ class HtmlLink extends HtmlBase {
   }
   public function setHref(string $href) {
     $this->href = $href;
+    return $this;
   }
   public function setParamName(array $paramName) {
     $this->paramName = $paramName;
+    return $this;
   }
   public function setParamValue(array $paramValue) {
     $this->paramValue = $paramValue;
+    return $this;
   }
   public function setText(string $text) {
     $this->text = $text;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

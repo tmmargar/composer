@@ -22,18 +22,22 @@ class Address extends Base {
   }
   public function setAddress(string $address) {
     $this->address = $address;
+    return $this;
   }
   public function setCity(string $city) {
     $this->city = $city;
+    return $this;
   }
   public function setState(string $state) {
     if (in_array($state, self::stateList)) {
       $this->state = $state;
+      return $this;
     } else {
       throw new Exception($state . " is not a valid state abberviation");
     }
   }
   public function setZip(int $zip) {
+    return $this;
     $this->zip = $zip;
   }
   public function __toString(): string {

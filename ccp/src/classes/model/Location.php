@@ -32,24 +32,31 @@ class Location extends Base {
   }
   public function setName(string $name) {
     $this->name = $name;
+    return $this;
   }
   public function setPlayer(Player $player) {
     $this->player = $player;
+    return $this;
   }
   public function setCount(int $count) {
     $this->count = $count;
+    return $this;
   }
   public function setActive(int $active) {
     $this->active = $active;
+    return $this;
   }
   public function setMap($map) {
     $this->map = $map;
+    return $this;
   }
   public function setMapName(string $mapName) {
     $this->mapName = $mapName;
+    return $this;
   }
   public function setTournamentCount(int $tournamentCount) {
     $this->tournamentCount = $tournamentCount;
+    return $this;
   }
   public function getLink(): string {
     $link = new HtmlLink(accessKey: NULL, class: NULL, debug: $this->isDebug(), href: "manageLocation.php", id: NULL, paramName: array("userId","mode"), paramValue: array($this->getId() . "modify"),

@@ -60,18 +60,23 @@ class Email extends Base {
   }
   public function setFromName(array $fromName) {
     $this->fromName = $fromName;
+    return $this;
   }
   public function setFromEmail(array $fromEmail) {
     $this->fromEmail = $fromEmail;
+    return $this;
   }
   public function setToName(array $toName) {
     $this->toName = $toName;
+    return $this;
   }
   public function setToEmail(array $toEmail) {
     $this->toEmail = $toEmail;
+    return $this;
   }
   public function setCcName(array $ccName) {
     $this->ccName = $ccName;
+    return $this;
   }
   public function setCcEmail(array $ccEmail) {
     if ($this->isLocal()) {
@@ -79,24 +84,31 @@ class Email extends Base {
       $ccEmail = array($this->localEmail);
     }
     $this->ccEmail = $ccEmail;
+    return $this;
   }
   public function setBccName(array $bccName) {
     $this->bccName = $bccName;
+    return $this;
   }
   public function setBccEmail(array $bccEmail) {
     $this->bccEmail = $bccEmail;
+    return $this;
   }
   public function setSubject(string $subject) {
     $this->subject = $subject;
+    return $this;
   }
   public function setBody(string $body) {
     $this->body = $body;
+    return $this;
   }
   public function setLocal(bool $local) {
     $this->local = $local;
+    return $this;
   }
   public function setLocalEmail(array|NULL $localEmail) {
     $this->localEmail = $localEmail;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

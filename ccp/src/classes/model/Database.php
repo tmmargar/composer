@@ -25,18 +25,23 @@ class Database extends Root {
   }
   public function setHostName(string $hostName) {
     $this->hostName = $hostName;
+    return $this;
   }
   public function setUserid(string $userid) {
     $this->userid = $userid;
+    return $this;
   }
   public function setPassword(string $password) {
     $this->password = $password;
+    return $this;
   }
   public function setDatabaseName(string $databaseName) {
     $this->databaseName = $databaseName;
+    return $this;
   }
   public function setPort(int $port) {
     $this->port = $port;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

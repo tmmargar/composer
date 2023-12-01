@@ -19,5 +19,6 @@ class SmartyLocal {
   }
   public function setSmarty(Smarty $smarty) {
     $this->smarty = $smarty;
+    return $this;
   }
 }

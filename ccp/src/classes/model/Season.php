@@ -32,27 +32,35 @@ class Season extends Base {
   }
   public function setActive(int $active) {
     $this->active = $active;
+    return $this;
   }
   public function setDescription(string $description) {
     $this->description = $description;
+    return $this;
   }
   public function setEndDate(string $endDate) {
     $this->endDate = $endDate;
+    return $this;
   }
   public function setFee(int $fee) {
     $this->fee = $fee;
+    return $this;
   }
   public function setFinalTableBonusPoints(int $finalTableBonusPoints) {
     $this->finalTableBonusPoints = $finalTableBonusPoints;
+    return $this;
   }
   public function setFinalTablePlayers(int $finalTablePlayers) {
     $this->finalTablePlayers = $finalTablePlayers;
+    return $this;
   }
   public function setStartDate(string $startDate) {
     $this->startDate = $startDate;
+    return $this;
   }
   public function setChampionshipQualify(int $championshipQualify) {
     $this->championshipQualify = $championshipQualify;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

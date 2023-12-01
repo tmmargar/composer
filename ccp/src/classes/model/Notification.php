@@ -16,12 +16,15 @@ class Notification extends Base {
   }
   public function setDescription(string $description) {
     $this->description = $description;
+    return $this;
   }
   public function setEndDate(DateTime $endDate) {
     $this->endDate = $endDate;
+    return $this;
   }
   public function setStartDate(DateTime $startDate) {
     $this->startDate = $startDate;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

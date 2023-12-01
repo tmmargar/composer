@@ -67,9 +67,11 @@ class DateTime extends Base {
   }
   public function setTime(int $time) {
     $this->time = $time;
+    return $this;
   }
   public function setTimeZone(DateTimeZone $timeZone) {
     $this->timeZone = $timeZone;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

@@ -98,75 +98,99 @@ class Tournament extends Base {
   }
   public function setDescription(string $description) {
     $this->description = $description;
+    return $this;
   }
   public function setComment(string $comment) {
     $this->comment = $comment;
+    return $this;
   }
   public function setLimitType(LimitType $limitType) {
     $this->limitType = $limitType;
+    return $this;
   }
   public function setGameType(GameType $gameType) {
     $this->gameType = $gameType;
+    return $this;
   }
   public function setSpecialType(SpecialType $specialType) {
     $this->specialType = $specialType;
+    return $this;
   }
   public function setChipCount(int $chipCount) {
     $this->chipCount = $chipCount;
+    return $this;
   }
   public function setLocation(Location $location) {
     $this->location = $location;
+    return $this;
   }
   public function setDate(DateTime $date) {
     $this->date = $date;
+    return $this;
   }
   public function setStartTime(DateTime $startTime) {
     $this->startTime = $startTime;
+    return $this;
   }
   public function setBuyinAmount(int $buyinAmount) {
     $this->buyinAmount = $buyinAmount;
+    return $this;
   }
   public function setMaxPlayers(int $maxPlayers) {
     $this->maxPlayers = $maxPlayers;
+    return $this;
   }
   public function setMaxRebuys(int $maxRebuys) {
     $this->maxRebuys = $maxRebuys;
+    return $this;
   }
   public function setRebuyAmount(int $rebuyAmount) {
     $this->rebuyAmount = $rebuyAmount;
+    return $this;
   }
   public function setAddonAmount(int $addonAmount) {
     $this->addonAmount = $addonAmount;
+    return $this;
   }
   public function setAddonChipCount(int $addonChipCount) {
     $this->addonChipCount = $addonChipCount;
+    return $this;
   }
   public function setGroupPayout(GroupPayout $groupPayout) {
     $this->groupPayout = $groupPayout;
+    return $this;
   }
   public function setRake(float $rake) {
     $this->rake = $rake;
+    return $this;
   }
   public function setRegisteredCount(int $registeredCount) {
     $this->registeredCount = $registeredCount;
+    return $this;
   }
   public function setEnteredCount(int $enteredCount) {
     $this->enteredCount = $enteredCount;
+    return $this;
   }
   public function setBuyinsPaid(int $buyinsPaid) {
     $this->buyinsPaid = $buyinsPaid;
+    return $this;
   }
   public function setRebuysPaid(int $rebuysPaid) {
     $this->rebuysPaid = $rebuysPaid;
+    return $this;
   }
   public function setRebuysCount(int $rebuysCount) {
     $this->rebuysCount = $rebuysCount;
+    return $this;
   }
   public function setAddonsPaid(int $addonsPaid) {
     $this->addonsPaid = $addonsPaid;
+    return $this;
   }
   public function setEarnings(int $earnings) {
     $this->earnings = $earnings;
+    return $this;
   }
   public function getLink() {
     $link = new HtmlLink(accessKey: NULL, class: NULL, debug: $this->isDebug(), href: "manageTournament.php", id: NULL, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),

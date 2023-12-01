@@ -10,6 +10,7 @@ class Phone extends Base {
   }
   public function setValue(string $value) {
     $this->value = $value;
+    return $this;
   }
   public function getDisplayFormatted(): string {
     // note: making sure we have something

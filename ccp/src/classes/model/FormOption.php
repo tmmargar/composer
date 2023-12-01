@@ -20,9 +20,11 @@ class FormOption extends FormBase {
   }
   public function setSelctedValue(string $selectedValue) {
     $this->selectedValue = $selectedValue;
+    return $this;
   }
   public function setText(string $text) {
     $this->text = $text;
+    return $this;
   }
   public function toString(): string {
     $output = parent::__toString();

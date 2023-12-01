@@ -29,18 +29,23 @@ class FormSelect extends FormBase {
   }
   public function setAccessKey(string $accessKey) {
     $this->accessKey = $accessKey;
+    return $this;
   }
   public function setMultiple(bool $multiple) {
     $this->multiple = $multiple;
+    return $this;
   }
   public function setOnClick(string $onClick) {
     $this->onClick = $onClick;
+    return $this;
   }
   public function setReadOnly(bool $readOnly) {
     $this->readOnly = $readOnly;
+    return $this;
   }
   public function setSize(int $size) {
     $this->size = $size;
+    return $this;
   }
   public function toString(): string {
     $output = parent::__toString();

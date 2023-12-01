@@ -20,15 +20,19 @@ class Payout extends Base {
   }
   public function setName(string $name) {
     $this->name = $name;
+    return $this;
   }
   public function setMinPlayers(int $minPlayers) {
     $this->minPlayers = $minPlayers;
+    return $this;
   }
   public function setMaxPlayers(int $maxPlayers) {
     $this->maxPlayers = $maxPlayers;
+    return $this;
   }
   public function setStructures(array|NULL $structures) {
     $this->structures = $structures;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

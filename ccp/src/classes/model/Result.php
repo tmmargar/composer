@@ -48,42 +48,55 @@ class Result extends Base {
   }
   public function setTournament(Tournament $tournament) {
     $this->tournament = $tournament;
+    return $this;
   }
   public function setPlayer(Player $player) {
     $this->player = $player;
+    return $this;
   }
   public function setStatus(Status $status) {
     $this->status = $status;
+    return $this;
   }
   public function setRegisterOrder(int $registerOrder) {
     $this->registerOrder = $registerOrder;
+    return $this;
   }
   public function setBuyinPaid(bool $buyinPaid) {
     $this->buyinPaid = $buyinPaid;
+    return $this;
   }
   public function setRebuyPaid(bool $rebuyPaid) {
     $this->rebuyPaid = $rebuyPaid;
+    return $this;
   }
   public function setAddonPaid(bool $addonPaid) {
     $this->addonPaid = $addonPaid;
+    return $this;
   }
   public function setRebuyCount(int $rebuyCount) {
     $this->rebuyCount = $rebuyCount;
+    return $this;
   }
   public function setAddonFlag(bool $addonFlag) {
     $this->addonFlag = $addonFlag;
+    return $this;
   }
   public function setPlace(int $place) {
     $this->place = $place;
+    return $this;
   }
   public function setKnockedOutBy(Player $knockedOutBy) {
     $this->knockedOutBy = $knockedOutBy;
+    return $this;
   }
   public function setFood(string $food) {
     $this->food = $food;
+    return $this;
   }
   public function setFeeStatus(string $feeStatus) {
     $this->feeStatus = $feeStatus;
+    return $this;
   }
   public function getLink(): string {
     $link = new HtmlLink(accessKey: NULL, class: NULL, debug: $this->isDebug(), href: "manageResult.php", id: NULL, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),

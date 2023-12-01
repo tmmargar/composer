@@ -13,6 +13,11 @@ class SpecialType extends Base {
   }
   public function setDescription(string $description) {
     $this->description = $description;
+    return $this;
+  }
+  public function setMultiplier(int $multiplier) {
+    $this->multiplier = $multiplier;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

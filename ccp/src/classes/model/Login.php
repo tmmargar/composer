@@ -13,9 +13,11 @@ class Login extends Base {
   }
   public function setPassword($password) {
     $this->password = $password;
+    return $this;
   }
   public function setUsername($username) {
     $this->username = $username;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

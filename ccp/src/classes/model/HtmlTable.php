@@ -391,54 +391,71 @@ class HtmlTable extends HtmlBase {
   }
   public function setCaption(string $caption) {
     $this->caption = $caption;
+    return $this;
   }
   public function setColspan(array $colspan) {
     $this->colspan = $colspan;
+    return $this;
   }
   public function setColumnFormat(array $columnFormat) {
     $this->columnFormat = $columnFormat;
+    return $this;
   }
   public function setDelimiter(string $delimiter) {
     $this->delimiter = $delimiter;
+    return $this;
   }
   public function setForeignKeys(array $foreignKeys) {
     $this->foreignKeys = $foreignKeys;
+    return $this;
   }
   public function setHiddenId(string $hiddenId) {
     $this->hiddenId = $hiddenId;
+    return $this;
   }
   public function setHeader(bool $header) {
     $this->header = $header;
+    return $this;
   }
   public function setHiddenAdditional(array $hiddenAdditional) {
     $this->hiddenAdditional = $hiddenAdditional;
+    return $this;
   }
   public function setHideColumnIndexes(array $hideColumnIndexes) {
     $this->hideColumnIndexes = $hideColumnIndexes;
+    return $this;
   }
   public function setHtml(array $html) {
     $this->html = $html;
+    return $this;
   }
   public function setLink(array $link) {
     $this->link = $link;
+    return $this;
   }
   public function setNote(bool $note) {
     $this->note = $note;
+    return $this;
   }
   public function setPdoStatement(PDOStatement $pdoStatement) {
     $this->pdoStatement = $pdoStatement;
+    return $this;
   }
   public function setQuery(string $query) {
     $this->query = $query;
+    return $this;
   }
   public function setSelectedRow(array $selectedRow) {
     $this->selectedRow = $selectedRow;
+    return $this;
   }
   public function setSuffix(string $suffix) {
     $this->suffix = $suffix;
+    return $this;
   }
   public function setWidth(string $width) {
     $this->width = $width;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

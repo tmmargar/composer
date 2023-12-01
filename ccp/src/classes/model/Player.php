@@ -90,72 +90,95 @@ class Player extends Base {
   }
   public function setFirstName(string $firstName) {
     $this->firstName = $firstName;
+    return $this;
   }
   public function setLastName(string $lastName) {
     $this->lastName = $lastName;
+    return $this;
   }
   public function setEmail(string $email) {
     $this->email = $email;
+    return $this;
   }
   public function setPhone(Phone|NULL $phone) {
     $this->phone = $phone;
+    return $this;
   }
   public function setUsername(string $username) {
     $this->username = $username;
+    return $this;
   }
   public function setPassword(string $password) {
     $this->password = $password;
+    return $this;
   }
   public function setAdministrator(int $administrator) {
     $this->administrator = $administrator;
+    return $this;
   }
   public function setRegistrationDate(string $registrationDate) {
     $this->registrationDate = $registrationDate;
+    return $this;
   }
   public function setApprovalDate(string $approvalDate) {
     $this->approvalDate = $approvalDate;
+    return $this;
   }
   public function setApprovalUserid(int $approvalUserid) {
     $this->approvalUserid = $approvalUserid;
+    return $this;
   }
   public function setApprovalName(string $approvalName) {
     $this->approvalName = $approvalName;
+    return $this;
   }
   public function setRejectionDate(string $rejectionDate) {
     $this->rejectionDate = $rejectionDate;
+    return $this;
   }
   public function setRejectionUserid(int $rejectionUserid) {
     $this->rejectionUserid = $rejectionUserid;
+    return $this;
   }
   public function setRejectionName(string $rejectionName) {
     $this->rejectionName = $rejectionName;
+    return $this;
   }
   public function setActive(int $active) {
     $this->active = $active;
+    return $this;
   }
   public function setResetSelector($resetSelector) {
     $this->resetSelector = $resetSelector;
+    return $this;
   }
   public function setResetToken($resetToken) {
     $this->resetToken = $resetToken;
+    return $this;
   }
   public function setResetExpires($resetExpires) {
     $this->resetExpires = $resetExpires;
+    return $this;
   }
   public function setRememberSelector($rememberSelector) {
     $this->rememberSelector = $rememberSelector;
+    return $this;
   }
   public function setRememberToken($rememberToken) {
     $this->rememberToken = $rememberToken;
+    return $this;
   }
   public function setRememberExpires($rememberExpires) {
     $this->rememberExpires = $rememberExpires;
+    return $this;
   }
   public function setAddress(Address $address) {
     $this->address = $address;
+    return $this;
   }
   public function setIdPrevious(int $idPrevious) {
     $this->idPrevious = $idPrevious;
+    return $this;
   }
   public function setName($name) {
     $names = explode(separator: " ", string: $name);
@@ -163,6 +186,7 @@ class Player extends Base {
     if (1 < count(value: $names)) {
       $this->lastName = implode(separator: " ", array: array_slice(array: $names, offset: 1));
     }
+    return $this;
   }
   public function getLink(): string {
     $link = new HtmlLink(accessKey: NULL, class: NULL, debugP: $this->isDebug(), href: "managePlayer.php", id: NULL, paramName: array("id","mode"), paramValue: array($this->getId() . "modify"),

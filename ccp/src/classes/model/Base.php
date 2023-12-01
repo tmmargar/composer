@@ -10,6 +10,7 @@ abstract class Base extends Root {
   }
   public function setId(int $id) {
     $this->id = $this->build(value: $id, suffix: NULL);
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

@@ -8,6 +8,7 @@ abstract class Root {
   }
   public function setDebug(bool $debug) {
     $this->debug = $debug;
+    return $this;
   }
   public function __toString(): string {
     $output = "debug = ";

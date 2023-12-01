@@ -80,9 +80,11 @@ class HtmlMenu extends HtmlBase {
   }
   public function setItems(array $items) {
     $this->items = $items;
+    return $this;
   }
   public function setText(string $text) {
     $this->text = $text;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

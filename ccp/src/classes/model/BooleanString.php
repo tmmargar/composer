@@ -8,6 +8,7 @@ class BooleanString extends Base {
   }
   public function setValue(string $value) {
     $this->value = $value;
+    return $this;
   }
   public function getBoolean(): bool {
     return Constant::FLAG_YES == $this->value ? true : false;

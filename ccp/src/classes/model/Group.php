@@ -10,6 +10,7 @@ class Group extends Base {
   }
   public function setName(string $name) {
     $this->name = $name;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

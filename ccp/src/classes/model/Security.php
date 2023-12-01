@@ -100,12 +100,15 @@ class Security extends Base {
    */
   public function setLogin($login) {
     $this->login = $login;
+    return $this;
   }
   public function setSeason(Season $season) {
     $this->season = $season;
+    return $this;
   }
   public function setPlayer(Player $player) {
     $this->player = $player;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

@@ -29,18 +29,23 @@ class FormBase extends Base {
   }
   public function setClass(array|NULL $class) {
     $this->class = $class;
+    return $this;
   }
   public function setDisabled(bool $disabled) {
     $this->disabled = $disabled;
+    return $this;
   }
   public function setName(string|NULL $name) {
     $this->name = $name;
+    return $this;
   }
   public function setSuffix(string|NULL $suffix) {
     $this->suffix = $suffix;
+    return $this;
   }
   public function setValue(array|string|NULL $value) {
     $this->value = $value;
+    return $this;
   }
   public function toString(): string {
     $output = parent::__toString();

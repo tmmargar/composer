@@ -19,15 +19,19 @@ class Fee extends Base {
   }
   public function setAmount(int $amount) {
     $this->amount = $amount;
+    return $this;
   }
   public function setPlayerId(string $playerId) {
     $this->playerId = $playerId;
+    return $this;
   }
   public function setSeasonId(string $seasonId) {
     $this->seasonId = $seasonId;
+    return $this;
   }
   public function setStatus(string $status) {
     $this->status = $status;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();

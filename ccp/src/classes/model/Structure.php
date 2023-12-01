@@ -13,9 +13,11 @@ class Structure extends Base {
   }
   public function setPlace(int $place) {
     $this->place = $place;
+    return $this;
   }
   public function setPercentage(float $percentage) {
     $this->percentage = $percentage;
+    return $this;
   }
   public function __toString(): string {
     $output = parent::__toString();
