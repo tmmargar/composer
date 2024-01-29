@@ -17,34 +17,32 @@ $smarty->assign("heading", "Send Email");
 $mode = isset($_POST[Constant::FIELD_NAME_MODE]) ? $_POST[Constant::FIELD_NAME_MODE] : Constant::MODE_VIEW;
 $output = "";
 if (Constant::MODE_EMAIL == $mode) {
-  $to = isset($_POST[TO_FIELD_NAME]) ? $_POST[TO_FIELD_NAME] : "";
-  $subject = isset($_POST[SUBJECT_FIELD_NAME]) ? $_POST[SUBJECT_FIELD_NAME] : "";
-  $body = isset($_POST[BODY_FIELD_NAME]) ? $_POST[BODY_FIELD_NAME] : "";
-  $output .=
-    "<script type=\"module\">\n" .
-    "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
-    "  let aryMessages = [];\n";
-  foreach ($to as $toEach) {
-    $toArray = explode(":", $toEach);
-//     $debug, $fromName, $fromEmail, $toName, $toEmail, $ccName, $ccEmail, $bccName, $bccEmail, $subject, $body
-    $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($toArray[0]), toEmail: array($toArray[1]), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: $subject, body: $body);
-    $output .= "  aryMessages.push(\"" . $email->sendEmail() . "\");\n";
-  }
-  $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
+    $to = isset($_POST[TO_FIELD_NAME]) ? $_POST[TO_FIELD_NAME] : "";
+    $subject = isset($_POST[SUBJECT_FIELD_NAME]) ? $_POST[SUBJECT_FIELD_NAME] : "";
+    $body = isset($_POST[BODY_FIELD_NAME]) ? $_POST[BODY_FIELD_NAME] : "";
+    $output .=
+        "<script type=\"module\">\n" .
+        "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+        "  let aryMessages = [];\n";
+    foreach ($to as $toEach) {
+        $toArray = explode(":", $toEach);
+        $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($toArray[0]), toEmail: array($toArray[1]), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: $subject, body: $body);
+        $output .= "  aryMessages.push(\"" . $email->sendEmail() . "\");\n";
+    }
+    $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}\n</script>\n";
 }
-$params = array();
-$resultList = $databaseResult->getPlayersActive(params: $params);
+$resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getActives();
 if (count($resultList) == 0) {
-  echo "No active users";
+    echo "No active users";
 }
 $script =
-  "<script src=\"https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js\"></script>\n" .
-  "<script src=\"scripts/manageEmail.js\" type=\"module\"></script>\n" .
-  "<script src=\"https://cdn.tiny.cloud/1/gb0quk0idsdusszgqyocrwkff5r6uupkzb3j30niuvzxqiyt/tinymce/6/tinymce.min.js\" referrerpolicy=\"origin\"></script>\n";
+    "<script src=\"https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js\"></script>\n" .
+    "<script src=\"scripts/manageEmail.js\" type=\"module\"></script>\n" .
+    "<script src=\"https://cdn.tiny.cloud/1/gb0quk0idsdusszgqyocrwkff5r6uupkzb3j30niuvzxqiyt/tinymce/6/tinymce.min.js\" referrerpolicy=\"origin\"></script>\n";
 $smarty->assign("script", $script);
 $style =
-  "<link href=\"https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css\" rel=\"stylesheet\">\n" .
-  "<link href=\"css/manageEmail.css\" rel=\"stylesheet\">\n";
+    "<link href=\"https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css\" rel=\"stylesheet\">\n" .
+    "<link href=\"css/manageEmail.css\" rel=\"stylesheet\">\n";
 $smarty->assign("style", $style);
 $smarty->assign("mode", $mode);
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
@@ -59,17 +57,15 @@ $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
 $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . TO_FIELD_NAME . "\">To:</div>\n";
 $output .= " <div class=\"responsive-cell responsive-cell-value\" style=\"overflow: unset;\">";
 $output .= "  <a href=\"#\" id=\"selectAll\">Select all</a>&nbsp;<a id=\"deselectAll\">De-select all</a>\n";
-//     $debug, $accessKey, $class, $disabled, $id, $multiple, $name, $onClick, $readOnly, $size, $suffix, $value
 $selectTo = new FormSelect(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_TO, class: array("tom-select"), disabled: false, id: TO_FIELD_NAME, multiple: true, name: TO_FIELD_NAME . "[]", onClick: NULL, readOnly: false, size: 5, suffix: NULL, value: NULL);
 $output .= $selectTo->getHtml();
 foreach ($resultList as $player) {
-  $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: NULL, suffix: NULL, text: $player->getName(), value: $player->getName() . ":" . $player->getEmail());
-  $output .= $option->getHtml();
+    $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: NULL, suffix: NULL, text: $player->getPlayerName(), value: $player->getPlayerName() . ":" . $player->getPlayerEmail());
+    $output .= $option->getHtml();
 }
 $output .= "  </select>\n";
 $output .= " </div>\n";
 $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SUBJECT_FIELD_NAME . "\">Subject:</div>\n";
-// ($debug, $accessKey, $autoComplete, $autoFocus, $checked, $class, $cols, $disabled, $id, $maxLength, $name, $onClick, $placeholder, $readOnly, $required, $rows, $size, $suffix, $type, $value, $wrap
 $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SUBJECT, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SUBJECT_FIELD_NAME, maxLength: 100, name: SUBJECT_FIELD_NAME, onClick: NULL, placeholder:NULL, readOnly: false, required: true, rows: NULL, size: 41, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: NULL, wrap: NULL);
 $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxEmail->getHtml() . "</div>\n";
 $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . BODY_FIELD_NAME . "\">Body:</div>\n";

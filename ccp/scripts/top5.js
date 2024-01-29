@@ -41,10 +41,10 @@ export const inputLocal = {
   rebuildTableForDialog : function({dialogName, tableName} = {}) {
     // if dialog exists
     if (document.querySelector("#dialogRankAll" + dialogName)) {
-      // header row + 5 data rows
-      if (document.querySelectorAll("#dataTbl" + tableName + " tbody tr").length > 6) {
-        // remove all rows except header and first 5
-        document.querySelectorAll("#dataTbl" + tableName + " tbody tr").forEach((row, index) => { if (index > 5) row.remove(); });
+      // 5 data rows
+      if (document.querySelectorAll("#dataTbl" + tableName + " tbody tr").length > 5) {
+        // remove all rows except first 5
+        document.querySelectorAll("#dataTbl" + tableName + " tbody tr").forEach((row, index) => { if (index > 4) row.remove(); });
       }
     }
   },

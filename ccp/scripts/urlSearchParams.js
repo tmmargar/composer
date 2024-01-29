@@ -59,7 +59,7 @@
      * Returns the first value associated to the given search parameter.
      *
      * @param {string} name
-     * @returns {string|null}
+     * @returns {?string}
      */
     prototype.get = function(name) {
         var dict = this [__URLSearchParams__];

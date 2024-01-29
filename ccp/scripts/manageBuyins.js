@@ -31,25 +31,6 @@ export const inputLocal = {
       });
     }
   },
-  calculateFeePaid : function() {
-    // fee paid amount
-    let feePaidTotal = 0;
-    let feePaidTotalCalculation = "(";
-    document.querySelectorAll("[id^='feePaid_']")?.forEach(obj => {
-      // only check enabled
-      if (!obj.disabled) {
-        //feePaidTotal += obj.value - obj.dataset.originalValue;
-        feePaidTotal += parseInt(obj.value);
-        feePaidTotalCalculation += (feePaidTotalCalculation != "(" ? " + " : "") + "$" + obj.value;
-      }
-    });
-    feePaidTotalCalculation += ")";
-    if (document.querySelector("#totalSeasonFee")) {
-      document.querySelector("#totalSeasonFee").value = parseInt(document.querySelector("#totalSeasonFee").value) + feePaidTotal;
-      document.querySelector("#feePaidTotal").innerHTML = "$" + feePaidTotal;
-      document.querySelector("#feePaidTotalCalculation").innerHTML = feePaidTotalCalculation;
-    }
-  },
   disableCheckboxAll : function({hasFlag, name, countNotCheckedPaid} = {}) {
     // if need to check flag and flag is set or no need to check flag (0 for rebuy and "" for addon)
     if ((hasFlag && document.querySelector("#" + name + "Flag").value != "0" && document.querySelector("#" + name + "Flag").value != "") || !hasFlag) {
@@ -117,7 +98,6 @@ export const inputLocal = {
     if (document.querySelector("#mode")) {
       document.querySelector("#mode").value = "modify";
     }
-    inputLocal.calculateFeePaid();
   },
   processAllCheckAll : function({countNotCheckedPaid} = {}) {
     input.toggleCheckAll({id: "buyin", idAll: "buyin"});
@@ -179,6 +159,14 @@ export const inputLocal = {
       document.querySelector("#rebuy_" + values[1]).checked = !(obj.value == 0);
       input.countUpdate({prefix: "rebuy", prefixAdditional: "rebuyCount"});
     }
+  },
+  highlightFees : function(playerIds) {
+      document.querySelectorAll("[id^='feePaid_']")?.forEach(obj => {
+          const id = obj.id.split("_");
+          if (playerIds.includes(parseInt(id[1]))) {
+              obj.parentElement.classList.add("fees");
+          }
+      });
   }
 };
 let documentReadyCallback = () => {
@@ -186,6 +174,9 @@ let documentReadyCallback = () => {
   inputLocal.setMinMax();
   inputLocal.setDefaults();
   inputLocal.postProcessing();
+  if (document.querySelector("#playerSeasonFee")) {
+      inputLocal.highlightFees(document.querySelector("#playerSeasonFee").value.split(",").map(Number));
+  }
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
   documentReadyCallback();

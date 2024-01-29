@@ -21,7 +21,7 @@ $output = "";
 $mode = isset($_POST[Constant::FIELD_NAME_MODE]) ? $_POST[Constant::FIELD_NAME_MODE] : "";
 if (Constant::MODE_LOGIN == $mode) {
   $login = new Login(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, username: $_POST["username"], password: $_POST["password"]);
-  $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name:"", username: "", password: "", email: "", phone: NULL, administrator: 0, registrationDate: NULL, approvalDate: NULL, approvalUserid: 0, approvalName: NULL, rejectionDate: NULL, rejectionUserid: 0, rejectionName: NULL, active: 0, address: NULL, resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
+  $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", username: "", password: "", email: "", phone: NULL, administrator: "0", registrationDate: new \DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
   $security = new Security(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, login: $login, player: $player);
   if ($security->login()) {
     $pageName = "home.php";

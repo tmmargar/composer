@@ -22,3 +22,6 @@ body {
 .responsive--3cols > .responsive-cell-value-after-footer {
   width: 78%;
 }
+input[type=number] {
+  width: 40px;
+}

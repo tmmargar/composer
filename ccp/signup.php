@@ -1,10 +1,13 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
+use DateTime;
+use Exception;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\Email;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Entity\Players;
 require_once "init.php";
 define("NAME_FIELD_NAME", "name");
 define("EMAIL_FIELD_NAME", "email");
@@ -13,6 +16,7 @@ define("PASSWORD_FIELD_NAME", "password");
 define("CONFIRM_PASSWORD_FIELD_NAME", "confirmPassword");
 define("SIGN_UP_FIELD_NAME", "signUp");
 define("SIGN_UP_TEXT", "Sign Up");
+$errors = NULL;
 $name = isset($_POST[NAME_FIELD_NAME]) ? $_POST[NAME_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 $emailAddress = isset($_POST[EMAIL_FIELD_NAME]) ? $_POST[EMAIL_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 $username = isset($_POST[USERNAME_FIELD_NAME]) ? $_POST[USERNAME_FIELD_NAME] : DEFAULT_VALUE_BLANK;
@@ -24,53 +28,69 @@ $autoFocusName = true;
 $autoFocusUserName = false;
 $autoFocusEmail = false;
 if (Constant::MODE_SIGNUP == $mode) {
-  $params = array($username);
-  $resultList = $databaseResult->getPlayerByUsername(params: $params);
-  if (0 < count($resultList)) {
-    $failMessage = "Username <span class='bold'>" . $username . "</span> already exists. Please choose another.";
-    $classUsername = "errors";
-    $autoFocusUserName = true;
-    $autoFocusName = false;
-  } else {
-    $params = array($emailAddress);
-    $resultList = $databaseResult->getPlayerByEmail(params: $params);
+    $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getByUsername(username: $username);
     if (0 < count($resultList)) {
-      $failMessage = "Email <span class='bold'>" . $emailAddress . "</span> already exists. Please choose another.";
-      $classEmail = "errors";
-      $autoFocusEmail = true;
-      $autoFocusName = false;
+        $failMessage = "Username <span class='bold'>" . $username . "</span> already exists. Please choose another.";
+        $classUsername = "errors";
+        $autoFocusUserName = true;
+        $autoFocusName = false;
     } else {
-      $output .=
-        "<script type=\"module\">\n" .
-        "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
-        "  let aryMessages = [];\n";
-      $nameValues = explode(" ", $name);
-      $params = array(NULL, $nameValues[0], $nameValues[1], $username, $password, $emailAddress, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL);
-      $databaseResult->insertPlayer(params: $params);
-      $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), toName: array(Constant::NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), fromName: array($name), fromEmail: array($emailAddress), ccName: array(Constant::NAME_STAFF), ccEmail: array(Constant::EMAIL_STAFF()), bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
-      $output .= "  aryMessages.push(\"" . $email->sendSignUpEmail() . "\");";
-      // send email to staff for approval
-      $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), toName: array($name), toEmail: array($emailAddress), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), ccName: array(Constant::NAME_STAFF), ccEmail: array(Constant::EMAIL_STAFF()), bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
-      $output .= "  aryMessages.push(\"" . $email->sendSignUpApprovalEmail() . "\");";
-      $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}</script>";
-      $name = DEFAULT_VALUE_BLANK;
-      $emailAddress = DEFAULT_VALUE_BLANK;
-      $username = DEFAULT_VALUE_BLANK;
-      $password = DEFAULT_VALUE_BLANK;
-      $confirmPassword = DEFAULT_VALUE_BLANK;
+        $params = array($emailAddress);
+        $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getByEmail(email: $emailAddress);
+        if (0 < count($resultList)) {
+            $failMessage = "Email <span class='bold'>" . $emailAddress . "</span> already exists. Please choose another.";
+            $classEmail = "errors";
+            $autoFocusEmail = true;
+            $autoFocusName = false;
+        } else {
+            $output .=
+                "<script type=\"module\">\n" .
+                "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+                "  let aryMessages = [];\n";
+            $nameValues = explode(" ", $name);
+            $pl = new Players();
+            $pl->setPlayerActiveFlag("0");
+            $pl->setPlayerAdministratorFlag("0");
+            $pl->setPlayerEmail($emailAddress);
+            $pl->setPlayerExpires(NULL);
+            $pl->setPlayerFirstName($nameValues[0]);
+            $pl->setPlayerLastName($nameValues[1]);
+            $pl->setPlayerPassword($password);
+            $pl->setPlayerPhone("0");
+            $pl->setPlayerRegistrationDate(new DateTime());
+            $pl->setPlayerSelector(NULL);
+            $pl->setPlayerToken(NULL);
+            $pl->setPlayerUsername($username);
+            $entityManager->persist($pl);
+            try {
+                $entityManager->flush();
+            } catch (Exception $e) {
+                $errors = $e->getMessage();
+            }
+            $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), toName: array(Constant::NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), fromName: array($name), fromEmail: array($emailAddress), ccName: array(Constant::NAME_STAFF), ccEmail: array(Constant::EMAIL_STAFF()), bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
+            $output .= "  aryMessages.push(\"" . $email->sendSignUpEmail() . "\");";
+            // send email to staff for approval
+            $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), toName: array($name), toEmail: array($emailAddress), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), ccName: array(Constant::NAME_STAFF), ccEmail: array(Constant::EMAIL_STAFF()), bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
+            $output .= "  aryMessages.push(\"" . $email->sendSignUpApprovalEmail() . "\");";
+            $output .= "  if (aryMessages.length > 0) {display.showMessages({messages: aryMessages});}</script>";
+            $name = DEFAULT_VALUE_BLANK;
+            $emailAddress = DEFAULT_VALUE_BLANK;
+            $username = DEFAULT_VALUE_BLANK;
+            $password = DEFAULT_VALUE_BLANK;
+            $confirmPassword = DEFAULT_VALUE_BLANK;
+        }
     }
-  }
 }
 $smarty->assign("title", "Chip Chair and a Prayer New Player Sign Up");
 $smarty->assign("heading", "New Player Sign Up");
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"] . "?" . $_SERVER["QUERY_STRING"]);
 $smarty->assign("formName", "frmSignup");
 if (isset($failMessage)) {
-  $output .=
-    "<script type=\"module\">\n" .
-    "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
-    "  display.showErrors({errors: [ \"" . $failMessage . "\" ]});" .
-    "</script>";
+    $output .=
+        "<script type=\"module\">\n" .
+        "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
+        "  display.showErrors({errors: [ \"" . $failMessage . "\" ]});" .
+        "</script>";
 }
 $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
 $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_NAME, autoComplete: "off", autoFocus: $autoFocusName, checked: NULL, class: NULL, cols: NULL, disabled: false, id: NAME_FIELD_NAME, maxLength: 60, name: NAME_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: 20, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: $name, wrap: NULL);

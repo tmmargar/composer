@@ -2,129 +2,78 @@
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
 use Poker\Ccp\classes\utility\SessionUtility;
-class Security extends Base {
-  private Season $season;
-  public function __construct(protected bool $debug, protected string|int|NULL $id, protected Login $login, protected Player $player) {
-    parent::__construct(debug: $debug, id: $id);
-  }
-  public function getLogin(): Login {
-    return $this->login;
-  }
-  public function getSeason(): Season {
-    return $this->season;
-  }
-  public function getPlayer(): Player {
-    return $this->player;
-  }
-  public function login(): bool {
-    if ($this->validatePassword()) {
-      $this->loginSuccess();
-      return true;
-    } else {
-      return false;
+class Security extends Base
+{
+    private Season $season;
+
+    public function __construct(protected bool $debug, protected string|int|NULL $id, protected Login $login, protected Player $player) {
+        parent::__construct(debug: $debug, id: $id);
     }
-  }
-  private function loginSuccess() {
-    $databaseResult = new DatabaseResult(debug: $this->isDebug());
-    $params = array($this->login->getUsername());
-    $resultList = $databaseResult->getPlayerByUsername(params: $params);
-    if (0 < count(value: $resultList)) {
-      $this->setPlayer(player: $resultList[0]);
-      SessionUtility::setValue(name: SessionUtility::OBJECT_NAME_SECURITY, value: $this);
+
+    public function getLogin(): Login {
+        return $this->login;
     }
-    $params = array(Constant::FLAG_YES_DATABASE);
-    $resultList = $databaseResult->getSeasonByActive(params: $params);
-    if (0 < count(value: $resultList)) {
-      $this->setSeason(season: $resultList[0]);
-      SessionUtility::setValue(name: SessionUtility::OBJECT_NAME_SEASON, value: $resultList[0]);
+
+    public function getSeason(): Season {
+        return $this->season;
     }
-  }
-  /*
-   * public static function rememberMe($userName, $password, $rememberMe, $url) {
-   * $current_time = time();
-   * $current_date = date("Y-m-d H:i:s", $current_time);
-   * // Set Cookie expiration for 1 month
-   * // $cookie_expiration_time = $current_time + (30 * 24 * 60 * 60); // for 1 month
-   * // $isLoggedIn = false;
-   * // Check if loggedin session and redirect if session exists
-   * echo "<Br>session player id -> " . $_SESSION["player"];
-   * echo "<Br>cookie user id -> " . $_COOKIE["remember_username"];
-   * echo "<Br>cookie selector -> " . $_COOKIE["remember_selector"];
-   * echo "<Br>cookie token -> " . $_COOKIE["remember_token"];
-   * if (! empty(self::getValue("userid"))) {
-   * self::redirect();
-   * } else if (! empty($_COOKIE["remember_username"]) && ! empty($_COOKIE["remember_selector"]) && ! empty($_COOKIE["remember_token"])) { // Check if loggedin session exists
-   * // Initiate auth token verification directive to false
-   * $isPasswordVerified = false;
-   * $isSelectorVerified = false;
-   * $isExpiryDateVerified = false;
-   * // Get token for username
-   * // $userToken = $auth->getTokenByUsername($_COOKIE["remember_username"], 0);
-   * $databaseResult = new DatabaseResult();
-   * $databaseResult->setDebug(SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG));
-   * $params = array(
-   * $_COOKIE["remember_username"]
-   * );
-   * $resultList = $databaseResult->getPlayerByUsername($params);
-   * if (0 < count($resultList)) {
-   * // Validate random password cookie with database
-   * if (password_verify($_COOKIE["remember_selector"], $resultList[0]->getRememberSelector())) {
-   * $isPasswordVerified = true;
-   * }
-   * echo "<br> token -> " . $_COOKIE["remember_token"] . " == " . $resultList[0]->getRememberToken();
-   * // Validate random selector cookie with database
-   * if (password_verify($_COOKIE["remember_token"], $resultList[0]->getRememberToken())) {
-   * $isSelectorVerified = true;
-   * }
-   * echo "<br> date -> " . $resultList[0]->getRememberExpires() . " >= " . $current_date;
-   * // check cookie expiration by date
-   * if ($resultList[0]->getRememberExpires() >= $current_date) {
-   * $isExpiryDateVerified = true;
-   * }
-   * // Redirect if all cookie based validation returns true
-   * // Else, mark the token as expired and clear cookies
-   * if (! empty($resultList[0]->getId()) && $isPasswordVerified && $isSelectorVerified && $isExpiryDateVerified) {
-   * self::redirect();
-   * } else {
-   * if (! empty($resultList[0]->getId())) {
-   * // $auth->markAsExpired($resultList[0]->getId());
-   * }
-   * // clear cookies
-   * // $util->clearAuthCookie();
-   * }
-   * }
-   * } else {
-   * self::login($userName, $password, $rememberMe, $url);
-   * }
-   * }
-   */
-  public function setLogin($login) {
-    $this->login = $login;
-    return $this;
-  }
-  public function setSeason(Season $season) {
-    $this->season = $season;
-    return $this;
-  }
-  public function setPlayer(Player $player) {
-    $this->player = $player;
-    return $this;
-  }
-  public function __toString(): string {
-    $output = parent::__toString();
-    $output .= ", login = [" . $this->login;
-    $output .= "], player = [" . $this->player . "]";
-    return $output;
-  }
-  private function validatePassword(): bool {
-    $found = false;
-    $databaseResult = new DatabaseResult(debug: $this->isDebug());
-    $resultList = $databaseResult->getLogin(userName: $this->login->getUsername());
-    if (0 < count(value: $resultList)) {
-      if (password_verify(password: $this->login->getPassword(), hash: $resultList[0])) {
-        $found = true;
-      }
+
+    public function getPlayer(): Player {
+        return $this->player;
     }
-    return $found;
-  }
+
+    public function login(): bool {
+        if ($this->validatePassword()) {
+            $this->loginSuccess();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function loginSuccess() {
+        $entityManager = getEntityManager();
+        $players = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getByUsername(username: $this->login->getUsername());
+        $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", username: "", password: "", email: "", phone: NULL, administrator: "0", registrationDate: new \DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
+        $player->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), players: $players[0]);
+        $this->setPlayer(player: $player);
+        SessionUtility::setValue(name: SessionUtility::OBJECT_NAME_SECURITY, value: $this);
+        $seasons = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getActives();
+        $season = new Season(debug: $this->debug, id: NULL, description: "", startDate: NULL, endDate: NULL, championshipQualify: 0, finalTablePlayers: 0, finalTableBonusPoints: 0, fee: 0, active: "0");
+        $season->createFromEntity($this->debug, $seasons);
+        $this->setSeason(season: $season);
+        SessionUtility::setValue(name: SessionUtility::OBJECT_NAME_SEASON, value: $season);
+    }
+
+    public function setLogin(Login $login) {
+        $this->login = $login;
+        return $this;
+    }
+
+    public function setSeason(Season $season) {
+        $this->season = $season;
+        return $this;
+    }
+
+    public function setPlayer(Player $player) {
+        $this->player = $player;
+        return $this;
+    }
+
+    public function __toString(): string {
+        $output = parent::__toString();
+        $output .= ", login = [" . $this->login;
+        $output .= "], player = [" . $this->player . "]";
+        return $output;
+    }
+
+    private function validatePassword(): bool {
+        $found = false;
+        $entityManager = getEntityManager();
+        $player = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getByUsername(username: $this->login->getUsername());
+        if (password_verify(password: $this->login->getPassword(), hash: $player[0]->getPlayerPassword())) {
+            $found = true;
+        }
+        return $found;
+    }
 }

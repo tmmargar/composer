@@ -48,7 +48,7 @@ export const inputLocal = {
         });
         obj.removeClass("errors");
       }
-      inputLocal.buildRowEvents(idValues[1]);
+      inputLocal.buildRowEvents(parseInt(idValues[1]) + 1);
     }
   },
   buildRowEvents : function(id) {
@@ -144,11 +144,11 @@ export const inputLocal = {
     return inputLocal.enableButtons();
   },
   initializeDataTable : function() {
-    if (document.querySelector("#mode").value == "view" || document.querySelector("#mode").value == "delete") {
-      dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderable": false, "type" : "name", "width" : "30%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "type" : "name", "width" : "30%" }, { "searchable": false, "visible": false }], aryOrder: [[4, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
-    } else if (document.querySelector("#mode").value == "create" || document.querySelector("#mode").value == "modify") {
-      dataTable.initialize({tableId: "inputs", aryColumns: null, aryOrder: [], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "", searching: false });
-    }
+      if (document.querySelector("#mode").value == "view" || document.querySelector("#mode").value == "delete") {
+        dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderable": false, "type" : "name", "width" : "30%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "width" : "10%" }, { "orderable": false, "type" : "name", "width" : "30%" }, { "searchable": false, "visible": false }], aryOrder: [[4, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
+      } else if (document.querySelector("#mode").value == "create" || document.querySelector("#mode").value == "modify") {
+        dataTable.initialize({tableId: "inputs", aryColumns: null, aryOrder: [], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "", searching: false });
+      }
   },
   postProcessing : function() {
     document.querySelectorAll("[id^='tournamentRebuy_']").forEach(obj => {
@@ -162,6 +162,8 @@ export const inputLocal = {
       if (document.querySelector("#mode").value == "create") {
         obj.value = "0";
       }
+      obj.min = 0;
+      obj.max = document.querySelector("#maxRebuys").value;
     });
     document.querySelectorAll("[id^='tournamentAddon_']").forEach(obj => {
       obj.disabled = document.querySelector("#addonAmount").value == 0;
@@ -331,12 +333,14 @@ export const inputLocal = {
   }
 };
 let documentReadyCallback = () => {
-  inputLocal.initializeDataTable();
-  inputLocal.setDefaults();
-  inputLocal.validate();
-  input.enable({objId: "save", functionName: inputLocal.enableSave});
-  inputLocal.postProcessing();
-  inputLocal.buildRowEvents();
+    if (document.querySelector("#mode")) {
+        inputLocal.initializeDataTable();
+        inputLocal.setDefaults();
+        inputLocal.validate();
+        input.enable({objId: "save", functionName: inputLocal.enableSave});
+        inputLocal.postProcessing();
+        inputLocal.buildRowEvents();
+    }
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
   documentReadyCallback();

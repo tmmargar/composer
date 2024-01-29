@@ -7,7 +7,7 @@ export const inputLocal = {
     input.validateLength({obj: document.querySelector("#locationName_" + id), length: 1, focus: false});
   },
   initializeDataTable : function() {
-    dataTable.initialize({tableId: "dataTbl", aryColumns: [{"orderSequence": [ "desc", "asc" ], "width" : "2%" }, { "width" : "19%" }, { "type" : "host", "width" : "15%" }, { "searchable": false, "width" : "21%" }, { "searchable": false, "width" : "11%" }, { "searchable": false, "width" : "5%" }, { "searchable": false, "width" : "4%" }, { "render" : function (data, type, row, meta) { return display.formatActive({value: data, meta: meta, tableId: "dataTbl"}); },  "width" : "7%" }, { "width" : "7%" }, { "searchable": false, "visible": false }], aryOrder: [[7, "desc"], [2, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
+    dataTable.initialize({tableId: "dataTbl", aryColumns: [{"orderSequence": [ "desc", "asc" ], "width" : "2%" }, { "width" : "21%" }, { "type" : "host", "width" : "15%" }, { "searchable": false, "width" : "21%" }, { "searchable": false, "width" : "11%" }, { "searchable": false, "sortable": false, "width" : "5%" }, { "searchable": false, "width" : "4%" }, { "searchable": false, "sortable": false, "width" : "7%" }, { "render" : function (data, type, row, meta) { return display.formatActive({value: data, meta: meta, tableId: "dataTbl"}); },  "width" : "7%" }, { "width" : "7%" }, { "searchable": false, "visible": false }], aryOrder: [[8, "desc"], [2, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "400px", searching: false });
   },
   save : function() {
     document.querySelectorAll("[id^='states_']")?.forEach(obj => { obj.disabled = false; });
@@ -50,11 +50,13 @@ export const inputLocal = {
     const address = document.querySelectorAll("[id^='address_']");
     const city = document.querySelectorAll("[id^='city_']");
     const zip = document.querySelectorAll("[id^='zipCode_']");
+    const map = document.querySelectorAll("[id^='map_']");
     if (player.length > 0) {
       player[0].setCustomValidity(player[0].options[player[0].selectedIndex].value == "" ? "You must select a player" : "");
       address[0].setCustomValidity(address[0].validity.valueMissing ? "You must enter an address" : "");
       city[0].setCustomValidity(city[0].validity.valueMissing ? "You must enter a city" : "");
       zip[0].setCustomValidity(zip[0].validity.valueMissing ? "You must enter a zip" : zip[0].validity.rangeUnderflow ? "You must enter a zip <= " + zip[0].max : zip[0].validity.rangeOverflow ? "You must enter a zip >= " + zip[0].min : "");
+      map[0].setCustomValidity(map[0].validity.valueMissing ? "You must enter a map name" : "");
     }
   }
 };

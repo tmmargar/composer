@@ -2,8 +2,9 @@
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
 class Database extends Root {
-  public function __construct(protected bool $debug, protected string $hostName, protected string $userid, protected string $password, protected string $databaseName, protected int $port) {
+  public function __construct(protected bool $debug, protected string $hostName, protected string $userid, protected string $password, protected string $databaseName, protected int $port): Database {
     parent::__construct(debug: $debug);
+    return $this;
   }
   public function getDsn(): string {
     return 'mysql:dbname=' . $this->getDatabaseName() . ';host=' . $this->getHostName() . ';port=' . $this->port;
@@ -23,23 +24,23 @@ class Database extends Root {
   public function getPort(): int {
     return $this->port;
   }
-  public function setHostName(string $hostName) {
+  public function setHostName(string $hostName): Database {
     $this->hostName = $hostName;
     return $this;
   }
-  public function setUserid(string $userid) {
+  public function setUserid(string $userid): Database {
     $this->userid = $userid;
     return $this;
   }
-  public function setPassword(string $password) {
+  public function setPassword(string $password): Database {
     $this->password = $password;
     return $this;
   }
-  public function setDatabaseName(string $databaseName) {
+  public function setDatabaseName(string $databaseName): Database {
     $this->databaseName = $databaseName;
     return $this;
   }
-  public function setPort(int $port) {
+  public function setPort(int $port): Database {
     $this->port = $port;
     return $this;
   }

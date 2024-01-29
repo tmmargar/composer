@@ -1,24 +1,21 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
+use \DateTime;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\DatabaseResult;
-use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "vendor/autoload.php";
 $header = "";
-$databaseResult = new DatabaseResult(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG));
-// $databaseResult = new DatabaseResult(true);
 if (strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["SCRIPT_NAME"], "logout.php") === false && strpos($_SERVER["SCRIPT_NAME"], "resetPassword.php") === false) {
   require_once "navigation.php";
-  $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
-  $params = array($now->getDatabaseDateTimeFormat());
-  $resultList = $databaseResult->getNotification(params: $params, returnQuery: false);
+//   $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
+  $resultList = $entityManager->getRepository(Constant::ENTITY_NOTIFICATIONS)->getByDate(date: new DateTime());
   foreach ($resultList as $notification) {
     if ("" != $header) {
       $header .= "<br>";
     }
-    $header .= "***" . $notification->getDescription() . "***";
+    $header .= "***" . $notification->getNotificationDescription() . "***";
   }
 }
 $smarty->assign("header", $header);

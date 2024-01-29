@@ -162,6 +162,20 @@ export const reportsInputLocal = {
       row.querySelector("td:nth-child(6)").innerHTML = ""; // remove balance
     });
     input.showDialog({name: "FeeDetail"});
+  },
+  buildQueryString : function() {
+    const queryString = new URLSearchParams(window.location.search);
+    let action = [];
+    for (let qs of queryString) {
+        if ("season" != qs[0] && "championship" != qs[0]) {
+            action.push(qs.join("="));
+        }
+    }
+    action.push("season=" + document.querySelector("#season").value);
+    if (document.querySelector("#championship") && document.querySelector("#championship").checked) {
+        action.push("championship=" + document.querySelector("#championship").value);
+    }
+    return action;
   }
 };
 let documentReadyCallback = () => {
@@ -174,20 +188,15 @@ if (document.readyState === "complete" || (document.readyState !== "loading" && 
 }
 document.addEventListener("change", (event) => {
   if (event.target && event.target.id.includes("season")) {
-    const queryString = new URLSearchParams(window.location.search);
-    let action = [];
-    let found = false;
-    for (let qs of queryString) {
-      if ("season" == qs[0]) {
-        qs[1] = event.target.value;
-        found = true;
-      }
-      action.push(qs.join("="));
-    }
-    if (!found) {
-      action[action.length] = "season=" + event.target.value;
-    }
+    let action = reportsInputLocal.buildQueryString();
     document.querySelector("#frmReports").setAttribute("action", document.URL.split('?')[0] + "?" + action.join("&"));
     document.querySelector("#frmReports").submit();
   }
+});
+document.addEventListener("click", (event) => {
+    if (event.target && event.target.id.includes("championship")) {
+      let action = reportsInputLocal.buildQueryString();
+      document.querySelector("#frmReports").setAttribute("action", document.URL.split('?')[0] + "?" + action.join("&"));
+      document.querySelector("#frmReports").submit();
+    }
 });

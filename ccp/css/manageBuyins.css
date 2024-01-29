@@ -25,3 +25,6 @@ body {
 input[type=number] {
   width: 40px;
 }
+.fees {
+  background-color: #ff8000;
+}
