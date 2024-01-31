@@ -801,7 +801,7 @@ $entityManager = getEntityManager();
 // $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getChampionshipQualified(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), numTourneys: 8, indexed: false);
 // echo "<br>championship qualified players count =" . count($result);
 // // "earningsAverageForSeason":
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: array(2), limitCount: NULL, indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: array(2), limitCount: NULL, indexed: false);
 // echo "<br>results earnings avg season count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -810,7 +810,7 @@ $entityManager = getEntityManager();
 //     if ($counter == 5) {break;}
 // }
 // // "earningsTotalForChampionship":
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: NULL, endDate: NULL, year: 2023, championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: NULL, endDate: NULL, year: 2023, championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: false);
 // echo "<br>results earnings total championship count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -819,7 +819,7 @@ $entityManager = getEntityManager();
 //     if ($counter == 5) {break;}
 // }
 // // "earningsTotalForSeason":
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: array(1), limitCount: NULL, indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: array(1), limitCount: NULL, indexed: false);
 // echo "<br>results earnings total season count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -828,7 +828,7 @@ $entityManager = getEntityManager();
 //     if ($counter == 5) {break;}
 // }
 // // "earningsTotalAndAverageForSeasonForPlayer":
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: 35, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: true, rank: true, orderBy: array(1), limitCount: NULL, indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: 35, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: true, rank: true, orderBy: array(1), limitCount: NULL, indexed: false);
 // echo "<br>results earnings total/avg player season count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -837,7 +837,7 @@ $entityManager = getEntityManager();
 //     if ($counter == 5) {break;}
 // }
 // // "earningsTotalAndAverageForPlayer":
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: 35, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: false, totalAndAverage: true, rank: true, orderBy: array(1), limitCount: NULL, indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: 35, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: false, totalAndAverage: true, rank: true, orderBy: array(1), limitCount: NULL, indexed: false);
 // echo "<br>results earnings total/avg player count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {

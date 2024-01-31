@@ -18,12 +18,13 @@ use Poker\Ccp\classes\model\Structure;
 use Poker\Ccp\classes\model\Tournament;
 use Poker\Ccp\classes\utility\HtmlUtility;
 use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 require_once "init.php";
 if (!defined("REPORT_ID_PARAM_NAME")) {
     define("REPORT_ID_PARAM_NAME", "reportId");
 }
-if (!defined("USER_ID_PARAM_NAME")) {
-    define("USER_ID_PARAM_NAME", "userId");
+if (!defined("PLAYER_ID_PARAM_NAME")) {
+    define("PLAYER_ID_PARAM_NAME", "playerId");
 }
 if (!defined("NAVIGATION_PARAM_NAME")) {
     define("NAVIGATION_PARAM_NAME", "navigation");
@@ -128,7 +129,7 @@ if (!isset($parentObjectId)) {
 } else {
     $output = "";
 }
-$userId = (int) ((isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID));
+$playerId = (int) ((isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME])) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID));
 if (!isset($navigation)) {
     $navigation = (isset($_POST[NAVIGATION_PARAM_NAME]) ? $_POST[NAVIGATION_PARAM_NAME] : isset($_GET[NAVIGATION_PARAM_NAME])) ? $_GET[NAVIGATION_PARAM_NAME] : NULL;
 }
@@ -267,16 +268,16 @@ if (!isset($reportId) || "" == $reportId) {
             break;
         case EARNINGS_TOTAL_FOR_SEASON:
             $orderBy = array(1);
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: $orderBy, limitCount: 5, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: $orderBy, limitCount: 5, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: $orderBy, limitCount: 5, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: $orderBy, limitCount: 5, indexed: false);
             $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
             $hideColIndexes = array(0, 3, 4, 5);
             $titleText = "Top 5 Money";
             break;
         case EARNINGS_AVERAGE_FOR_SEASON:
             $orderBy = array(2);
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: $orderBy, limitCount: 5, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: $orderBy, limitCount: 5, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: $orderBy, limitCount: 5, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: $orderBy, limitCount: 5, indexed: false);
             $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
             $hideColIndexes = array(0, 2, 4, 5);
             $titleText = "Top 5 Avg Money";
@@ -306,7 +307,7 @@ if (!isset($reportId) || "" == $reportId) {
             break;
         case POINTS_TOTAL_FOR_SEASON_FOR_USER:
         case POINTS_AVERAGE_FOR_SEASON_FOR_USER:
-            $params = array($startDate, $endDate, $userId);
+            $params = array($startDate, $endDate, $playerId);
             if (POINTS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
@@ -316,14 +317,14 @@ if (!isset($reportId) || "" == $reportId) {
                 $valueIndex = 4;
                 $formatPlaces = 2;
             }
-            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: $userId, startDate: $startDate, endDate: $endDate, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: $userId, startDate: $startDate, endDate: $endDate, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: $playerId, startDate: $startDate, endDate: $endDate, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: $playerId, startDate: $startDate, endDate: $endDate, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: false);
             $value = array(array("number", "center"), array(4, "number", $formatPlaces), "Points", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
         case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER:
         case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER:
-            $params = array($startDate, $endDate, $userId);
+            $params = array($startDate, $endDate, $playerId);
             if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
@@ -333,8 +334,8 @@ if (!isset($reportId) || "" == $reportId) {
                 $valueIndex = 4;
                 $formatPlaces = 2;
             }
-            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: $userId, startDate: $startDate, endDate: $endDate, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: $userId, startDate: $startDate, endDate: $endDate, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: $playerId, startDate: $startDate, endDate: $endDate, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: $playerId, startDate: $startDate, endDate: $endDate, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: false);
             $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
@@ -349,8 +350,8 @@ if (!isset($reportId) || "" == $reportId) {
                 $valueIndex = 4;
                 $formatPlaces = 2;
             }
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: $userId, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: true, rank: true, orderBy: $orderBy, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: $userId, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: true, rank: true, orderBy: $orderBy, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: $playerId, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: true, rank: true, orderBy: $orderBy, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: $playerId, startDate: $startDate, endDate: $endDate, year: NULL, championship: false, season: true, totalAndAverage: true, rank: true, orderBy: $orderBy, limitCount: NULL, indexed: false);
             $hideColIndexes = array(0, 1, 2, 3, 5);
             $value = array(array("currency", "center"), array(4, "currency", $formatPlaces), "Earnings", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
@@ -358,7 +359,7 @@ if (!isset($reportId) || "" == $reportId) {
             break;
         case WINS_TOTAL_FOR_SEASON_FOR_USER:
         case WINS_AVERAGE_FOR_SEASON_FOR_USER:
-            $params = array($startDate, $endDate, $userId);
+            $params = array($startDate, $endDate, $playerId);
             if (WINS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
@@ -368,8 +369,8 @@ if (!isset($reportId) || "" == $reportId) {
                 $valueIndex = 4;
                 $formatPlaces = 2;
             }
-            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $userId, winsForPlayer: false, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $userId, winsForPlayer: false, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $playerId, winsForPlayer: false, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $playerId, winsForPlayer: false, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: false);
             $hideColIndexes = array(0, 1, 2, 3, 5);
             $value = array(array("number", "center"), array(4, "number", $formatPlaces), "Wins", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
@@ -385,8 +386,8 @@ if (!isset($reportId) || "" == $reportId) {
                 $valueIndex = 4;
                 $formatPlaces = 2;
             }
-            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: $userId, startDate: NULL, endDate: NULL, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: $userId, startDate: NULL, endDate: NULL, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: $playerId, startDate: NULL, endDate: NULL, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: $playerId, startDate: NULL, endDate: NULL, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: false);
             $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Points", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
@@ -401,8 +402,8 @@ if (!isset($reportId) || "" == $reportId) {
                 $valueIndex = 4;
                 $formatPlaces = 2;
             }
-            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: $userId, startDate: NULL, endDate: NULL, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: $userId, startDate: NULL, endDate: NULL, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: $playerId, startDate: NULL, endDate: NULL, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: $playerId, startDate: NULL, endDate: NULL, orderBy: $orderBy, rank: true, limitCount: NULL, indexed: false);
             $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
@@ -417,35 +418,35 @@ if (!isset($reportId) || "" == $reportId) {
                 $valueIndex = 4;
                 $formatPlaces = 2;
             }
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: $userId, startDate: NULL, endDate: NULL, year: NULL, championship: false, season: false, totalAndAverage: true, rank: true, orderBy: $orderBy, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: $userId, startDate: NULL, endDate: NULL, year: NULL, championship: false, season: false, totalAndAverage: true, rank: true, orderBy: $orderBy, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: $playerId, startDate: NULL, endDate: NULL, year: NULL, championship: false, season: false, totalAndAverage: true, rank: true, orderBy: $orderBy, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: $playerId, startDate: NULL, endDate: NULL, year: NULL, championship: false, season: false, totalAndAverage: true, rank: true, orderBy: $orderBy, limitCount: NULL, indexed: false);
             $value = array(array("currency", "center"), array(3, "currency", $formatPlaces), "Earnings", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
         case WINS_FOR_USER:
             $orderBy = array(1);
-            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $userId, winsForPlayer: true, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $userId, winsForPlayer: true, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $playerId, winsForPlayer: true, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $playerId, winsForPlayer: true, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: false);
             $value = array(array("number", "center"), array(3, "number", 0), "Wins", 3);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
         case NEMESIS_FOR_USER:
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getNemesises(playerId: $userId, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getNemesises(playerId: $userId, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getNemesises(playerId: $playerId, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getNemesises(playerId: $playerId, limitCount: NULL, indexed: false);
             $colFormats = array(array(1, "number", 0));
             $hideColIndexes = array(1);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
         case BULLY_FOR_USER:
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getBullies(knockedOutBy: $userId, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getBullies(knockedOutBy: $userId, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getBullies(knockedOutBy: $playerId, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getBullies(knockedOutBy: $playerId, limitCount: NULL, indexed: false);
             $colFormats = array(array(1, "number", 0));
             $hideColIndexes = array(1);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
         case FINISHES_FOR_USER:
-            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $userId, startDate: NULL, endDate: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $userId, startDate: NULL, endDate: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $playerId, startDate: NULL, endDate: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $playerId, startDate: NULL, endDate: NULL, indexed: false);
             $colFormats = array(array(2, "percentage", 2));
             $titleText = "Place of Finish";
             break;
@@ -456,8 +457,8 @@ if (!isset($reportId) || "" == $reportId) {
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
         case TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER:
-            $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPlayedByType(playerId: $userId, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPlayedByType(playerId: $userId, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPlayedByType(playerId: $playerId, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPlayedByType(playerId: $playerId, indexed: false);
             $colFormats = array(array(4, "number", 0));
             $hideColIndexes = array(0, 2);
             // $width = Constant::FLAG_LOCAL() ? "30%" : "100%";
@@ -591,7 +592,7 @@ if (!isset($reportId) || "" == $reportId) {
                 $outputTemp = $htmlTable->getHtml(results: $result, resultHeaders: $resultHeaders);
                 if (0 < count($result)) {
                     foreach($result as $row) {
-                        if ($row[2] == $userId) {
+                        if ($row[2] == $playerId) {
                             $rowPlayer = $row;
                             break;
                         }
@@ -605,7 +606,7 @@ if (!isset($reportId) || "" == $reportId) {
                         "  import { inputLocal } from \"./scripts/top5.js\";\n" .
                         "  document.querySelector(\"#rank_" . str_replace(" ", "", $titleText) . "_link\").addEventListener(\"click\", (evt) => inputLocal.showFullList({title: '" . $dialogParameters[0] . "', userFullName: '" . SessionUtility::getValue(SessionUtility::OBJECT_NAME_NAME) . "'}));\n" .
                         "</script>\n";
-                    $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $userId . "\"><a href=\"#\" id=\"rank_" . str_replace(" ", "", $titleText) . "_link\">" . $rank[2] . ": " . $rowPlayer[$rank[3]] . "</a></div>\n";
+                    $output .= "<div " . (($rankClasses != "") ? "class=\"" . $rankClasses . "\"" : "") . " id=\"rank_" . $playerId . "\"><a href=\"#\" id=\"rank_" . str_replace(" ", "", $titleText) . "_link\">" . $rank[2] . ": " . $rowPlayer[$rank[3]] . "</a></div>\n";
                     $output .=
                         "<dialog class=\"dialog\" id=\"dialogRankAll" . str_replace(" ", "", $titleText) . "\">\n" .
                         " <form method=\"dialog\">\n" .
@@ -626,7 +627,7 @@ if (!isset($reportId) || "" == $reportId) {
             case TOURNAMENTS_WON_FOR_USER:
                 $titleText = "Tournaments Won";
                 $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
-                $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getWon(playerId: $userId);
+                $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getWon(playerId: $playerId);
                 if (0 < count($resultList)) {
                     $output .=
                         "<script type=\"module\">\n" .
@@ -653,9 +654,9 @@ if (!isset($reportId) || "" == $reportId) {
                         $result = $entityManager->getRepository(Constant::ENTITY_PAYOUTS)->getById(payoutId: $group->getGroups()->getGroupPayouts()[0]->getPayouts()->getPayoutId());
                         $payout->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), payouts: $result[0]);
                         $groupPayout = new GroupPayout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: "", group: $group, payouts: array($payout));
-                        $tournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["id"], description: $row["description"], comment: $row["comment"], limitType: $limitType, gameType: $gameType, specialType: $specialType, chipCount: $row["chips"], location: $location, date: new \Poker\Ccp\classes\model\DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $row["date"]), startTime: new \Poker\Ccp\classes\model\DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $row["start"]), buyinAmount: $row["buyin"], maxPlayers: $row["max players"], maxRebuys: $row["max"], rebuyAmount: $row["amt"], addonAmount: $row["amt "], addonChipCount: $row["chips "], groupPayout: $groupPayout, rake: (float) ($row["rake"] * 100), registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: $row["enteredCount"], earnings: (int) $row["earnings"]);
+                        $tournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["id"], description: $row["description"], comment: $row["comment"], limitType: $limitType, gameType: $gameType, specialType: $specialType, chipCount: $row["chips"], location: $location, date: new DateTime(datetime: $row["date"]), startTime: new DateTime(datetime: $row["start"]), buyinAmount: $row["buyin"], maxPlayers: $row["max players"], maxRebuys: $row["max"], rebuyAmount: $row["amt"], addonAmount: $row["amt "], addonChipCount: $row["chips "], groupPayout: $groupPayout, rake: (float) ($row["rake"] * 100), registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: $row["enteredCount"], earnings: (int) $row["earnings"]);
                         $ctr++;
-                        $tournamentInfo = $tournament->getDate()->getDisplayFormat() . ", " . $tournament->getStartTime()->getDisplayAmPmFormat() . " " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . " " . $tournament->getMaxRebuys() . "r " . (0 < $tournament->getAddonAmount() ? "+a" : "") . " " . $tournament->getChipCount() . " chips " . $tournament->getEnteredCount() . " played $" . $tournament->getEarnings() . " won";
+                        $tournamentInfo = DateTimeUtility::formatDisplayDate(value: $tournament->getDate()) . ", " . DateTimeUtility::formatDisplayTime(value: $tournament->getStartTime()) . " " . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . " " . " " . $tournament->getMaxRebuys() . "r " . (0 < $tournament->getAddonAmount() ? "+a" : "") . " " . $tournament->getChipCount() . " chips " . $tournament->getEnteredCount() . " played $" . $tournament->getEarnings() . " won";
                         $output .= "<div style=\"display: inline-block; vertical-align: top; width: 3%;\">" . $ctr . "</div>\n<div class=\"fixedWidth\"  style=\"display: inline-block; text-align: left; width: 95%;\">" . $tournamentInfo . "</div>\n";
                     }
                 } else {
@@ -665,10 +666,10 @@ if (!isset($reportId) || "" == $reportId) {
             case TOURNAMENTS_PLAYED_FIRST_FOR_USER:
                 $titleText = "";
                 $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
-                $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getResultsMinDate(playerId: $userId);
+                $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getResultsMinDate(playerId: $playerId);
                 if (0 < count($resultList)) {
                     $date = new DateTime(datetime: $resultList[0]["tournamentDate"]);
-                    $output .= "<div class=\"center\">Member since " . DateTimeUtility::formatDisplayDateTime(value: $date) . "</div>\n";
+                    $output .= "<div class=\"center\">Member since " . DateTimeUtility::formatDisplayDate(value: $date) . "</div>\n";
                 }
                 break;
             default:

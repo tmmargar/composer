@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
+use DateTime;
 use Poker\Ccp\Entity\Locations;
 class Location extends Base {
     private Locations $locations;
     public function createFromEntity(bool $debug, Locations $locations): Location {
         $this->locations = $locations;
-        $player = new Player(debug: false, id: 0, name: "", username: "", password: "", email: "", phone: NULL, administrator: "0", registrationDate: new \DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
+        $player = new Player(debug: false, id: 0, name: "", username: "", password: "", email: "", phone: NULL, administrator: "0", registrationDate: new DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
         $player->createFromEntity(debug: $debug, players: $locations->getPlayers());
         return $this->create(debug: $debug, id: $locations->getLocationId(), name: $locations->getLocationName(), address: $locations->getLocationAddress(), city: $locations->getLocationCity(), state: $locations->getLocationState(), zipCode: $locations->getLocationZipCode(), player: $player, count: count($locations->getTournaments()), active: $locations->getPlayers()->getPlayerActiveFlag(), map: $locations->getLocationMap(), mapName: $locations->getLocationMapLink(), tournamentCount: 0);
     }

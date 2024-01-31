@@ -8,6 +8,7 @@ abstract class DateTimeUtility {
     private const DATE_FORMAT_DISPLAY_DATE = "m/d/Y";
     private const DATE_FORMAT_DISPLAY_DATE_TIME = "m/d/Y h:i:s A";
     private const DATE_FORMAT_DISPLAY_DATE_TIME_MILLISECONDS = "m/d/Y h:i:s v";
+    private const DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN = "M d";
     private const DATE_FORMAT_DISPLAY_TIME = "h:i:s A";
     private const DATE_FORMAT_SECONDS_SINCE_EPOCH = "U";
     private const DATE_FORMAT_DISPLAY_LONG = "D, M j, Y h:i A";
@@ -40,6 +41,9 @@ abstract class DateTimeUtility {
     }
     public static function formatDisplayPickerTime(DateTime $value) {
         return $value->format(DateTimeUtility::DATE_FORMAT_PICKER_TIME);
+    }
+    public static function formatDisplayRegistrationNotOpen(DateTime $value) {
+        return $value->format(DateTimeUtility::DATE_FORMAT_DISPLAY_REGISTRATION_NOT_OPEN);
     }
     public static function formatDisplayTime(DateTime $value) {
         return $value->format(DateTimeUtility::DATE_FORMAT_DISPLAY_TIME);

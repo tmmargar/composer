@@ -52,7 +52,7 @@ if (count($resultList) == 0) {
                 "  display.showErrors({errors: [ \"" . $errors . "\" ]});\n" .
                 "</script>\n";
         } else {
-            $output .= isset($mode) ? "  aryMessages.push(\"Successfully registered " . $player->getPlayerName() . " for tournament on " . DateTimeUtility::formatDisplayDateTime(value: $tournaments->getTournamentDate()) . " starting at " . DateTimeUtility::formatDisplayTime(value: $tournaments->getTournamentStartTime()) . "\");\n" : "\r";
+            $output .= isset($mode) ? "  aryMessages.push(\"Successfully registered " . $player->getPlayerName() . " for tournament on " . DateTimeUtility::formatDisplayDate(value: $tournaments->getTournamentDate()) . " starting at " . DateTimeUtility::formatDisplayTime(value: $tournaments->getTournamentStartTime()) . "\");\n" : "\r";
         }
         $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, description: NULL, comment: NULL, limitType: NULL, gameType: NULL, specialType: NULL, chipCount: 0, location: NULL, date: NULL, startTime: NULL, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: NULL, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0, earnings: 0);
         $emailTournament->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), tournaments: $tournaments);

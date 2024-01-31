@@ -1,6 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
+use DateTime;
 use Poker\Ccp\classes\utility\SessionUtility;
 class Security extends Base
 {
@@ -34,7 +35,7 @@ class Security extends Base
     private function loginSuccess() {
         $entityManager = getEntityManager();
         $players = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getByUsername(username: $this->login->getUsername());
-        $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", username: "", password: "", email: "", phone: NULL, administrator: "0", registrationDate: new \DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
+        $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", username: "", password: "", email: "", phone: NULL, administrator: "0", registrationDate: new DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
         $player->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), players: $players[0]);
         $this->setPlayer(player: $player);
         SessionUtility::setValue(name: SessionUtility::OBJECT_NAME_SECURITY, value: $this);

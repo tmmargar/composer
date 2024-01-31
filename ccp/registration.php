@@ -22,9 +22,10 @@ use Poker\Ccp\classes\model\Structure;
 use Poker\Ccp\classes\model\Tournament;
 use Poker\Ccp\classes\utility\SessionUtility;
 use Poker\Ccp\Entity\Results;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 require_once "init.php";
 define("TOURNAMENT_ID_PARAMETER_NAME", "tournamentId");
-define("USER_ID_PARAMETER_NAME", "userId");
+define("PLAYER_ID_PARAMETER_NAME", "playerId");
 define("FOOD_FIELD_NAME", "food");
 define("REGISTERED_FIELD_NAME", "registered");
 define("REGISTERED_LABEL", "Registered");
@@ -45,9 +46,9 @@ $output .=
 if (!isset($tournamentId) || "" == $tournamentId) {
     $output .= " aryErrors.push(\"Unable to identify tournament to register for.\");\n";
 } else {
-    $userId = (int) ((isset($_POST[USER_ID_PARAMETER_NAME]) ? $_POST[USER_ID_PARAMETER_NAME] : isset($_GET[USER_ID_PARAMETER_NAME])) ? $_GET[USER_ID_PARAMETER_NAME] : SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID));
+    $playerId = (int) ((isset($_POST[PLAYER_ID_PARAMETER_NAME]) ? $_POST[PLAYER_ID_PARAMETER_NAME] : isset($_GET[PLAYER_ID_PARAMETER_NAME])) ? $_GET[PLAYER_ID_PARAMETER_NAME] : SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID));
     $mode = isset($_POST[Constant::FIELD_NAME_MODE]) ? $_POST[Constant::FIELD_NAME_MODE] : Constant::MODE_VIEW;
-    $now = new \Poker\Ccp\classes\model\DateTime(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
+    $now = new DateTime();
     $registerText = Constant::TEXT_REGISTER;
     $registered = false;
     if (isset($_POST[REGISTERED_FIELD_NAME]) && (1 == $_POST[REGISTERED_FIELD_NAME])) {
@@ -59,7 +60,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
         if (Constant::MODE_SAVE_CREATE == $mode) {
             if ($registered) {
                 $tournamentFind = $entityManager->find(Constant::ENTITY_TOURNAMENTS, $tournamentId);
-                $playerFind = $entityManager->find(Constant::ENTITY_PLAYERS, $userId);
+                $playerFind = $entityManager->find(Constant::ENTITY_PLAYERS, $playerId);
 //                 $results = $entityManager->getRepository(Constant::ENTITY_RESULTS)->findOneBy(array("tournaments" => $tournamentFind, "players" => $playerFind));
                 $results->setResultRegistrationFood($food);
                 $entityManager->persist($results);
@@ -67,7 +68,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
                 $state = "updating your registration";
             } else {
                 $re = new Results();
-                $player = $entityManager->find(Constant::ENTITY_PLAYERS, $userId);
+                $player = $entityManager->find(Constant::ENTITY_PLAYERS, $playerId);
                 $re->setPlayers($player);
                 $re->setPlayerKos(null);
                 $re->setResultAddonFlag(Constant::FLAG_NO);
@@ -89,7 +90,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             }
         } else {
             $tournamentFind = $entityManager->find(Constant::ENTITY_TOURNAMENTS, $tournamentId);
-            $playerFind = $entityManager->find(Constant::ENTITY_PLAYERS, $userId);
+            $playerFind = $entityManager->find(Constant::ENTITY_PLAYERS, $playerId);
             $results = $entityManager->getRepository(Constant::ENTITY_RESULTS)->findOneBy(array("tournaments" => $tournamentFind, "players" => $playerFind));
             $registerOrder = $results->getResultRegistrationOrder();
             $entityManager->remove($results);
@@ -111,7 +112,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             $limitType = new LimitType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["limit_type_id"], name: $row["name"]);
             $gameType = new GameType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["game_type_id"], name: $row["type"]);
             $specialType = new SpecialType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["special_type_id"], description: $row["std"], multiplier: $row["special_type_multiplier"]);
-            $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", username: NULL, password: NULL, email: NULL, phone: NULL, administrator: "0", registrationDate: new \DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
+            $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", username: NULL, password: NULL, email: NULL, phone: NULL, administrator: "0", registrationDate: new DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
             $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getById(playerId: $row["player_id"]);
             $player->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), players: $result[0]);
             $location = new Location(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["location_id"], name: $row["location"], address: "", city: "", state: "", zipCode: 00000, player: $player, count: 0, active: "0", map: NULL, mapName: NULL, tournamentCount: 0);
@@ -127,17 +128,17 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             $result = $entityManager->getRepository(Constant::ENTITY_PAYOUTS)->getById(payoutId: $group->getGroups()->getGroupPayouts()[0]->getPayouts()->getPayoutId());
             $payout->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), payouts: $result[0]);
             $groupPayout = new GroupPayout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: "", group: $group, payouts: array($payout));
-            $tournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["id"], description: $row["description"], comment: $row["comment"], limitType: $limitType, gameType: $gameType, specialType: $specialType, chipCount: $row["chips"], location: $location, date: new \Poker\Ccp\classes\model\DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $row["date"]), startTime: new \Poker\Ccp\classes\model\DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $row["start"]), buyinAmount: $row["buyin"], maxPlayers: $row["max players"], maxRebuys: $row["max"], rebuyAmount: $row["amt"], addonAmount: $row["amt "], addonChipCount: $row["chips "], groupPayout: $groupPayout, rake: (float) ($row["rake"] * 100), registeredCount: $row["registeredCount"], buyinsPaid: $row["buyinsPaid"], rebuysPaid: $row["rebuysPaid"], rebuysCount: (int) $row["rebuysCount"], addonsPaid: $row["addonsPaid"], enteredCount: $row["enteredCount"], earnings: 0);
+            $tournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["id"], description: $row["description"], comment: $row["comment"], limitType: $limitType, gameType: $gameType, specialType: $specialType, chipCount: $row["chips"], location: $location, date: new DateTime(datetime: $row["date"]), startTime: new DateTime(datetime: $row["start"]), buyinAmount: $row["buyin"], maxPlayers: $row["max players"], maxRebuys: $row["max"], rebuyAmount: $row["amt"], addonAmount: $row["amt "], addonChipCount: $row["chips "], groupPayout: $groupPayout, rake: (float) ($row["rake"] * 100), registeredCount: $row["registeredCount"], buyinsPaid: $row["buyinsPaid"], rebuysPaid: $row["rebuysPaid"], rebuysCount: (int) $row["rebuysCount"], addonsPaid: $row["addonsPaid"], enteredCount: $row["enteredCount"], earnings: 0);
             $tournamentLocationPlayer = $tournament->getLocation()->getPlayer();
             $tournamentLocation = $tournament->getLocation();
             $waitListCount = ($tournament->getRegisteredCount() > $tournament->getMaxPlayers()) ? ($tournament->getRegisteredCount() - $tournament->getMaxPlayers()) : 0;
             if ($mode == Constant::MODE_SEND_EMAIL) {
                 // if set means email notification required and need location information from view query
                 if (isset($state)) {
-                    $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getById(playerId: $userId);
+                    $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getById(playerId: $playerId);
                     if (0 < count($resultList)) {
                         $player = $resultList[0];
-                        $resultListNested = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFeeForPlayerAndTournament(playerId: $userId, tournamentId: $tournamentId);
+                        $resultListNested = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFeeForPlayerAndTournament(playerId: $playerId, tournamentId: $tournamentId);
                         $feeStatus = $resultListNested[0]["status"];
                         $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($player->getPlayerName()), toEmail: array($player->getPlayerEmail()), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
 //                         $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $tournament->getId(), description: NULL, comment: NULL, limitType: NULL, gameType: NULL, specialType: NULL, chipCount: 0, location: NULL, date: $tournament->getDate(), startTime: $tournament->getStartTime(), buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: NULL, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
@@ -196,7 +197,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
                 $output .= "  <div class=\"clear\"></div>\n";
                 $output .= "  <br />\n";
                 $output .= "  <div class=\"column\">Date / Time:</div>\n";
-                $output .= "  <div>" . $tournament->getDate()->getDisplayLongFormat() . " " . $tournament->getStartTime()->getDisplayAmPmFormat() . "</div>\n";
+                $output .= "  <div>" . DateTimeUtility::formatDisplayLong(value: $tournament->getDate()) . " " . DateTimeUtility::formatDisplayTime(value: $tournament->getStartTime()) . "</div>\n";
                 $output .= "  <div class=\"clear\"></div>\n";
                 $output .= "  <div class=\"column\">Map:</div>\n";
                 $output .= "  <div>" . $tournament->getLocation()->buildMapUrl() . "</div>\n";
@@ -211,12 +212,12 @@ if (!isset($tournamentId) || "" == $tournamentId) {
                 } else {
                     $maxPlayers = $tournament->getMaxPlayers();
                 }
-                $dateTimeRegistrationClose = new \Poker\Ccp\classes\model\DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $tournament->getDate()->getDatabaseFormat() . " " . $tournament->getRegistrationClose()->getDisplayAmPmFormat());
+                $dateTimeRegistrationClose = new DateTime(datetime: DateTimeUtility::formatDatabaseDate(value: $tournament->getDate()) . " " . DateTimeUtility::formatDisplayTime(value: $tournament->getRegistrationClose()));
                 // $registrationCloseDate = $dateTimeRegistrationClose->getDatabaseFormat();
                 $tournamentDateClone = clone $tournament->getDate();
-                $registrationOpenDate = new \Poker\Ccp\classes\model\DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: $tournamentDateClone->getDatabaseFormat() . " 12:00:00");
+                $registrationOpenDate = new DateTime(datetime: DateTimeUtility::formatDatabaseDate(value: $tournamentDateClone) . " 12:00:00");
                 $interval = new DateInterval(Constant::INTERVAL_DATE_REGISTRATION_OPEN);
-                $registrationOpenDate->getTime()->sub($interval);
+                $registrationOpenDate->sub($interval);
                 if ($tournament->getDescription() == "Championship") {
                     $registeredCount = 0;
                 } else {
@@ -232,9 +233,9 @@ if (!isset($tournamentId) || "" == $tournamentId) {
                 $output .= "  <div>" . $waitListCount . "</div>\n";
                 $output .= "  <div class=\"clear\"></div>\n";
                 $output .= "  <div class=\"column\">Deadline:</div>\n";
-                $output .= "  <div>" . $dateTimeRegistrationClose->getDisplayLongTimeFormat() . "</div>\n";
+                $output .= "  <div>" . DateTimeUtility::formatDisplayLong(value: $dateTimeRegistrationClose) . "</div>\n";
                 $output .= "  <div class=\"clear\"></div>\n";
-                $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getResults(tournamentId: $tournamentId, playerId: $userId);
+                $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getResults(tournamentId: $tournamentId, playerId: $playerId);
                 $output .= "  <br />\n";
                 if (0 < count($resultList)) {
                     $output .= "  <div class=\"column\">Name:</div>\n";
@@ -246,7 +247,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
                     $output .= "  <div class=\"column\">Dish:</div>\n";
                     $output .= "  <div>";
                     $food = count($resultList[0]->getResults()) > 0 ? $resultList[0]->getResults()[0]->getResultRegistrationFood() : "";
-                    if (($now->getTime() >= $registrationOpenDate->getTime()) && ($now->getTime() <= $dateTimeRegistrationClose->getTime())) {
+                    if (($now >= $registrationOpenDate) && ($now <= $dateTimeRegistrationClose)) {
                         $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_FOOD, autoComplete: NULL, autoFocus: true, checked: NULL, class: NULL, cols: NULL, disabled: false, id: FOOD_FIELD_NAME, maxLength: NULL, name: FOOD_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 20, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: $food, wrap: NULL);
                         $output .= $textBoxName->getHtml();
                     } else {
@@ -279,7 +280,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
                         $addonPaid = new BooleanString($result["addon"]);
                         $addonFlag = new BooleanString($result["result_addon_flag"]);
                         $result = new Result(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, tournament: $tournament, player: $player, status: $status, registerOrder: (int) $result["result_registration_order"], buyinPaid: $buyinPaid->getBoolean(), rebuyPaid: $rebuyPaid->getBoolean(), addonPaid: $addonPaid->getBoolean(), rebuyCount: (int) $result["rebuy"], addonFlag: $addonFlag->getBoolean(), place: (int) $result["place"], knockedOutBy: $knockedOutBy, food: $result["result_registration_food"], feeStatus: $result["feeStatus"]);
-                        if ($userId == $result->getPlayer()->getId()) {
+                        if ($playerId == $result->getPlayer()->getId()) {
                           $registered = true;
                           $registerText = UPDATE_REGISTER_TEXT;
                         }
@@ -300,12 +301,12 @@ if (!isset($tournamentId) || "" == $tournamentId) {
                 if (!$registered && isset($count) && $count >= $maxPlayers) {
                     $registerText = "Add to wait list";
                 }
-                $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getForIdAndDates(playerId: $userId, startDate: SessionUtility::getValue(SessionUtility::OBJECT_NAME_START_DATE), endDate: SessionUtility::getValue(SessionUtility::OBJECT_NAME_END_DATE));
+                $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getForIdAndDates(playerId: $playerId, startDate: SessionUtility::getValue(SessionUtility::OBJECT_NAME_START_DATE), endDate: SessionUtility::getValue(SessionUtility::OBJECT_NAME_END_DATE));
                 if (0 < count($resultList)) {
                     $numPlayed = $resultList[0];
                 }
                 // check in registration range and not full
-                if (($now->getTime() >= $registrationOpenDate->getTime()) && ($now->getTime() <= $dateTimeRegistrationClose->getTime())) {
+                if (($now >= $registrationOpenDate) && ($now <= $dateTimeRegistrationClose)) {
                     if ($tournament->getDescription() == "Championship" && SessionUtility::getValue(SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY) > $numPlayed) {
                         $output .=
                             "<script type=\"module\">\n" .

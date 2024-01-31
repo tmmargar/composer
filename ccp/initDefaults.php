@@ -8,7 +8,6 @@ require_once "vendor/autoload.php";
 $header = "";
 if (strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["SCRIPT_NAME"], "logout.php") === false && strpos($_SERVER["SCRIPT_NAME"], "resetPassword.php") === false) {
   require_once "navigation.php";
-//   $now = new DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
   $resultList = $entityManager->getRepository(Constant::ENTITY_NOTIFICATIONS)->getByDate(date: new DateTime());
   foreach ($resultList as $notification) {
     if ("" != $header) {

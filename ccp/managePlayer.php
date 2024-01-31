@@ -24,7 +24,7 @@ define("APPROVAL_DATE_FIELD_LABEL", "Approval Date");
 define("APPROVAL_USER_FIELD_LABEL", "Approval Player");
 define("REJECTION_DATE_FIELD_LABEL", "Rejection Date");
 define("REJECTION_USER_FIELD_LABEL", "Rejection Player");
-define("USER_ID_FIELD_NAME", "userId");
+define("PLAYER_ID_FIELD_NAME", "playerId");
 define("FIRST_NAME_FIELD_NAME", "firstName");
 define("LAST_NAME_FIELD_NAME", "lastName");
 define("USERNAME_FIELD_NAME", "username");
@@ -48,7 +48,7 @@ $smarty->assign("heading", "Manage Player");
 $smarty->assign("style", "<link href=\"css/managePlayer.css\" rel=\"stylesheet\">");
 $errors = NULL;
 if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
-    $ids = isset($_GET[USER_ID_FIELD_NAME]) ? $_GET[USER_ID_FIELD_NAME] : $ids;
+    $ids = isset($_GET[PLAYER_ID_FIELD_NAME]) ? $_GET[PLAYER_ID_FIELD_NAME] : $ids;
     $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getById(playerId: (int) $ids);
     $output .= " <div class=\"buttons center\">\n";
     $buttonSave = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::TEXT_SAVE . "_2", maxLength: NULL, name: Constant::TEXT_SAVE . "_2", onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL);

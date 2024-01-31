@@ -2,11 +2,10 @@
 declare(strict_types = 1);
 namespace ccp;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";
-if (!defined("REPORT_ID_PARAM_NAME")) {define("USER_ID_PARAM_NAME", "userId");}
-$userId = (int) ((isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue("userid"));
+if (!defined("REPORT_ID_PARAM_NAME")) {define("PLAYER_ID_PARAM_NAME", "playerId");}
+$playerId = (int) ((isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME])) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue("userid"));
 $output = "";
 $output .= " <script src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
 $startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE);
@@ -20,7 +19,7 @@ if (0 < count($resultList)) {
     $labelPlayed3 = $labelIncrement * 3;
     $labelPlayed4 = $tournamentsTotal;
 }
-$resultList2 = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForUserAndDates(playerId: $userId, startDate: $startDate, endDate: $endDate);
+$resultList2 = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForUserAndDates(playerId: $playerId, startDate: $startDate, endDate: $endDate);
 if (0 < count($resultList2)) {
     $tournamentsPlayed = count($resultList2);
 } else {

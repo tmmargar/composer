@@ -1,7 +1,6 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use DateTime;
 use Exception;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\FormControl;
@@ -204,7 +203,7 @@ if (Constant::MODE_VIEW == $mode || Constant::MODE_DELETE == $mode || Constant::
     $resultHeaders = $entityManager->getRepository(Constant::ENTITY_LOCATIONS)->getTableOutput(locationId: $id, indexed: false);
     $colFormats = array(array(0, "right", 0), array(7, "right", 0));
     $hideColIndexes = array(2);
-    $link = array(array(3), array("managePlayer.php", array("userId", "mode"), array(2, "modify"), 3));
+    $link = array(array(3), array("managePlayer.php", array("playerId", "mode"), array(2, "modify"), 3));
     $htmlTable = new HtmlTable(caption: NULL, class: NULL, colspan: NULL, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: Constant::DELIMITER_DEFAULT, foreignKeys: NULL, header: true, hiddenAdditional: NULL, hiddenId: HIDDEN_ROW_FIELD_NAME, hideColumnIndexes: $hideColIndexes, html: NULL, id: NULL, link: $link, note: true, selectedRow: $ids, suffix: NULL, width: "90%");
     $output .= $htmlTable->getHtml(results: $result, resultHeaders: $resultHeaders);
     $output .= "<div class=\"buttons center\">\n";

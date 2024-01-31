@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 class Email extends Base {
     private const EMAIL_ADDRESS_LOCAL = "me@localhost.com";
     private bool $local;
@@ -185,7 +186,7 @@ class Email extends Base {
             } else {
                 $subject = "registration (update) successful for the tournament on ";
             }
-            $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
+            $subject .= DateTimeUtility::formatDisplayDate($tournament->getDate()) . " starting at " . DateTimeUtility::formatDisplayTime($tournament->getStartTime());
             $this->setSubject(subject: $subject);
             $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />&nbsp;&nbsp;Your season fee is " . $feeStatus . ".<BR />";
             if (is_string($waitList)) {
@@ -202,7 +203,7 @@ class Email extends Base {
                     $body .= "(you were moved from the wait list to registered) ";
                 }
             }
-            $body .= "for the tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat() . " with additional details below:<br />";
+            $body .= "for the tournament on " . DateTimeUtility::formatDisplayDate($tournament->getDate()) . " starting at " . DateTimeUtility::formatDisplayTime($tournament->getStartTime()) . " with additional details below:<br />";
             $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $location->getAddress() . "<br />";
             $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $location->getCity() . ", " . $location->getState() . " " . $location->getZipCode() . "<br />";
             $body .= "&nbsp;&nbsp;If you need to cancel your registration for this tournament, please <a href=\"" . $url . "\">click here</a>";
@@ -218,14 +219,14 @@ class Email extends Base {
         for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
             $url .= Constant::PATH() . "registration.php?tournamentId=" . $tournament->getId();
             $subject = " registration is open reminder for the tournament on ";
-            $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
+            $subject .= DateTimeUtility::formatDisplayDate($tournament->getDate()) . " starting at " . DateTimeUtility::formatDisplayTime($tournament->getStartTime());
             $this->setSubject(subject: $subject);
             $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
             $body .= "&nbsp;&nbsp;Registration is open ";
             if ($waitListCount > 0) {
                 $body .= "(on the wait list) ";
             }
-            $body .= "for the tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat() . " with additional details below:<br />";
+            $body .= "for the tournament on " . DateTimeUtility::formatDisplayDate($tournament->getDate()) . " starting at " . DateTimeUtility::formatDisplayTime($tournament->getStartTime()) . " with additional details below:<br />";
             $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $tournament->getDescription() . "<br />";
             $body .= "&nbsp;&nbsp;&nbsp;&nbsp;Hosted by " . $tournament->getLocation()->getPlayer()->getName() . "<br />";
             $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $tournament->getLimitType()->getName() . " " . $tournament->getGameType()->getName() . "<br />";
@@ -254,10 +255,10 @@ class Email extends Base {
         for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
             $url .= Constant::PATH() . "registration.php?tournamentId=" . $tournament->getId();
             $subject = "registration cancelled for the tournament on ";
-            $subject .= $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat();
+            $subject .= DateTimeUtility::formatDisplayDate($tournament->getDate()) . " starting at " . DateTimeUtility::formatDisplayTime($tournament->getStartTime());
             $this->setSubject(subject: $subject);
             $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
-            $body .= "&nbsp;&nbsp;Your registration was cancelled for the tournament on " . $tournament->getDate()->getDisplayFormat() . " starting at " . $tournament->getStartTime()->getDisplayAmPmFormat() . " with additional details below:<br />";
+            $body .= "&nbsp;&nbsp;Your registration was cancelled for the tournament on " . DateTimeUtility::formatDisplayDate($tournament->getDate()) . " starting at " . DateTimeUtility::formatDisplayTime($tournament->getStartTime()) . " with additional details below:<br />";
             $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $location->getAddress() . "<br />";
             $body .= "&nbsp;&nbsp;&nbsp;&nbsp;" . $location->getCity() . ", " . $location->getState() . " " . $location->getZipCode() . "<br />";
             $body .= "&nbsp;&nbsp;If you need to re-register for this tournament, please <a href=\"" . $url . "\">click here</a>";

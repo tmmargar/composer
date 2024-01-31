@@ -69,7 +69,7 @@ foreach ($resultListPlayers as $player) {
         $htmlMenuPlayerGroupArray[$counterPlayerGroup] = $htmlMenuPlayerGroup;
         $counterPlayerGroup++;
     }
-    $htmlLinkPlayer = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "personalize.php", id: NULL, paramName: array("userId"), paramValue: array($player->getPlayerId()), tabIndex: - 1, text: $player->getPlayerName() . "'s stats", title: NULL);
+    $htmlLinkPlayer = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "personalize.php", id: NULL, paramName: array("playerId"), paramValue: array($player->getPlayerId()), tabIndex: - 1, text: $player->getPlayerName() . "'s stats", title: NULL);
     $htmlLinkPlayerArray[$htmlLinkPlayerArrayCounter] = $htmlLinkPlayer;
     $htmlLinkPlayerArrayCounter ++;
     if ($counterLoop == 10 || $counterOverall == count($resultListPlayers)) {
@@ -177,7 +177,7 @@ if (SessionUtility::getValue(SessionUtility::OBJECT_NAME_ADMINISTRATOR) != 0) {
     array_push($levels, $htmlMenuReportAdministration);
 }
 $htmlMenuReportMyProfile = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "My profile");
-$htmlLinkEdit = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "managePlayer.php", id: NULL, paramName: array("mode","userId"), paramValue: array("modify",SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID)), tabIndex: - 1, text: "Edit my profile", title: NULL);
+$htmlLinkEdit = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "managePlayer.php", id: NULL, paramName: array("mode","playerId"), paramValue: array("modify",SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID)), tabIndex: - 1, text: "Edit my profile", title: NULL);
 $htmlLinkLogout = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "logout.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Logout", title: NULL);
 $htmlLinkResetPassword = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "resetPassword.php", id: NULL, paramName: array("nav"), paramValue: array("Y"), tabIndex: - 1, text: "Password reset", title: NULL);
 $htmlLinkMyProfileArray = array($htmlLinkEdit,$htmlLinkLogout,$htmlLinkResetPassword);

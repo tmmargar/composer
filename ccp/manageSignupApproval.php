@@ -25,15 +25,15 @@ if (Constant::MODE_SAVE_VIEW == $mode) {
     $approval = array();
     $rejection = array();
     foreach ($_POST as $key => $value) {
-        $userId = count(explode("_", $key)) > 1 ? explode("_", $key)[1] : "";
+        $playerId = count(explode("_", $key)) > 1 ? explode("_", $key)[1] : "";
         if (strpos($key, 'player_') !== false) {
-            $player[$userId] = $value;
+            $player[$playerId] = $value;
         } else if (strpos($key, 'email_') !== false) {
-            $emailAddress[$userId] = $value;
+            $emailAddress[$playerId] = $value;
         } else if (strpos($key, 'approvePlayer_') !== false) {
-            $approval[$userId] = $player[$userId];
+            $approval[$playerId] = $player[$playerId];
         } else if (strpos($key, 'rejectPlayer_') !== false) {
-            $rejection[$userId] = $player[$userId];
+            $rejection[$playerId] = $player[$playerId];
         }
     }
     $output .=

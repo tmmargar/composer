@@ -354,7 +354,7 @@ class ResultsRepository extends BaseRepository {
         }
     }
 
-    public function getEarnings(?int $userId, ?DateTime $startDate, ?DateTime $endDate, ?int $year, bool $championship, bool $season, bool $totalAndAverage, bool $rank, ?array $orderBy, ?int $limitCount, bool $indexed) {
+    public function getEarnings(?int $playerId, ?DateTime $startDate, ?DateTime $endDate, ?int $year, bool $championship, bool $season, bool $totalAndAverage, bool $rank, ?array $orderBy, ?int $limitCount, bool $indexed) {
 //         case "earningsAverageForSeason":
 //         case "earningsTotalForChampionship":
 //         case "earningsTotalForSeason":
@@ -375,14 +375,14 @@ class ResultsRepository extends BaseRepository {
                 "            FROM poker_players p " .
                 "            INNER JOIN poker_results r ON p.player_id = r.player_id " .
                 "            INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id ";
-                if (!(isset($userId) && !$season) && isset($startDate) && isset($endDate)) {
+                if (!(isset($playerId) && !$season) && isset($startDate) && isset($endDate)) {
                     $sql .= "            AND t.tournament_date BETWEEN :startDate1 AND :endDate1 ";
                 }
                 $sql .=
                 "            INNER JOIN (SELECT r1.player_id, COUNT(*) AS NumTourneys " .
                 "                        FROM poker_results r1 " .
                 "                        INNER JOIN poker_tournaments t1 ON r1.tournament_id = t1.tournament_id AND r1.result_place_finished > 0 ";
-                if (!(isset($userId) && !$season) && isset($startDate) && isset($endDate)) {
+                if (!(isset($playerId) && !$season) && isset($startDate) && isset($endDate)) {
                     $sql .= "                        AND t1.tournament_date BETWEEN :startDate2 AND :endDate2 ";
                 }
                 $sql .=
@@ -411,7 +411,7 @@ class ResultsRepository extends BaseRepository {
                     "                             INNER JOIN poker_payouts p ON gp.payout_id = p.payout_id AND np.numPlayers BETWEEN p.payout_min_players AND p.payout_max_players) a " .
                     "                       INNER JOIN poker_structures s1 ON a.payout_id = s1.payout_id) s ON r.tournament_id = s.tournament_id AND r.result_place_finished = s.structure_place WHERE r.result_place_finished > 0) y " .
                     "            GROUP BY player_id ";
-                if (!($season && !isset($userId))) {
+                if (!($season && !isset($playerId))) {
                     $sql .= "            UNION ";
                 }
         } else {
@@ -421,7 +421,7 @@ class ResultsRepository extends BaseRepository {
             }
             $sql .= "             FROM (";
         }
-        if (!($season && !isset($userId))) {
+        if (!($season && !isset($playerId))) {
             $sql .= "            SELECT xx.player_id, xx.player_last_name, xx.player_first_name, SUM(xx.earnings) AS totalEarnings, MAX(xx.earnings) AS maxEarnings, 0";
             if ($championship) {
                 $sql .= ", numTourneys AS trnys ";
@@ -435,7 +435,7 @@ class ResultsRepository extends BaseRepository {
                 "                 FROM poker_players p " .
                 "                 INNER JOIN poker_results r ON p.player_id = r.player_id " .
                 "                 INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id";
-            if (!(isset($userId) && !$season) && !$championship && isset($startDate) && isset($endDate)) {
+            if (!(isset($playerId) && !$season) && !$championship && isset($startDate) && isset($endDate)) {
                 $sql .= "        AND t.tournament_date BETWEEN :startDate3 AND :endDate3 ";
             }
             if ($championship && isset($year)) {
@@ -455,7 +455,7 @@ class ResultsRepository extends BaseRepository {
                 "                                                                   WHERE result_paid_buyin_flag = '" . Constant::FLAG_YES . "' " .
                 "                                                                   AND result_place_finished > 0 " .
                 "                                                                   GROUP BY tournament_id) b ON t2.tournament_id = b.tournament_id";
-            if (!(isset($userId) && !$season) && !$championship && isset($startDate) && isset($endDate)) {
+            if (!(isset($playerId) && !$season) && !$championship && isset($startDate) && isset($endDate)) {
                 $sql .= "                               AND t2.tournament_date BETWEEN :startDate4 AND :endDate4 ";
             }
             if ($championship && isset($year)) {
@@ -486,7 +486,7 @@ class ResultsRepository extends BaseRepository {
                 "                                         WHERE r.status_code IN ('" . Constant::CODE_STATUS_REGISTERED . "','" . Constant::CODE_STATUS_FINISHED . "') " .
                 "                                         GROUP BY r.tournament_id) np " .
                 "                                   INNER JOIN poker_tournaments t on np.tournament_id = t.tournament_id";
-            if (!(isset($userId) && !$season) && isset($startDate) && isset($endDate)) {
+            if (!(isset($playerId) && !$season) && isset($startDate) && isset($endDate)) {
                 $sql .= "                                    AND t.tournament_date BETWEEN :startDate5 AND :endDate5 ";
             }
             if ($championship && isset($year)) {
@@ -512,8 +512,8 @@ class ResultsRepository extends BaseRepository {
             }
             $sql .= "GROUP BY player_id) z ON p.player_id = z.player_id ";
             if ($totalAndAverage) {
-                $whereClause = "WHERE p.player_id = " . $userId;
-                $sql .= " WHERE p.player_id = " . $userId;
+                $whereClause = "WHERE p.player_id = " . $playerId;
+                $sql .= " WHERE p.player_id = " . $playerId;
             } else {
                 $sql .= " WHERE p.player_active_flag = 1";
             }
@@ -545,14 +545,14 @@ class ResultsRepository extends BaseRepository {
             $sql .= " LIMIT :limitCount";
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        if (!$championship && !(isset($userId) && !$season) && isset($startDate) && isset($endDate)) {
+        if (!$championship && !(isset($playerId) && !$season) && isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
             $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
-            if (!($season && !isset($userId))) {
+            if (!($season && !isset($playerId))) {
                 $statement->bindValue("startDate3", $startDateFormatted, PDO::PARAM_STR);
                 $statement->bindValue("endDate3", $endDateFormatted, PDO::PARAM_STR);
                 $statement->bindValue("startDate4", $startDateFormatted, PDO::PARAM_STR);

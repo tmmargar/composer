@@ -12,7 +12,7 @@ use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";
 define("REPORT_ID_PARAM_NAME", "reportId");
-define("USER_ID_PARAM_NAME", "userId");
+define("PLAYER_ID_PARAM_NAME", "playerId");
 define("TOURNAMENT_ID_PARAM_NAME", "tournamentId");
 define("SEASON_PARAM_NAME", "season");
 define("SEASON_SELECTION_PARAM_NAME", "seasonSelection");
@@ -38,7 +38,7 @@ if (!isset($reportId)) {
     $reportId = (isset($_POST[REPORT_ID_PARAM_NAME]) ? $_POST[REPORT_ID_PARAM_NAME] : isset($_GET[REPORT_ID_PARAM_NAME])) ? $_GET[REPORT_ID_PARAM_NAME] : NULL;
 }
 $output = "<div class=\"contentReport\">\n";
-$userId = (int) ((isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue("userid"));
+$playerId = (int) ((isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME])) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue("userid"));
 if (!isset($tournamentId)) {
     $tournamentId = (int) ((isset($_POST[TOURNAMENT_ID_PARAM_NAME]) ? $_POST[TOURNAMENT_ID_PARAM_NAME] : isset($_GET[TOURNAMENT_ID_PARAM_NAME])) ? $_GET[TOURNAMENT_ID_PARAM_NAME] : NULL);
 }
@@ -192,8 +192,8 @@ if (!isset($reportId)) {
             $width = "100%";
             break;
         case REPORT_ID_EARNINGS_CHAMPIONSHIP:
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: NULL, endDate: NULL, year: ("ALL" == $seasonId ? NULL : (int) $year), championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: NULL, endDate: NULL, year: ("ALL" == $seasonId ? NULL : (int) $year), championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: NULL, endDate: NULL, year: ("ALL" == $seasonId ? NULL : (int) $year), championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(playerId: NULL, startDate: NULL, endDate: NULL, year: ("ALL" == $seasonId ? NULL : (int) $year), championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: false);
             $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
             $hideColIndexes = array(0);
             $width = "100%";
@@ -221,8 +221,8 @@ if (!isset($reportId)) {
             $width = "100%";
             break;
         case REPORT_ID_FINISHES:
-            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $userId, startDate: $startDate, endDate: $endDate, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $userId, startDate: $startDate, endDate: $endDate, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $playerId, startDate: $startDate, endDate: $endDate, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $playerId, startDate: $startDate, endDate: $endDate, indexed: false);
             $colFormats = array(array(0, "number", 0), array(1, "number", 0), array(2, "percentage", 2));
             $caption = "";
             $width = "100%";

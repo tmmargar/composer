@@ -77,7 +77,7 @@ abstract class HtmlUtility {
       switch ($class) {
           case Location::class:
               $url = "manageLocation.php";
-              $paramNames = array("userId", "mode");
+              $paramNames = array("playerId", "mode");
               $paramValues = array($id . "modify");
           case Player::class:
               $url = "managePlayer.php";
