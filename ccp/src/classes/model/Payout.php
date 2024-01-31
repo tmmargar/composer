@@ -1,9 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
 use Poker\Ccp\Entity\Payouts;
-
 class Payout extends Base {
     private Payouts $payouts;
     public function createFromEntity(bool $debug, Payouts $payouts): Payout {

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
 use PDO;
 use PDOException;
+use Poker\Ccp\classes\model\Constant;
 class DatabaseResult extends Root {
   private const USER_NAME_SERVER = "chipch5_app";
   private const PASSWORD_SERVER = "app_chipch5";
@@ -599,7 +600,7 @@ class DatabaseResult extends Root {
     $pdoStatement = NULL;
     switch ($dataName) {
       case "blobTest":
-        $query = "SELECT name, contentType, blobcontents FROM blobtest";
+        $query = "SELECT name, content_type, blob_contents FROM blob_test";
         break;
       case "autoRegisterHost":
         $query =
@@ -3635,11 +3636,11 @@ class DatabaseResult extends Root {
     // try {
     switch ($dataName) {
       case "blobInsert":
-        $query = "INSERT INTO blobtest(name, contentType, blobcontents) VALUES(:name, :contentType, :blobcontents)";
+        $query = "INSERT INTO blob_test(name, content_type, blob_contents) VALUES(:name, :contentType, :blobContents)";
         $pdoStatement = $this->getConnection()->prepare(query: $query);
         $pdoStatement->bindParam(':name', $params[0], PDO::PARAM_STR);
-        $pdoStatement->bindParam(':contentTypexbo', $params[1], PDO::PARAM_STR);
-        $pdoStatement->bindParam(':blobcontents', $params[2], PDO::PARAM_LOB);
+        $pdoStatement->bindParam(':contentType', $params[1], PDO::PARAM_STR);
+        $pdoStatement->bindParam(':blobContents', $params[2], PDO::PARAM_LOB);
         break;
       case "feeInsert":
         $query =
@@ -4203,7 +4204,7 @@ class DatabaseResult extends Root {
       case "resultUpdateByTournamentIdAndPlace":
         $query =
           "UPDATE poker_results " .
-          "SET " . (isset($params[0]) ? "result_rebuy_count = :rebuyCount, " : "") .
+          "SET result_paid_buyin_flag = " . Constant::FLAG_YES . (isset($params[0]) ? ", result_rebuy_count = :rebuyCount, " : "") .
           (isset($params[1]) ? "result_paid_rebuy_flag = :rebuyPaid, " : "") .
           (isset($params[2]) ? " result_paid_addon_flag = :addonPaid, " : "") .
           "status_code = :statusCode, result_place_finished = :place, player_id_ko = :knockedOutBy " .

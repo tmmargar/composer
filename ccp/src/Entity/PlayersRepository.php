@@ -1,12 +1,13 @@
 <?php
 namespace Poker\Ccp\Entity;
+use DateInterval;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Parameter;
-use Poker\Ccp\classes\model\Constant;
-use DateInterval;
-use DateTime;
 use PDO;
+use Poker\Ccp\classes\model\Constant;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 class PlayersRepository extends BaseRepository {
     public function getActives() {
         return $this->createQueryBuilder("p")->where("p.playerActiveFlag = 1")->getQuery()->getResult();
@@ -130,8 +131,8 @@ class PlayersRepository extends BaseRepository {
             "ORDER BY points DESC";
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($startDate) && isset($endDate)) {
-            $startDateFormatted = $startDate->format("Y-m-d");
-            $endDateFormatted = $endDate->format("Y-m-d");
+            $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+            $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
             $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
@@ -206,8 +207,8 @@ class PlayersRepository extends BaseRepository {
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
         if (isset($startDate) && isset($endDate)) {
-            $startDateFormatted = $startDate->format("Y-m-d");
-            $endDateFormatted = $endDate->format("Y-m-d");
+            $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+            $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
             $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
@@ -289,8 +290,8 @@ class PlayersRepository extends BaseRepository {
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($startDate) && isset($endDate)) {
-            $startDateFormatted = $startDate->format("Y-m-d");
-            $endDateFormatted = $endDate->format("Y-m-d");
+            $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+            $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
             $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
@@ -370,8 +371,8 @@ class PlayersRepository extends BaseRepository {
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($startDate) && isset($endDate)) {
-            $startDateFormatted = $startDate->format("Y-m-d");
-            $endDateFormatted = $endDate->format("Y-m-d");
+            $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+            $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
             $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
@@ -420,7 +421,7 @@ class PlayersRepository extends BaseRepository {
 //         INNER JOIN poker_seasons s ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date AND '2020-01-01' BETWEEN s.season_start_date AND s.season_end_date
 //         INNER JOIN poker_special_types st ON t.special_type_id = st.special_type_id AND st.special_type_description = 'Championship';
         $qb = $this->createQueryBuilder("p");
-        $tournamentDateFormatted = $tournamentDate->format("Y-m-d");
+        $tournamentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $tournamentDate);
         return $qb->select("p")
                   ->innerJoin("p.tournamentAbsences", "ta")
                   ->innerJoin("ta.tournaments", "t")
@@ -512,8 +513,8 @@ class PlayersRepository extends BaseRepository {
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (!$winsForPlayer && isset($startDate) && isset($endDate)) {
-            $startDateFormatted = $startDate->format("Y-m-d");
-            $endDateFormatted = $endDate->format("Y-m-d");
+            $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+            $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
             $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
@@ -562,7 +563,7 @@ class PlayersRepository extends BaseRepository {
             $hash = hash(algo: 'sha256', data: $token);
             $expires = new DateTime();
             $expires->add(new DateInterval("P1D")); // 1 day
-            $expiresFormatted = $expires->format("U");
+            $expiresFormatted = DateTimeUtility::formatSecondsSinceEpoch(value: $expires);
         }
         $sql =
             "UPDATE poker_players " .

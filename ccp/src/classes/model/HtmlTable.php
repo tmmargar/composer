@@ -2,9 +2,8 @@
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
 use DateTime;
-use PDOStatement;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\classes\utility\HtmlUtility;
-
 class HtmlTable extends HtmlBase {
   /*
    * $caption is additional info about table (default is NULL)
@@ -154,7 +153,6 @@ class HtmlTable extends HtmlBase {
                         $class = array();
                         $temp = $row[$index];
                         if (!$formattedFlag) {
-                            //$aryFmt = $this->pdoStatement->getColumnMeta(column: $index);
                             if (isset($this->columnFormat)) {
                                 $aryFmt2 = array();
                                 for ($idx = 0; $idx < count(value: $this->columnFormat); $idx++) {
@@ -179,15 +177,15 @@ class HtmlTable extends HtmlBase {
                                 switch (strtolower(string: $fmt)) {
                                     case "date":
                                         $dateTime = new DateTime(datetime: $temp);
-                                        $temp = $dateTime->format("m/d/Y");
+                                        $temp = DateTimeUtility::formatDisplayDate(value: $dateTime);
                                         break;
                                     case "datetime":
                                         $dateTime = new DateTime(datetime: $temp);
-                                        $temp = $dateTime->format("m/d/Y h:i:s A");
+                                        $temp = DateTimeUtility::formatDisplayDateTime(value: $dateTime);
                                         break;
                                     case "time":
                                         $dateTime = new DateTime(datetime: $temp);
-                                        $temp = $dateTime->format("h:i:s A");
+                                        $temp = DateTimeUtility::formatDisplayTime(value: $dateTime);
                                         array_push($class, "time");
                                         break;
                                     case "currency":
@@ -331,12 +329,6 @@ class HtmlTable extends HtmlBase {
     public function getLink(): ?array {
         return $this->link;
     }
-    public function getPdoStatement(): ?PDOStatement {
-        return $this->pdoStatement;
-    }
-    public function getQuery(): string {
-        return $this->query;
-    }
     public function getSelectedRow(): ?string {
         return $this->selectedRow;
     }
@@ -400,14 +392,6 @@ class HtmlTable extends HtmlBase {
         $this->note = $note;
         return $this;
     }
-    public function setPdoStatement(PDOStatement $pdoStatement) {
-        $this->pdoStatement = $pdoStatement;
-        return $this;
-    }
-    public function setQuery(string $query) {
-        $this->query = $query;
-        return $this;
-    }
     public function setSelectedRow(array $selectedRow) {
         $this->selectedRow = $selectedRow;
         return $this;
@@ -446,10 +430,6 @@ class HtmlTable extends HtmlBase {
         $output .= print_r(value: $this->link, return: true);
         $output .= ", note = ";
         $output .= var_export(value: $this->note, return: true);
-        $output .= ", pdoStatement = ";
-        $output .= var_export(value: $this->pdoStatement, return: true);
-        $output .= ", query = '";
-        $output .= $this->query;
         $output .= "', selectedRow = ";
         $output .= print_r(value: $this->selectedRow, return: true);
         $output .= ", suffix = '";

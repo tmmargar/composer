@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace ccp;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\utility\SessionUtility;
-require_once "../autoload.php";
+require_once "../bootstrap.php";
 // check if site is down
 $file_handle = fopen(filename: "../status.txt", mode: "a+");
 $contents = file_get_contents(filename: "../status.txt");

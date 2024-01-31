@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
 class Database extends Root {
-  public function __construct(protected bool $debug, protected string $hostName, protected string $userid, protected string $password, protected string $databaseName, protected int $port): Database {
+  public function __construct(protected bool $debug, protected string $hostName, protected string $userid, protected string $password, protected string $databaseName, protected int $port) {
     parent::__construct(debug: $debug);
     return $this;
   }

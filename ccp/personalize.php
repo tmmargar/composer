@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use Poker\Ccp\classes\model\DatabaseResult;
+use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";
 if (!defined("USER_ID_PARAM_NAME")) {define("USER_ID_PARAM_NAME", "userId");}
@@ -9,13 +9,13 @@ $smarty->assign("title", "Chip Chair and a Prayer My Stats");
 $outputPersonalize =
   "<div class=\"responsive responsive--4cols responsive--collapse\">\n";
 $heading = "";
-$userId = (isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : "";
+$userId = (int) ((isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME])) ? $_GET[USER_ID_PARAM_NAME] : 0);
 if ($userId == "" || SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_USERID) == $userId) {
   $heading .= "My";
 } else {
   $params = array($userId);
-  $resultList = $databaseResult->getPlayerById(params: $params);
-  $heading .= $resultList[0]->getName() . "'s";
+  $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getById(playerId: $userId);
+  $heading .= $resultList[0]->getPlayerName() . "'s";
 }
 $heading .= " Stats";
 $outputPersonalize .=

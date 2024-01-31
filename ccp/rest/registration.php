@@ -1,6 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
+use DateTime;
 use Poker\Ccp\classes\model\Constant;
 require_once "init.php";
 define("TOURNAMENT_ID_PARAMETER_NAME", "tournamentId");
@@ -22,18 +23,18 @@ $output .= "<script type=\"module\">\n" . "  import { dataTable, display, input 
 $mode = isset($_POST[Constant::FIELD_NAME_MODE]) ? $_POST[Constant::FIELD_NAME_MODE] : Constant::MODE_VIEW;
 $tournamentDate = isset($_GET["tournamentDate"]) ? $_GET["tournamentDate"] : "";
 $max = $_GET["max"] == "Y" ? true : false;
-$params = array($tournamentDate,$max);
+$entityManager = getEntityManager();
 // date (YYYY-MM-DD) and true if max false if not
-$resultList = $databaseResult->getRegistrationList(params: $params);
+$resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getRegistrationList(tournamentDate: new DateTime(datetime: $tournamentDate), max: $max);
 if (0 < count($resultList)) {
   $count = 0;
   $registered = false;
   $output2 .= " <table id=\"output\">\n <tbody>\n";
   foreach ($resultList as $result) {
     $output2 .= "  <tr>\n";
-    $output2 .= "   <td>" . $result[0] . " " . $result[1] . "</td>\n";
-    $output2 .= "   <td>" . $result[2] . "</td>\n";
-    $output2 .= "   <td>" . $result[3] . "</td>\n";
+    $output2 .= "   <td>" . $result["player_first_name"] . " " . $result["player_last_name"] . "</td>\n";
+    $output2 .= "   <td>" . $result["result_registration_food"] . "</td>\n";
+    $output2 .= "   <td>" . $result["fee status"] . "</td>\n";
     $output2 .= "  </tr>\n";
     $count ++;
   }

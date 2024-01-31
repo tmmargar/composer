@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace ccp;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";

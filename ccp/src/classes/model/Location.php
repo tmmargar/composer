@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
 use Poker\Ccp\Entity\Locations;
-
 class Location extends Base {
     private Locations $locations;
     public function createFromEntity(bool $debug, Locations $locations): Location {

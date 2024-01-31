@@ -4,7 +4,6 @@ namespace ccp;
 use DateTime;
 use PDO;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\HtmlTable;
 use Poker\Ccp\classes\model\GameType;
@@ -669,7 +668,7 @@ if (!isset($reportId) || "" == $reportId) {
                 $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getResultsMinDate(playerId: $userId);
                 if (0 < count($resultList)) {
                     $date = new DateTime(datetime: $resultList[0]["tournamentDate"]);
-                    $output .= "<div class=\"center\">Member since " . $date->format("m/d/Y") . "</div>\n";
+                    $output .= "<div class=\"center\">Member since " . DateTimeUtility::formatDisplayDateTime(value: $date) . "</div>\n";
                 }
                 break;
             default:

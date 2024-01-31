@@ -2,8 +2,8 @@
 namespace Poker\Ccp\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
-use Poker\Ccp\classes\model\Constant;
 use PDO;
+use Poker\Ccp\classes\model\Constant;
 class FeesRepository extends BaseRepository {
     public function getForTournament(int $tournamentId, bool $greaterThanZero) {
 //         case "feeCountByTournamentId":

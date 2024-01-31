@@ -1,10 +1,9 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
-use \DateTime;
+use DateTime;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\Entity\Players;
-
 class Player extends Base {
     private string $firstName;
     private string $lastName;
@@ -235,15 +234,15 @@ class Player extends Base {
         $output .= "', administrator = '";
         $output .= $this->administrator;
         $output .= "', registrationDate = '";
-        $output .= NULL !== $this->registrationDate ? $this->registrationDate->format("m/d/Y") : "";
+        $output .= NULL !== $this->registrationDate ? DateTimeUtility::formatDisplayDateTime(value: $this->registrationDate) : "";
         $output .= "', approvalDate = '";
-        $output .= NULL !== $this->approvalDate ? $this->approvalDate->format("m/d/Y") : "";
+        $output .= NULL !== $this->approvalDate ? DateTimeUtility::formatDisplayDateTime(value: $this->approvalDate) : "";
         $output .= "', approvalUserId = '";
         $output .= $this->approvalUserid;
         $output .= "', approvalName = '";
         $output .= $this->approvalName;
         $output .= "', rejectionDate = '";
-        $output .= NULL !== $this->rejectionDate ? $this->rejectionDate->format("m/d/Y") : "";
+        $output .= NULL !== $this->rejectionDate ? DateTimeUtility::formatDisplayDateTime(value: $this->rejectionDate) : "";
         $output .= "', rejectionUserId = '";
         $output .= $this->rejectionUserid;
         $output .= "', rejectionName = '";

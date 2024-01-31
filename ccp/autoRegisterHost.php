@@ -7,6 +7,7 @@ use Poker\Ccp\classes\model\Address;
 use Poker\Ccp\classes\model\Constant;
 use Poker\Ccp\classes\model\Email;
 use Poker\Ccp\classes\model\Tournament;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\classes\utility\SessionUtility;
 use Poker\Ccp\Entity\Results;
 require_once "init.php";
@@ -15,7 +16,7 @@ $output .=
     "<script type=\"module\">\n" .
     "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
     "  let aryMessages = [];\n";
-$output .= isset($mode) ? "  aryMessages.push(\"###Run at " . $now->format("D, M j, Y h:i A") . "###\");\n" : "\r";
+$output .= isset($mode) ? "  aryMessages.push(\"###Run at " . DateTimeUtility::formatDisplayLong(value: $now) . "###\");\n" : "\r";
 $dateTime = new DateTime();
 $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getRegisterHost(startDate: $dateTime, endDate: $dateTime);
 if (count($resultList) == 0) {
@@ -24,11 +25,8 @@ if (count($resultList) == 0) {
     foreach ($resultList as $tournaments) {
         $player = $tournaments->getLocations()->getPlayers();
         $params = array($tournaments->getTournamentId(), $player->getPlayerId(), "N/A");
-//         $rowCount = $databaseResult->insertRegistration(params: $params);
         $re = new Results();
-//         $player = $entityManager->find(Constant::ENTITY_PLAYERS, (int) $player->getId());
         $re->setPlayers($player);
-//         $re->setPlayerKos(null);
         $re->setResultAddonFlag(Constant::FLAG_NO);
         $re->setResultPaidAddonFlag(Constant::FLAG_NO);
         $re->setResultPaidBuyinFlag(Constant::FLAG_NO);
@@ -54,7 +52,7 @@ if (count($resultList) == 0) {
                 "  display.showErrors({errors: [ \"" . $errors . "\" ]});\n" .
                 "</script>\n";
         } else {
-            $output .= isset($mode) ? "  aryMessages.push(\"Successfully registered " . $player->getPlayerName() . " for tournament on " . $tournaments->getTournamentDate()->format("m/d/Y") . " starting at " . $tournaments->getTournamentStartTime()->format("h:i A") . "\");\n" : "\r";
+            $output .= isset($mode) ? "  aryMessages.push(\"Successfully registered " . $player->getPlayerName() . " for tournament on " . DateTimeUtility::formatDisplayDateTime(value: $tournaments->getTournamentDate()) . " starting at " . DateTimeUtility::formatDisplayTime(value: $tournaments->getTournamentStartTime()) . "\");\n" : "\r";
         }
         $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, description: NULL, comment: NULL, limitType: NULL, gameType: NULL, specialType: NULL, chipCount: 0, location: NULL, date: NULL, startTime: NULL, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: NULL, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0, earnings: 0);
         $emailTournament->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), tournaments: $tournaments);

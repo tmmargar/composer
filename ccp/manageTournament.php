@@ -8,6 +8,7 @@ use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\FormOption;
 use Poker\Ccp\classes\model\FormSelect;
 use Poker\Ccp\classes\model\HtmlTable;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\classes\utility\SessionUtility;
 use Poker\Ccp\Entity\Tournaments;
 require_once "init.php";
@@ -141,7 +142,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
                 $output .= "    </div>\n";
             }
             $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . TOURNAMENT_DATE_TIME_FIELD_NAME . "_" . $id . "\">" . TOURNAMENT_DATE_TIME_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
-            $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_START_TIME, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("timePicker"), cols: NULL, disabled: false, id: TOURNAMENT_DATE_TIME_FIELD_NAME . "_" . $id, maxLength: 30, name: TOURNAMENT_DATE_TIME_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 20, suffix: NULL, type: FormControl::TYPE_INPUT_DATE_TIME, value: ((NULL !== $tournaments) ? ($tournaments->getTournamentDate()->format("Y-m-d") . $tournaments->getTournamentStartTime()->format("\TH:i")) : ""), wrap: NULL);
+            $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_START_TIME, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("timePicker"), cols: NULL, disabled: false, id: TOURNAMENT_DATE_TIME_FIELD_NAME . "_" . $id, maxLength: 30, name: TOURNAMENT_DATE_TIME_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 20, suffix: NULL, type: FormControl::TYPE_INPUT_DATE_TIME, value: ((NULL !== $tournaments) ? (DateTimeUtility::formatDatabaseDate(value: $tournaments->getTournamentDate()) . DateTimeUtility::formatDisplayPickerTime(value: $tournaments->getTournamentStartTime())) : ""), wrap: NULL);
             $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxName->getHtml() . "</div>\n";
             $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id . "\">" . TOURNAMENT_BUYIN_AMOUNT_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
             $textBoxName = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_BUYIN_AMOUNT, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id, maxLength: 4, name: TOURNAMENT_BUYIN_AMOUNT_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 5, suffix: NULL, type: FormControl::TYPE_INPUT_NUMBER, value: ((NULL !== $tournaments) ? (string) $tournaments->getTournamentBuyinAmount() : ""), wrap: NULL);
@@ -285,7 +286,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
             $entityManager->flush();
             $params = array($tournamentMaxRebuys == 0 ? (int) 0 : NULL, $tournamentMaxRebuys == 0 ? Constant::FLAG_NO : NULL, $tournamentAddonAmount == 0 ? Constant::FLAG_NO : NULL, $tournamentAddonAmount == 0 ? Constant::FLAG_NO : NULL, $tournamentId);
             if (isset($params[0]) || isset($params[1]) || isset($params[2]) || isset($params[3])) {
-                $rowCount = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->updateFinish(rebuyCount: $params[0], rebuyPaidFlag: $params[1], addonPaidFlag: $params[2], addonFlag: $params[3], statusCode: NULL, place: NULL, playerIdKo: NULL, tournamentId: $tournamentId, playerId: NULL);
+                $rowCount = $entityManager->getRepository(Constant::ENTITY_RESULTS)->updateFinish(rebuyCount: $params[0], rebuyPaidFlag: $params[1], addonPaidFlag: $params[2], addonFlag: $params[3], statusCode: NULL, place: NULL, playerIdKo: NULL, tournamentId: $tournamentId, playerId: NULL);
                 if (!is_numeric($rowCount)) {
                     $output .=
                         "<script type=\"module\">\n" .

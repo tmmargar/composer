@@ -21,6 +21,7 @@ $classes = array(
     $entityManager->getClassMetadata('Poker\Ccp\Entity\Structures'),
     $entityManager->getClassMetadata('Poker\Ccp\Entity\TournamentAbsences'),
     $entityManager->getClassMetadata('Poker\Ccp\Entity\Tournaments')
+    $entityManager->getClassMetadata('Poker\Ccp\Entity\blobtest')
 );
 $tool->dropSchema($classes);
 $tool->createSchema($classes);

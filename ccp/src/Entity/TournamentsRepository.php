@@ -1,11 +1,12 @@
 <?php
 namespace Poker\Ccp\Entity;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Parameter;
-use Poker\Ccp\classes\model\Constant;
-use DateTime;
 use PDO;
+use Poker\Ccp\classes\model\Constant;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 class TournamentsRepository extends BaseRepository {
     public function getById(?int $tournamentId) {
         $qb = $this->createQueryBuilder("t")
@@ -33,8 +34,8 @@ class TournamentsRepository extends BaseRepository {
 //         " LEFT JOIN poker_results r ON t.tournament_id = r.tournament_id AND p.player_id = r.player_id " .
 //         "WHERE r.player_id IS NULL";
         $qb = $this->createQueryBuilder("t");
-        $dtStartFormatted = $startDate->format("Y-m-d");
-        $dtEndFormatted = $endDate->format("Y-m-d");
+        $dtStartFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+        $dtEndFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
         return $qb->innerJoin("t.locations", "l", Expr\Join::WITH, $qb->expr()->between("t.tournamentDate", ":startDate", "DATE_ADD(:endDate, 14, 'DAY')"))
                   ->innerJoin("l.players", "p", Expr\Join::WITH, "p.playerActiveFlag = 1")
                   ->leftJoin("t.results", "r", Expr\Join::WITH, "p.playerId = r.players")
@@ -57,8 +58,8 @@ class TournamentsRepository extends BaseRepository {
 //             }
 //             $query .= "t.tournament_date BETWEEN :startDate AND :endDate";
         $qb = $this->createQueryBuilder("t");
-        $startDateFormatted = $startDate->format("Y-m-d");
-        $endDateFormatted = $endDate->format("Y-m-d");
+        $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+        $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
         return $qb->where("t.tournamentDate BETWEEN :startDate AND :endDate")
                   ->setParameters(new ArrayCollection(array(new Parameter("startDate", $startDateFormatted), new Parameter("endDate", $endDateFormatted))))
                   ->getQuery()->getResult();
@@ -78,8 +79,8 @@ class TournamentsRepository extends BaseRepository {
         //             }
         //             $query .= "t.tournament_date BETWEEN :startDate AND :endDate";
         $qb = $this->createQueryBuilder("t");
-        $dtStartFormatted = $startDate->format("Y-m-d");
-        $dtEndFormatted = $endDate->format("Y-m-d");
+        $dtStartFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+        $dtEndFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
         return $qb->innerJoin("t.results", "r")
                   ->where("r.players = :playerId")
                   ->andWhere("r.statusCodes = :statusCode")
@@ -145,8 +146,8 @@ class TournamentsRepository extends BaseRepository {
             "      WHERE t.tournament_date BETWEEN :startDate AND :endDate) zz";
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($startDate) && isset($endDate)) {
-            $startDateFormatted = $startDate->format("Y-m-d");
-            $endDateFormatted = $endDate->format("Y-m-d");
+            $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+            $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
             $statement->bindValue("startDate", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate", $endDateFormatted, PDO::PARAM_STR);
         }
@@ -169,7 +170,7 @@ class TournamentsRepository extends BaseRepository {
             "ORDER BY r.result_registration_order";
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($tournamentDate)) {
-            $tournamentDateFormatted = $tournamentDate->format("Y-m-d");
+            $tournamentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $tournamentDate);
             $statement->bindValue("tournamentDate", $tournamentDateFormatted, PDO::PARAM_STR);
         }
         return $statement->executeQuery()->fetchAllAssociative();
@@ -196,7 +197,7 @@ class TournamentsRepository extends BaseRepository {
 
     public function getResultsMaxId(DateTime $tournamentDate) { // max with results
 //         case "resultIdMax":
-        $tournamentDateFormatted = $tournamentDate->format("Y-m-d");
+        $tournamentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $tournamentDate);
         $qb = $this->createQueryBuilder("t");
         return $qb->select("MAX(t.tournamentId) AS tournamentId")
                   ->innerJoin("t.results", "r")
@@ -280,8 +281,8 @@ class TournamentsRepository extends BaseRepository {
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($tournamentDate) && isset($startTime)) {
-            $tournamentDateFormatted = $tournamentDate->format("Y-m-d");
-            $startTimeFormatted = $startTime->format("h:i");
+            $tournamentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $tournamentDate);
+            $startTimeFormatted = DateTimeUtility::formatDatabaseTime(value: $startTime);
             $statement->bindValue("tournamentDate1", $tournamentDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("tournamentDate2", $tournamentDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("startTime", $startTimeFormatted, PDO::PARAM_STR);
@@ -335,20 +336,9 @@ class TournamentsRepository extends BaseRepository {
 //             "AND player_id = :playerId " .
 //             "AND result_place_finished > 0 " .
 //             "AND tournament_date BETWEEN :startDate AND :endDate";
-//         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-//         $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
-//         $startDateFormatted = $startDate->format("Y-m-d");
-//         $endDateFormatted = $endDate->format("Y-m-d");
-//         $statement->bindValue("startDate", $startDateFormatted, PDO::PARAM_STR);
-//         $statement->bindValue("endDate", $endDateFormatted, PDO::PARAM_STR);
-//         if ($indexed) {
-//             return $statement->executeQuery()->fetchAllNumeric();
-//         } else {
-//             return $statement->executeQuery()->fetchAllAssociative();
-//         }
         $qb = $this->createQueryBuilder("t");
-        $startDateFormatted = $startDate->format("Y-m-d");
-        $endDateFormatted = $endDate->format("Y-m-d");
+        $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+        $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
         return $qb->select("COUNT(t) AS numPlayed")
                   ->innerJoin("t.results", "r")
                   ->where("r.players = :playerId")
@@ -532,8 +522,8 @@ class TournamentsRepository extends BaseRepository {
 
     public function getForDateAndTime(DateTime $tournamentDate, DateTime $time) {
         $qb = $this->createQueryBuilder("t");
-        $tournamentDateFormatted = $tournamentDate->format("Y-m-d");
-        $timeFormatted = $time->format("H:i");
+        $tournamentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $tournamentDate);
+        $timeFormatted = DateTimeUtility::formatDatabaseTime(value: $time);
         return $qb->where("t.tournamentDate = :tournamentDate")
                   ->andWhere("t.tournamentStartTime = :startTime")
                   ->setParameters(new ArrayCollection(array(new Parameter("tournamentDate", $tournamentDateFormatted), new Parameter("startTime", $timeFormatted))))

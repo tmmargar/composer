@@ -1,9 +1,8 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use \DateTime;
+use DateTime;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "vendor/autoload.php";
 $header = "";

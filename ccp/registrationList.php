@@ -2,9 +2,8 @@
 declare(strict_types = 1);
 namespace ccp;
 use DateInterval;
-use \DateTime;
+use DateTime;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\GameType;
 use Poker\Ccp\classes\model\GroupPayout;
 use Poker\Ccp\classes\model\Group;
@@ -30,7 +29,7 @@ if (NULL != $limitCount) {
 $now = new \Poker\Ccp\classes\model\DateTime(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, time: "now");
 $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getAllMultiple(championship: false, tournamentDate: new DateTime(), startTime: new DateTime(), tournamentId: NULL, notEntered: false, ordered: false, mode: NULL, interval: NULL, limitCount: $limitCount);
 foreach ($resultList as $row) {
-    $limitType = new LimitType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["limit_type_id"], name: $row["name"]);
+    $limitType = new LimitType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["limit_type_id"], name: $row["limit"]);
     $gameType = new GameType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["game_type_id"], name: $row["type"]);
     $specialType = new SpecialType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["special_type_id"], description: $row["std"], multiplier: $row["special_type_multiplier"]);
     $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", username: NULL, password: NULL, email: NULL, phone: NULL, administrator: "0", registrationDate: new \DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);

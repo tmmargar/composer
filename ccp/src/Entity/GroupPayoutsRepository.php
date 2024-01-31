@@ -1,7 +1,6 @@
 <?php
 namespace Poker\Ccp\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
-// use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Parameter;
 use PDO;
 class GroupPayoutsRepository extends BaseRepository {

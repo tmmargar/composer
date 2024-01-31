@@ -1,9 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
 use Poker\Ccp\Entity\SpecialTypes;
-
 class SpecialType extends Base {
     private SpecialTypes $specialTypes;
     public function createFromEntity(bool $debug, SpecialTypes $specialTypes): SpecialType {

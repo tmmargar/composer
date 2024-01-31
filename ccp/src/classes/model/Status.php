@@ -1,8 +1,8 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-use Poker\Ccp\Entity\StatusCodes;
 use Exception;
+use Poker\Ccp\Entity\StatusCodes;
 class Status extends Base {
     private const codeList = array("P" => "Paid","R" => "Registered","F" => "Finished");
     private StatusCodes $statusCodes;

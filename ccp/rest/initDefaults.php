@@ -2,11 +2,8 @@
 declare(strict_types = 1);
 namespace ccp;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\utility\SessionUtility;
 $header = "";
-$databaseResult = new DatabaseResult(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG));
-// $databaseResult = new DatabaseResult(true);
 $smarty->assign("header", $header);
 $aryScriptFull = explode(separator: "/", string: $_SERVER["SCRIPT_NAME"]);
 $scriptName = $aryScriptFull[count(value: $aryScriptFull) - 1];

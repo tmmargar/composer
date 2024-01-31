@@ -1,9 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
 use Poker\Ccp\Entity\LimitTypes;
-
 class LimitType extends Base {
     private LimitTypes $limitTypes;
     public function createFromEntity(bool $debug, LimitTypes $limitTypes): LimitType {

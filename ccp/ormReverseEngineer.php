@@ -1,6 +1,7 @@
 <?php
 use Doctrine\ORM\Tools\EntityGenerator;
 require_once "bootstrap.php";
+$entityManager = getEntityManager();
 $entityManager->getConfiguration()->setMetadataDriverImpl(
   new \Doctrine\ORM\Mapping\Driver\DatabaseDriver(
     $entityManager->getConnection()->getSchemaManager()
@@ -19,4 +20,4 @@ $generator = new EntityGenerator();
 $generator->setUpdateEntityIfExists(true);
 $generator->setGenerateStubMethods(true);
 $generator->setGenerateAnnotations(true);
-$generator->generate($metadata, __DIR__ . '/src/classes/entity');
+$generator->generate($metadata, __DIR__ . '/src/EntityTest');

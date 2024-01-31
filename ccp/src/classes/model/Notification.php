@@ -1,9 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
 use Poker\Ccp\Entity\Notifications;
-
 class Notification extends Base {
     private Notifications $notifications;
     public function createFromEntity(bool $debug, Notifications $notifications): Notification {

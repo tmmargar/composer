@@ -1,7 +1,6 @@
 <?php
 require_once "bootstrap.php";
 use Doctrine\Common\Collections\ArrayCollection;
-// use Doctrine\ORM\EntityManager;
 use Poker\Ccp\Entity\Fees;
 use Poker\Ccp\Entity\GameTypes;
 use Poker\Ccp\Entity\Groups;
@@ -17,21 +16,22 @@ use Poker\Ccp\Entity\SpecialTypes;
 use Poker\Ccp\Entity\Structures;
 use Poker\Ccp\Entity\Tournaments;
 use Poker\Ccp\classes\model\Constant;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 date_default_timezone_set(timezoneId: "America/New_York");
+$entityManager = getEntityManager();
 // $fe = new Fees();
 // $fe->setFeeAmount(3);
-// $entityManager = new EntityManager($connection, $config);
 // $player = $entityManager->find(Constant::ENTITY_PLAYERS, 35);
 // // echo "<br>player has fees count = " . count($player->getFees());
 // // echo "<br>Fees player name=" . $player->getPlayerName();
 // $fe->setPlayers($player);
 // $season = $entityManager->find(Constant::ENTITY_SEASONS, 18);
 // // echo "<br>season has fees count = " . count($season->getFees());
-// // echo "<br>Fees season start date=" . $season->getSeasonStartDate()->format("m/d/Y");
+// // echo "<br>Fees season start date=" . DateTimeUtility::formatDisplayDateTime(value: $season->getSeasonStartDate());
 // $fe->setSeasons($season);
 // $tournament = $entityManager->find(Constant::ENTITY_TOURNAMENTS, 500);
 // // echo "<br>tournament has fees count = " . count($tournament->getFees());
-// // echo "<br>Fees tournament date=" . $tournament->getTournamentDate()->format("m/d/Y");
+// // echo "<br>Fees tournament date=" . DateTimeUtility::formatDisplayDateTime(value: $tournament->getTournamentDate());
 // $fe->setTournaments($tournament);
 // $entityManager->persist($fe);
 // $entityManager->flush();
@@ -47,7 +47,7 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $seasonFind = $entityManager->find(Constant::ENTITY_SEASONS, 15);
 // $playerFind = $entityManager->find(Constant::ENTITY_PLAYERS, 35);
 // $tournamentFind = $entityManager->find(Constant::ENTITY_TOURNAMENTS, 414);
-// $feeFind = $entityManagergetRepository(Constant::ENTITY_FEES)->->findOneBy(array("seasons" => $seasonFind, "players" => $playerFind, "tournaments" => $tournamentFind));
+// $feeFind = $entityManager->getRepository(Constant::ENTITY_FEES)->findOneBy(array("seasons" => $seasonFind, "players" => $playerFind, "tournaments" => $tournamentFind));
 // echo "<br>find fee for season=" . $seasonFind->getSeasonId() . ", player=" . $playerFind->getPlayerId() . ", tournament=" . $tournamentFind->getTournamentId() . " amount=" . $feeFind->getFeeAmount();
 
 // $gt = new GameTypes();
@@ -130,7 +130,7 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $pl->setPlayerActiveFlag(1);
 // $pl->setPlayerAdministratorFlag(0);
 // $pl->setPlayerApprovalDate(null);
-// $pl->setPlayerApprovalPlayerId(null);
+// $pl->setPlayerApproval(null);
 // $pl->setPlayerEmail("abc@dummy.com");
 // $pl->setPlayerExpires(null);
 // $pl->setPlayerFirstName("first");
@@ -140,7 +140,7 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $pl->setPlayerPhone(1234567898);
 // $pl->setPlayerRegistrationDate(new DateTime());
 // $pl->setPlayerRejectionDate(null);
-// $pl->setPlayerRejectionPlayerId(null);
+// $pl->setPlayerRejection(null);
 // $pl->setPlayerSelector(null);
 // $pl->setPlayerToken(null);
 // $pl->setPlayerUsername("dummy");
@@ -173,13 +173,13 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $nt->setNotificationEndDate(new DateTime());
 // $entityManager->persist($nt);
 // $entityManager->flush();
-// echo "<br>Created Notifications with ID=" . $nt->getNotificationId() . " and desc=" . $nt->getNotificationDescription() . " and start date=" . $nt->getNotificationStartDate()->format("m/d/Y h:i:s.v") . " and end date=" . $nt->getNotificationEndDate()->format("m/d/Y h:i:s.v");
+// echo "<br>Created Notifications with ID=" . $nt->getNotificationId() . " and desc=" . $nt->getNotificationDescription() . " and start date=" . DateTimeUtility::formatDisplayDateTimeMilliseconds(value: $nt->getNotificationStartDate()) . " and end date=" . DateTimeUtility::formatDisplayDateTimeMilliseconds(value: $nt->getNotificationEndDate());
 // $nt->setNotificationDescription("orm updated notif desc");
 // $nt->setNotificationStartDate(new DateTime());
 // $nt->setNotificationEndDate(new DateTime());
 // $entityManager->persist($nt);
 // $entityManager->flush();
-// echo "<br>Updated Notifications with ID=" . $nt->getNotificationId() . " and desc=" . $nt->getNotificationDescription() . " and start date=" . $nt->getNotificationStartDate()->format("m/d/Y h:i:s.v") . " and end date=" . $nt->getNotificationEndDate()->format("m/d/Y h:i:s.v");
+// echo "<br>Updated Notifications with ID=" . $nt->getNotificationId() . " and desc=" . $nt->getNotificationDescription() . " and start date=" . DateTimeUtility::formatDisplayDateTimeMilliseconds(value: $nt->getNotificationStartDate()) . " and end date=" . DateTimeUtility::formatDisplayDateTimeMilliseconds(value: $nt->getNotificationEndDate());
 // $idDeleted = $nt->getNotificationId();
 // $entityManager->remove($nt);
 // $entityManager->flush();
@@ -209,7 +209,7 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $pl->setPlayerActiveFlag(1);
 // $pl->setPlayerAdministratorFlag(0);
 // $pl->setPlayerApprovalDate(null);
-// $pl->setPlayerApprovalPlayerId(null);
+// $pl->setPlayerApproval(null);
 // $pl->setPlayerEmail("abc@dummy.com");
 // $pl->setPlayerExpires(null);
 // $pl->setPlayerFirstName("first");
@@ -219,7 +219,7 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $pl->setPlayerPhone(1234567898);
 // $pl->setPlayerRegistrationDate(new DateTime());
 // $pl->setPlayerRejectionDate(null);
-// $pl->setPlayerRejectionPlayerId(null);
+// $pl->setPlayerRejection(null);
 // $pl->setPlayerSelector(null);
 // $pl->setPlayerToken(null);
 // $pl->setPlayerUsername("dummy");
@@ -231,7 +231,7 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $entityManager->flush();
 // echo "<br>Updated Players with ID=" . $pl->getPlayerId() . " and active=" . $pl->getPlayerActiveFlag();
 // $idDeleted = $pl->getPlayerId();
-// $entityManager->remove($lo);
+// $entityManager->remove($pl);
 // $entityManager->flush();
 // echo "<br>Deleted Players with ID=" . $idDeleted;
 
@@ -274,13 +274,13 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $st->setSeasonActiveFlag(1);
 // $entityManager->persist($st);
 // $entityManager->flush();
-// echo "<br>Created Seasons with ID=" . $st->getSeasonId() . " and desc=" . $st->getSeasonDescription() . " and start date=" . $st->getSeasonStartDate()->format("m/d/Y h:i:s.v") . " and end date=" . $st->getSeasonEndDate()->format("m/d/Y h:i:s.v");
+// echo "<br>Created Seasons with ID=" . $st->getSeasonId() . " and desc=" . $st->getSeasonDescription() . " and start date=" . DateTimeUtility::formatDisplayDateTimeMilliseconds(value: $st->getSeasonStartDate()) . " and end date=" . DateTimeUtility::formatDisplayDateTimeMilliseconds(value: $st->getSeasonEndDate());
 // $st->setSeasonDescription("orm updated notif desc");
 // $st->setSeasonStartDate(new DateTime());
 // $st->setSeasonEndDate(new DateTime());
 // $entityManager->persist($st);
 // $entityManager->flush();
-// echo "<br>Updated Seasons with ID=" . $st->getSeasonId() . " and desc=" . $st->getSeasonDescription() . " and start date=" . $st->getSeasonStartDate()->format("m/d/Y h:i:s.v") . " and end date=" . $st->getSeasonEndDate()->format("m/d/Y h:i:s.v");
+// echo "<br>Updated Seasons with ID=" . $st->getSeasonId() . " and desc=" . $st->getSeasonDescription() . " and start date=" . DateTimeUtility::formatDisplayDateTimeMilliseconds(value: $st->getSeasonStartDate()) . " and end date=" . DateTimeUtility::formatDisplayDateTimeMilliseconds(value: $st->getSeasonEndDate());
 // $idDeleted = $st->getSeasonId();
 // $entityManager->remove($st);
 // $entityManager->flush();
@@ -307,7 +307,6 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $pa->setPayoutMinPlayers(5);
 // $pa->setPayoutName("orm test payout");
 // $str = new Structures();
-// $entityManager = new EntityManager($connection, $config);
 // $str->setPayouts($pa);
 // $str->setStructurePercentage(.66);
 // $str->setStructurePlace(1);
@@ -357,7 +356,6 @@ date_default_timezone_set(timezoneId: "America/New_York");
 // $entityManager->flush();
 // echo "<br>Deleted Tournaments with ID=" . $idDeleted;
 
-$entityManager = getEntityManager();
 // $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getActives();
 // echo "<br>active players count=" . count($result);
 // echo "<br>id=" . $result[0]->getPlayerId();
@@ -380,11 +378,11 @@ $entityManager = getEntityManager();
 // $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getBullies(knockedOutBy: 35, limitCount: 5, indexed: false);
 // // echo "<br>player bullies count=" . count($result);
 // foreach ($result as $row) {
-//     echo "<br>bully player name=" . $row[0]->getPlayers()->getPlayerName() . ", count=" . $row["kos"];
+//     echo "<br>bully player name=" . $row["name"] . ", count=" . $row["kos"];
 // }
 // $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForDates(startDate: $dtStart, endDate: $dtEnd);
 // echo "<br>count for dates count=" . count($result);
-// $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForUserAndDates(userId: 35, startDate: $dtStart, endDate: $dtEnd);
+// $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForUserAndDates(playerId: 35, startDate: $dtStart, endDate: $dtEnd);
 // echo "<br>count for dates and user count=" . count($result);
 // $result = $entityManager->getRepository(Constant::ENTITY_FEES)->getForTournament(tournamentId: 469, greaterThanZero: true);
 // echo "<br>fees tournament count=" . count($result);
@@ -396,17 +394,10 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) { break; }
 // }
-// foreach ($result as $row) {
-//     if (get_class($row) == Constant::ENTITY_PLAYERS) {
-//         echo "<br>name=" . $row->getPlayerName();
-//     } else if (get_class($row) == Constant::ENTITY_SEASONS) {
-//         echo "<br>seasons=" . $row->getSeasonDescription() . "/fees=" . $row->getSeasonFee() . "/paid=" . (count($row->getFees()) == 0 ? 0 : $row->getFees()[0]->getFeeAmount());
-//     }
-// }
 // $result = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getFeesBySeason(indexed: false);
 // echo "<br>fees by season count=" . count($result);
 // foreach ($result as $row) {
-//     echo "<br>season id=" . $row[0]->getSeasonId() . "/total amount=" . $row["amount"];
+//     echo "<br>season id=" . $row["season_id"] . "/total amount=" . $row["amount"];
 // }
 // $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFeeForPlayerAndTournament(playerId: 35, tournamentId: 442);
 // echo "<br>fees for player/tournament count=" . count($result);
@@ -418,7 +409,7 @@ $entityManager = getEntityManager();
 // foreach ($result as $row) {
 //     echo "<br>place=" . $row["place"] . "/finishes=" . $row["finishes"] . "/percent=" . $row["pct"] * 100 . "%";
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getResults(playerId: 35);
+// $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getResults(tournamentId: 442, playerId: 35);
 // echo "<br>results for player count=" . count($result);
 // foreach ($result as $player) {
 //     foreach ($player->getResults() as $results) {
@@ -452,21 +443,21 @@ $entityManager = getEntityManager();
 //     echo "<br>location name=" . $location->getLocationName() . "/player name=" . $location->getPlayers()->getPlayerName() . "/tournament count=" . count($location->getTournaments());
 // }
 // $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getByUsername(username: "tmmargar");
-// echo "<br>id=" . $result->getPlayerId() . "/name=" . $result->getPlayerName() . "/approval=" . ($result->getPlayerApproval() === NULL ? "N/A" : $result->getPlayerApproval()->getPlayerName());
+// echo "<br>id=" . $result[0]->getPlayerId() . "/name=" . $result[0]->getPlayerName() . "/approval=" . ($result[0]->getPlayerApproval() === NULL ? "N/A" : $result[0]->getPlayerApproval()->getPlayerName());
 // $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getNemesises(playerId: 35, limitCount: 5, indexed: false);
 // // echo "<br>player nemesises count=" . count($result);
 // foreach ($result as $row) {
-//     echo "<br>nemesis player name=" . $row[0]->getPlayerKos()->getPlayerName() . ", count=" . $row["kos"];
+//     echo "<br>nemesis player name=" . $row["name"] . ", count=" . $row["kos"];
 // }
 // $result = $entityManager->getRepository(Constant::ENTITY_NOTIFICATIONS)->getByDate(date: new DateTime());
 // echo "<br>notifications count=" . count($result);
 // foreach ($result as $notification) {
-//     echo "<br>notification desc=" . $notification->getNotificationDescription() . "/start date=" . $notification->getNotificationStartDate()->format("m/d/Y h:i:sa") . "/end date=" . $notification->getNotificationEndDate()->format("m/d/Y h:i:sa");
+//     echo "<br>notification desc=" . $notification->getNotificationDescription() . "/start date=" . DateTimeUtility::formatDisplayDateTime($notification->getNotificationStartDate()) . "/end date=" . DateTimeUtility::formatDisplayDateTime(value: $notification->getNotificationEndDate());
 // }
 // $result = $entityManager->getRepository(Constant::ENTITY_NOTIFICATIONS)->getById(notificationId: NULL);
 // echo "<br>notifications count=" . count($result);
 // foreach ($result as $notification) {
-//     echo "<br>notification desc=" . $notification->getNotificationDescription() . "/start date=" . $notification->getNotificationStartDate()->format("m/d/Y h:i:sa") . "/end date=" . $notification->getNotificationEndDate()->format("m/d/Y h:i:sa");
+//     echo "<br>notification desc=" . $notification->getNotificationDescription() . "/start date=" . DateTimeUtility::formatDisplayDateTime($notification->getNotificationStartDate()) . "/end date=" . DateTimeUtility::formatDisplayDateTime(value: $notification->getNotificationEndDate());
 // }
 // $result = $entityManager->getRepository(Constant::ENTITY_PAYOUTS)->getById(payoutId: NULL);
 // echo "<br>payouts count=" . count($result);
@@ -487,7 +478,7 @@ $entityManager = getEntityManager();
 // $result = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getById(seasonId: NULL);
 // echo "<br>seasons count=" . count($result);
 // foreach ($result as $season) {
-//     echo "<br>season desc=" . $season->getSeasonDescription() . "/start date=" . $season->getSeasonStartDate()->format("m/d/Y") . "/end date=" . $season->getSeasonEndDate()->format("m/d/Y");
+//     echo "<br>season desc=" . $season->getSeasonDescription() . "/start date=" . DateTimeUtility::formatDisplayDateTime(value: $season->getSeasonStartDate()) . "/end date=" . DateTimeUtility::formatDisplayDateTime(value: $season->getSeasonEndDate());
 // }
 // $result = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getByTournamentIdAndSpecialTypeDescription(tournamentId: 493, specialTypeDescription: Constant::DESCRIPTION_CHAMPIONSHIP);
 // echo "<br>seasons count=" . count($result);
@@ -529,7 +520,7 @@ $entityManager = getEntityManager();
 // $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getForYear(tournamentDate: new DateTime());
 // echo "<br>tournaments for year count=" . count($result);
 // foreach ($result as $tournament) {
-//     echo "<br>tournaments for year desc=" . $tournament->getTournamentDescription() . "/date=" . $tournament->getTournamentDate()->format("m/d/Y") . "/st=" . $tournament->getTournamentStartTime()->format("h:i:s");
+//     echo "<br>tournaments for year desc=" . $tournament->getTournamentDescription() . "/date=" . DateTimeUtility::formatDisplayDateTime(value: $tournament->getTournamentDate()) . "/st=" . DateTimeUtility::formatDisplayDateTime(value: $tournament->getTournamentStartTime());
 // }
 
 // getAllMultiple(bool $championship, ?DateTime $tournamentDate, ?DateTime $startTime, ?int $tournamentId, bool $notEntered, bool $ordered, ?string $mode, ?int $interval, int $limitCount) {
@@ -549,7 +540,7 @@ $entityManager = getEntityManager();
 // echo "<br>tournaments modify count=" . count($result);
 // $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getAllMultiple(championship: false, tournamentDate: NULL, startTime: NULL, tournamentId: NULL, notEntered: false, ordered: false, mode: NULL, interval: 14, limitCount: NULL);
 // echo "<br>tournaments modify count=" . count($result);
-// $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getRegistrationStatus(tournamentId: 494);
+// $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getRegistrationStatus(tournamentId: 494, indexed: false);
 // echo "<br>tournaments registration status count=" . count($result);
 // foreach ($result as $row) {
 //     echo "<br>name=" . $row["name"] . "/status=" . $row["status"];
@@ -580,7 +571,7 @@ $entityManager = getEntityManager();
 // $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getResultsMinDate(playerId: 35);
 // // echo "<br>tournaments for id and dates count=" . count($result);
 // $dt = new DateTime($result[0]["tournamentDate"]);
-// echo "<br>min date=" . $dt->format("m/d/Y");
+// echo "<br>min date=" . DateTimeUtility::formatDisplayDateTime(value: $dt);
 // $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getOrderedDateTime();
 // echo "<br>tournaments ordered count=" . count($result);
 // $counter = 0;
@@ -623,8 +614,8 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// //knockoutsAverageForSeason
-// $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), orderBy: array(2), rank: false);
+//knockoutsAverageForSeason
+// $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), orderBy: array(2), rank: false, limitCount: NULL, indexed: false);
 // echo "<br>ko avg season count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -669,7 +660,7 @@ $entityManager = getEntityManager();
 //     if ($counter == 5) {break;}
 // }
 // //knockoutsTotalAndAverageForPlayer
-// $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: 35, startDate: NULL, endDate: NULL, orderBy: array(2), rank: true);
+// $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getKo(playerId: 35, startDate: NULL, endDate: NULL, orderBy: array(2), rank: true, limitCount: NULL, indexed: false);
 // echo "<br>ko total/avg user count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -677,7 +668,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-//pointsAverageForSeason
+// // pointsAverageForSeason
 // $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getPoints(playerId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), orderBy: array(2), rank: false, limitCount: NULL, indexed: false);
 // echo "<br>pts avg season count=" . count($result);
 // $counter = 0;
@@ -726,7 +717,7 @@ $entityManager = getEntityManager();
 // foreach ($result as $row) {
 //     echo "<br>name=" . $row["player_first_name"] . " " . $row["player_last_name"] . "/food=" . $row["result_registration_food"];
 // }
-//resultSelectOneByTournamentIdAndPlayerId
+// // resultSelectOneByTournamentIdAndPlayerId
 // $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getPaidOrRegisteredOrFinished(tournamentId: 490, playerId: 35, paid: false, registered: false, finished: false, indexed: false);
 // echo "<br>results paid count=" . count($result);
 // foreach ($result as $row) {
@@ -750,17 +741,17 @@ $entityManager = getEntityManager();
 // foreach ($result as $row) {
 //     echo "<br>name=" . $row["name"] . " " . $row["status"];
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getForTournament(prizePool: 4000, tournamentId: 493);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getForTournament(prizePool: 4000, tournamentId: 493, indexed: false);
 // echo "<br>results for tournament count=" . count($result);
 // foreach ($result as $row) {
 //     echo "<br>name=" . $row["name"] . "/place=" . $row["place"] . "/earnings=" . $row["earnings"];
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getForTournament(prizePool: NULL, tournamentId: 492);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getForTournament(prizePool: NULL, tournamentId: 492, indexed: false);
 // echo "<br>results for tournament count=" . count($result);
 // foreach ($result as $row) {
 //     echo "<br>name=" . $row["name"] . "/place=" . $row["place"] . "/earnings=" . $row["earnings"];
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedByPoints(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"));
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedByPoints(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), indexed: false);
 // echo "<br>results ordered by points count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -768,14 +759,14 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedByEarnings(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"));
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedByEarnings(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), indexed: false);
 // echo "<br>results ordered by earnings count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
 //     echo "<br>name=" . $row["name"] . "/earnings=" . $row["earnings"];
 //     $counter++;
 //     if ($counter == 5) {break;}
-// }$result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedByKos(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"));
+// }$result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedByKos(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), indexed: false);
 // echo "<br>results ordered by kos count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -799,7 +790,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), stats: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), championship: false, stats: false, indexed: false);
 // echo "<br>results ordered summary count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -809,7 +800,7 @@ $entityManager = getEntityManager();
 // }
 // $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getChampionshipQualified(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), numTourneys: 8, indexed: false);
 // echo "<br>championship qualified players count =" . count($result);
-// case "earningsAverageForSeason":
+// // "earningsAverageForSeason":
 // $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: array(2), limitCount: NULL, indexed: false);
 // echo "<br>results earnings avg season count=" . count($result);
 // $counter = 0;
@@ -818,7 +809,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// case "earningsTotalForChampionship":
+// // "earningsTotalForChampionship":
 // $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: NULL, endDate: NULL, year: 2023, championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: false);
 // echo "<br>results earnings total championship count=" . count($result);
 // $counter = 0;
@@ -827,7 +818,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// case "earningsTotalForSeason":
+// // "earningsTotalForSeason":
 // $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: false, rank: false, orderBy: array(1), limitCount: NULL, indexed: false);
 // echo "<br>results earnings total season count=" . count($result);
 // $counter = 0;
@@ -836,7 +827,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// case "earningsTotalAndAverageForSeasonForPlayer":
+// // "earningsTotalAndAverageForSeasonForPlayer":
 // $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: 35, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: true, totalAndAverage: true, rank: true, orderBy: array(1), limitCount: NULL, indexed: false);
 // echo "<br>results earnings total/avg player season count=" . count($result);
 // $counter = 0;
@@ -845,7 +836,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// case "earningsTotalAndAverageForPlayer":
+// // "earningsTotalAndAverageForPlayer":
 // $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: 35, startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), year: NULL, championship: false, season: false, totalAndAverage: true, rank: true, orderBy: array(1), limitCount: NULL, indexed: false);
 // echo "<br>results earnings total/avg player count=" . count($result);
 // $counter = 0;

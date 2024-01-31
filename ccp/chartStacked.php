@@ -1,49 +1,44 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use Poker\Ccp\classes\model\DatabaseResult;
+use Exception;
 use Poker\Ccp\classes\utility\HtmlUtility;
 use Poker\Ccp\classes\utility\SessionUtility;
-use Poker\Ccp\classes\model\DateTime;
-use Exception;
 require_once "init.php";
 define("USER_ID_PARAM_NAME", "userId");
 $userId = isset($_POST[USER_ID_PARAM_NAME]) ? $_POST[USER_ID_PARAM_NAME] : isset($_GET[USER_ID_PARAM_NAME]) ? $_GET[USER_ID_PARAM_NAME] : SessionUtility::getValue("userid");
 $output = "";
 $output .= " <script src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
 try {
-  $startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat();
-  $endDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat();
-  $params = array($startDate, $endDate, NULL, false);
-  $resultList = $databaseResult->getCountTournamentForDates(params: $params);
-  if (0 < count(value: $resultList)) {
-    $tournamentsTotal = $resultList[0];
-    $labelIncrement = $tournamentsTotal / 4;
-    $labelPlayed1 = $labelIncrement;
-    $labelPlayed2 = $labelIncrement * 2;
-    $labelPlayed3 = $labelIncrement * 3;
-    $labelPlayed4 = $tournamentsTotal;
-  }
-  $params = array($startDate, $endDate, $userId, true);
-  $resultList = $databaseResult->getCountTournamentForDates(params: $params);
-  if (0 < count($resultList)) {
-    $tournamentsPlayed = $resultList[0];
-  }
-  // $startDate = "2019-10-01";
-  $params = array($startDate, $endDate, NULL, false);
-  $resultList = $databaseResult->getCountTournamentForDates(params: $params);
-  if (0 < count(value: $resultList)) {
-    $tournamentsLeft = $resultList[0];
-    $yellowFrom = 0;
-    $yellowTo = $tournamentsLeft / 2;
-    $redFrom = $yellowTo;
-    $redTo = $tournamentsLeft;
-    $labelIncrement = $tournamentsLeft / 4;
-    $labelNeed1 = $labelIncrement;
-    $labelNeed2 = $labelIncrement * 2;
-    $labelNeed3 = $labelIncrement * 3;
-    $labelNeed4 = $tournamentsLeft;
-  }
+    $startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->getDatabaseFormat();
+    $endDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->getDatabaseFormat();
+    $params = array($startDate, $endDate, NULL, false);
+    $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForDates(startDate: $startDate, endDate: $endDate);
+    if (0 < count(value: $resultList)) {
+        $tournamentsTotal = count($resultList) == 0 ? 1 : count($resultList);
+        $labelIncrement = $tournamentsTotal / 4;
+        $labelPlayed1 = $labelIncrement;
+        $labelPlayed2 = $labelIncrement * 2;
+        $labelPlayed3 = $labelIncrement * 3;
+        $labelPlayed4 = $tournamentsTotal;
+    }
+    $params = array($startDate, $endDate, $userId, true);
+    $resultList2 = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForUserAndDates(playerId: $userId, startDate: $startDate, endDate: $endDate);
+    if (0 < count($resultList2)) {
+        $tournamentsPlayed = count($resultList2);
+    }
+    if (0 < count(value: $resultList)) {
+        $tournamentsLeft = count($resultList) == 0 ? 1 : count($resultList);
+        $yellowFrom = 0;
+        $yellowTo = $tournamentsLeft / 2;
+        $redFrom = $yellowTo;
+        $redTo = $tournamentsLeft;
+        $labelIncrement = $tournamentsLeft / 4;
+        $labelNeed1 = $labelIncrement;
+        $labelNeed2 = $labelIncrement * 2;
+        $labelNeed3 = $labelIncrement * 3;
+        $labelNeed4 = $tournamentsLeft;
+    }
 } catch (Exception $e) {
   //$output .= HtmlUtility::buildErrorMessage($e);
 }

@@ -1,9 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
 use Poker\Ccp\Entity\Groups;
-
 class Group extends Base {
     private Groups $groups;
     public function createFromEntity(bool $debug, Groups $groups): Group {

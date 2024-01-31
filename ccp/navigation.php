@@ -1,13 +1,13 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use \DateTime;
+use DateTime;
 use Poker\Ccp\classes\model\Constant;
-// use Poker\Ccp\classes\model\DateTime;
 use Poker\Ccp\classes\model\HtmlLink;
 use Poker\Ccp\classes\model\HtmlMenu;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\classes\utility\HtmlUtility;
+use Poker\Ccp\classes\utility\SessionUtility;
 // $accessKey, $class, $debug, $href, $id, $paramName, $paramValue, $tabIndex, $text, $title)
 $htmlLinkHome = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "home.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Home", title: NULL);
 $htmlLinkEvents = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "registrationList.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Events", title: NULL);
@@ -40,7 +40,7 @@ foreach ($queryResultYears as $rowYears) { // array of integers
     if (0 < count($queryResultAll)) {
         foreach ($queryResultAll as $tournaments) { // array of Tournaments
             $description = NULL !== $tournaments->getTournamentDescription() ? count(explode(" - ", $tournaments->getTournamentDescription())) > 1 ? explode(" - ", $tournaments->getTournamentDescription())[1] : explode(" - ", $tournaments->getTournamentDescription())[0] : "";
-            $htmlLinkResult = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "reports.php", id: NULL, paramName: array("reportId", "tournamentId"), paramValue: array("results", $tournaments->getTournamentId()), tabIndex: - 1, text: $description . " (" . $tournaments->getTournamentDate()->format("m/d/Y") . ")", title: NULL);
+            $htmlLinkResult = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "reports.php", id: NULL, paramName: array("reportId", "tournamentId"), paramValue: array("results", $tournaments->getTournamentId()), tabIndex: - 1, text: $description . " (" . DateTimeUtility::formatDisplayDate(value: $tournaments->getTournamentDate()) . " " . DateTimeUtility::formatDisplayTime(value: $tournaments->getTournamentStartTime()) . ")", title: NULL);
             $htmlLinkResultArray[$htmlLinkResultArrayCounter] = $htmlLinkResult;
             $htmlLinkResultArrayCounter++;
         }

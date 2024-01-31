@@ -5,7 +5,6 @@ use DateTime;
 use Exception;
 use Poker\Ccp\classes\model\Base;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\FormOption;
 use Poker\Ccp\classes\model\FormSelect;
@@ -171,7 +170,7 @@ if ($mode == Constant::MODE_VIEW) {
         $cnt = 0;
         while ($cnt < count($resultList)) {
             $row = $resultList[$cnt];
-            $limitType = new LimitType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["limit_type_id"], name: $row["name"]);
+            $limitType = new LimitType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["limit_type_id"], name: $row["limit"]);
             $gameType = new GameType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["game_type_id"], name: $row["type"]);
             $specialType = new SpecialType(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["special_type_id"], description: $row["std"], multiplier: $row["special_type_multiplier"]);
             $player = new Player(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", username: NULL, password: NULL, email: NULL, phone: NULL, administrator: "0", registrationDate: new \DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
@@ -246,10 +245,6 @@ if ($mode == Constant::MODE_VIEW) {
     $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: NULL, name: Constant::FIELD_NAME_MODE, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL,suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: NULL);
     $output .= $hiddenMode->getHtml();
     if ($tournamentId != DEFAULT_VALUE_TOURNAMENT_ID) {
-//         $params = array($tournamentId);
-//         $pdoStatementAndQuery = $databaseResult->getStatusPaid(params: $params, returnQuery: true);
-//         $pdoStatement = $pdoStatementAndQuery[0];
-//         $query = $pdoStatementAndQuery[1];
         $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getStatuses(tournamentId: $tournamentId, indexed: true);
         $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getStatuses(tournamentId: $tournamentId, indexed: false);
         $textBoxFeePaid = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_FEE_PAID, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::TEXT_FEE_PAID . "_?2", maxLength: 2, name: Constant::TEXT_FEE_PAID . "_?2", import: $import, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 2, suffix: "_?2", type: FormControl::TYPE_INPUT_NUMBER, value: "?6", wrap: NULL);

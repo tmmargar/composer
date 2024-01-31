@@ -1,9 +1,10 @@
 <?php
 namespace Poker\Ccp\Entity;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
-use DateTime;
 use PDO;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 class SeasonsRepository extends BaseRepository {
     public function getActives() {
 //       case "seasonSelectOneByActive":
@@ -88,8 +89,8 @@ class SeasonsRepository extends BaseRepository {
             $sql .= " AND season_id <> :seasonId";
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        $date1Formatted = $date1->format("Y-m-d");
-        $date2Formatted = $date2->format("Y-m-d");
+        $date1Formatted = DateTimeUtility::formatDatabaseDate(value: $date1);
+        $date2Formatted = DateTimeUtility::formatDatabaseDate(value: $date2);
         $statement->bindValue("date1", $date1Formatted, PDO::PARAM_STR);
         $statement->bindValue("date2", $date2Formatted, PDO::PARAM_STR);
         if (isset($seasonId)) {

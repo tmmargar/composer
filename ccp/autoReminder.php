@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace ccp;
 use DateTime;
 use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\DatabaseResult;
 use Poker\Ccp\classes\model\Email;
 use Poker\Ccp\classes\model\GameType;
 use Poker\Ccp\classes\model\Group;
@@ -18,6 +17,7 @@ use Poker\Ccp\classes\model\SpecialType;
 use Poker\Ccp\classes\model\Status;
 use Poker\Ccp\classes\model\Structure;
 use Poker\Ccp\classes\model\Tournament;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";
 if (Constant::FLAG_LOCAL()) {
@@ -28,7 +28,7 @@ $output .=
     "<script type=\"module\">\n" .
     "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
     "  let aryMessages = [];\n";
-$output .= isset($mode) ? "  aryMessages.push(\"###Run at " . $now->format("D, M j, Y h:i A") . "###\");\n" : "\r";
+$output .= isset($mode) ? "  aryMessages.push(\"###Run at " . DateTimeUtility::formatDisplayLong(value: $now) . "###\");\n" : "\r";
 $days = 14;
 $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getActivesForNotification();
 $resultList2 = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getAllMultiple(championship: false, tournamentDate: NULL, startTime: NULL, tournamentId: NULL, notEntered: false, ordered: false, mode: NULL, interval: $days, limitCount: NULL);

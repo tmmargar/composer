@@ -1,10 +1,8 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
-use \DateTime;
+use DateTime;
 use Poker\Ccp\Entity\Seasons;
-
 class Season extends Base {
     private Seasons $seasons;
     public function createFromEntity(bool $debug, Seasons $seasons): Season {

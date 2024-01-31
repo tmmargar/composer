@@ -1,9 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
 use Poker\Ccp\Entity\Results;
-
 class Result extends Base {
     private Results $results;
     public function createFromEntity(bool $debug, Results $results): Result {

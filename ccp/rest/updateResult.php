@@ -1,17 +1,17 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
+use DateTime;
 use Poker\Ccp\classes\model\Constant;
+use Poker\Ccp\Entity\Fees;
 require_once "init.php";
-$params = array(Constant::FLAG_YES_DATABASE);
-$resultList = $databaseResult->getSeasonByActive(params: $params);
-$season = $resultList[0];
-$params = array($_POST["tournamentDate"],$_POST["tournamentDate"]);
-$paramsNested = array($season->getStartDate()->getDatabaseFormat(),$season->getEndDate()->getDatabaseFormat(),$season->getChampionshipQualify());
-$resultList = $databaseResult->getTournamentByDateAndStartTime(params: $params, paramsNested: $paramsNested, limitCount: NULL);
-$tournament = $resultList[$_POST["first"]];
-$params = array(NULL,NULL,NULL,Constant::CODE_STATUS_PAID,0,NULL,$tournament->getId()); // , $maxPlace);
-$rowCount = $databaseResult->updateResultByTournamentIdAndPlace(params: $params);
+$entityManager = getEntityManager();
+$resultList = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getActives();
+$season = $resultList;
+$resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getAllMultiple(championship: false, tournamentDate: new DateTime(datetime: $_POST["tournamentDate"]), startTime: new DateTime(datetime: $_POST["tournamentDate"]), tournamentId: NULL, notEntered: false, ordered: false, mode: NULL, interval: NULL, limitCount: NULL);
+// first tournament is 0 second is 1
+$row = $resultList[$_POST["first"]];
+$rowCount = $entityManager->getRepository(Constant::ENTITY_RESULTS)->updateFinish(rebuyCount: NULL, rebuyPaidFlag: NULL, addonPaidFlag: NULL, addonFlag: NULL, statusCode: Constant::CODE_STATUS_PAID, place: 0, playerIdKo: NULL, tournamentId: $row["id"], playerId: NULL);
 echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to paid";
 $index = - 1;
 foreach ($_POST["firstName"] as $firstName) {
@@ -21,28 +21,53 @@ foreach ($_POST["firstName"] as $firstName) {
   $index ++;
   echo "<br>" . chr(13) . chr(10) . "idx->" . $index;
   $fullName = $firstName . " " . $_POST["lastName"][$index];
-  $params = array($fullName);
-  $resultList = $databaseResult->getPlayerByName(params: $params);
+  $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getByName(name: $fullName);
   if (0 < count($resultList)) {
     $player = $resultList[0];
   }
   if ("N/A" != $_POST["feePaid"][$index]) {
-    $params = array($_POST["feePaid"][$index],$season->getId(),$player->getId(),$tournament->getId());
-    $rowCount = $databaseResult->updateFees(params: $params);
+    $seasonFind = $entityManager->find(Constant::ENTITY_SEASONS, $season->getSeasonId());
+    $playerFind = $entityManager->find(Constant::ENTITY_PLAYERS, $player->getPlayerId());
+    $tournamentFind = $entityManager->find(Constant::ENTITY_TOURNAMENTS, $row["id"]);
+    $feeFind = $entityManager->getRepository(Constant::ENTITY_FEES)->findOneBy(array("seasons" => $seasonFind, "players" => $playerFind, "tournaments" => $tournamentFind));
+    if (NULL !== $feeFind) {
+        $feeFind->setFeeAmount((int) $_POST["feePaid"][$index]);
+        $entityManager->persist($feeFind);
+        try {
+            $entityManager->flush();
+        } catch (Exception $e) {
+            echo "<br>" . $e->getMessage();
+        }
+    } else {
+        $rowCount = $entityManager->getRepository(Constant::ENTITY_FEES)->deleteForSeasonAndPlayer(seasonId: $season->getSeasonId(), playerId: $player->getPlayerId());
+        $fe = new Fees();
+        $fe->setFeeAmount((int) $_POST["feePaid"][$index]);
+        $player = $entityManager->find(Constant::ENTITY_PLAYERS, $player->getPlayerId());
+        $fe->setPlayers($player);
+        $season = $entityManager->find(Constant::ENTITY_SEASONS, $season->getSeasonId());
+        $fe->setSeasons($season);
+        $tournament = $entityManager->find(Constant::ENTITY_TOURNAMENTS, $row["id"]);
+        $fe->setTournaments($tournament);
+        $entityManager->persist($fe);
+        try {
+            $entityManager->flush();
+        } catch (Exception $e) {
+            $errors = $e->getMessage();
+        }
+    }
   }
   $fullNameKO = $_POST["knockedOut"][$index];
-  $params = array($fullNameKO);
-  $resultList = $databaseResult->getPlayerByName(params: $params);
-  if (0 < count($resultList)) {
-    $userKO = $resultList[0];
+  if ("" == $fullNameKO) {
+      $userKO = NULL;
   } else {
-    $userKO = NULL;
+      $params = array($fullNameKO);
+      $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getByName(name: $fullNameKO);
+      if (0 < count($resultList)) {
+        $userKO = $resultList[0];
+      }
   }
-  $params = array($tournament->getId(),$player->getId());
-  $resultList = $databaseResult->getResultByTournamentIdAndPlayerId(params: $params);
+  $resultList = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getPaidOrRegisteredOrFinished(tournamentId: $row["id"], playerId: $player->getPlayerId(), paid: false, registered: false, finished: false, indexed: false);
   $userResult = $resultList[0];
-  // rebuycount, rebuypaid, addonpaid, statuscode, place, kobyid, playerid
-  $params = array($_POST["rebuyCount"][$index],$_POST["rebuy"][$index],$_POST["addon"][$index],Constant::CODE_STATUS_FINISHED,$_POST["place"][$index],NULL == $userKO ? NULL : $userKO->getId(),$tournament->getId(),$player->getId());
-  $rowCount = $databaseResult->updateResult(params: $params);
-  echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to finished for tournament id " . $tournament->getId() . " and player id " . $player->getId();
+  $rowCount = $entityManager->getRepository(Constant::ENTITY_RESULTS)->updateFinish(rebuyCount: (int) $_POST["rebuyCount"][$index], rebuyPaidFlag: $_POST["rebuy"][$index], addonPaidFlag: $_POST["addon"][$index], addonFlag: NULL, statusCode: Constant::CODE_STATUS_FINISHED, place: (int) $_POST["place"][$index], playerIdKo: NULL == $userKO ? NULL : $userKO->getPlayerId(), tournamentId: $row["id"], playerId: $player->getPlayerId());
+  echo "<br>" . chr(13) . chr(10) . $rowCount . " rows updated to finished for tournament id " . $row["id"] . " and player id " . $player->getPlayerId();
 }

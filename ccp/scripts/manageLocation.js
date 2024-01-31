@@ -43,7 +43,7 @@ export const inputLocal = {
     }
   },
   tableRowClick : function(row) {
-    document.querySelectorAll("[id^='delete']")?.forEach(obj => { obj.disabled = !(row.querySelector("td:nth-of-type(9)").innerText == 0); });
+    document.querySelectorAll("[id^='delete']")?.forEach(obj => { obj.disabled = !(row.querySelector("td:nth-of-type(9)").innerText == "Yes"); });
   },
   validate : function() {
     const player = document.querySelectorAll("[id^='playerId_']");

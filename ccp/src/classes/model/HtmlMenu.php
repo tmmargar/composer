@@ -1,6 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\classes\utility\SessionUtility;
 class HtmlMenu extends HtmlBase {
     public function __construct(protected bool $debug, protected string|int|NULL $id, protected ?array $items, protected ?string $text) {
@@ -35,9 +36,9 @@ class HtmlMenu extends HtmlBase {
         if ("" == SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)) {
             $output .= "None";
         } else {
-            $output .= SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE)->format("m/d/Y");
+            $output .= DateTimeUtility::formatDisplayDate(value: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE));
             $output .= "&nbsp;-&nbsp;";
-            $output .= SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE)->format("m/d/Y");
+            $output .= DateTimeUtility::formatDisplayDate(value: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE));
             $output .= "&nbsp;(";
             $output .= SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " to qualify)";
         }

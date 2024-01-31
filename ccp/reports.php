@@ -8,6 +8,7 @@ use Poker\Ccp\classes\model\FormControl;
 use Poker\Ccp\classes\model\FormOption;
 use Poker\Ccp\classes\model\FormSelect;
 use Poker\Ccp\classes\model\HtmlTable;
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\classes\utility\SessionUtility;
 require_once "init.php";
 define("REPORT_ID_PARAM_NAME", "reportId");
@@ -66,8 +67,8 @@ if ("ALL" == $seasonId) {
 } else {
     $startDate = isset($seasonStartDate) ? DateTime::createFromFormat("Y-m-d", $seasonStartDate) : SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE);
     $endDate = isset($seasonEndDate) ? DateTime::createFromFormat("Y-m-d", $seasonEndDate) : SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE);
-    $year = $startDate->format("Y");
-    $yearEnd = $endDate->format("Y");
+    $year = DateTimeUtility::formatYear(value: $startDate);
+    $yearEnd = DateTimeUtility::formatYear(value: $endDate);
     if ($year != $yearEnd) {
         $year .= "', '" . $yearEnd;
     }
@@ -191,8 +192,8 @@ if (!isset($reportId)) {
             $width = "100%";
             break;
         case REPORT_ID_EARNINGS_CHAMPIONSHIP:
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: NULL, endDate: NULL, year: ("ALL" == $seasonId ? NULL : (int) $year), championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: NULL, endDate: NULL, year: ("ALL" == $seasonId ? NULL : (int) $year), championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: NULL, endDate: NULL, year: ("ALL" == $seasonId ? NULL : (int) $year), championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getEarnings(userId: NULL, startDate: NULL, endDate: NULL, year: ("ALL" == $seasonId ? NULL : (int) $year), championship: true, season: false, totalAndAverage: false, rank: false, orderBy: NULL, limitCount: NULL, indexed: false);
             $colFormats = array(array(2, "currency", 0), array(3, "currency", 0));
             $hideColIndexes = array(0);
             $width = "100%";
@@ -236,7 +237,7 @@ if (!isset($reportId)) {
         case REPORT_ID_FEES:
             $result = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getFeesBySeason(indexed: true);
             $resultHeaders = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getFeesBySeason(indexed: false);
-            $colFormats = array(array(4, "currency", 0));
+            $colFormats = array(array(2, "date", 0), array(3, "date", 0), array(4, "currency", 0));
             $hideColIndexes = array(0);
             $width = "100%";
             $link = array(array(4), array("#", array("seasonId"), array(0), 4, "fee_detail_link"));
@@ -252,9 +253,9 @@ if (!isset($reportId)) {
         if (0 < count($resultList)) {
             $ctr = 0;
             while ($ctr < count($resultList)) {
-                $seasonText = $resultList[$ctr]->getSeasonDescription() . " (" . $resultList[$ctr]->getSeasonStartDate()->format("Y-m-d") . " - " . $resultList[$ctr]->getSeasonEndDate()->format("Y-m-d") . ")";
-                $seasonValue = $resultList[$ctr]->getSeasonId() . "::" . $resultList[$ctr]->getSeasonStartDate()->format("Y-m-d") . "::" . $resultList[$ctr]->getSeasonEndDate()->format("Y-m-d");
-                $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: $startDate == NULL || $endDate == NULL ? "" : $seasonId . "::" . $startDate->format("Y-m-d") . "::" . $endDate->format("Y-m-d"), suffix: NULL, text: $seasonText, value: $seasonValue);
+                $seasonText = $resultList[$ctr]->getSeasonDescription() . " (" . DateTimeUtility::formatDatabaseDate(value: $resultList[$ctr]->getSeasonStartDate()) . " - " . DateTimeUtility::formatDatabaseDate(value: $resultList[$ctr]->getSeasonEndDate()) . ")";
+                $seasonValue = $resultList[$ctr]->getSeasonId() . "::" . DateTimeUtility::formatDatabaseDate(value: $resultList[$ctr]->getSeasonStartDate()) . "::" . DateTimeUtility::formatDatabaseDate(value: $resultList[$ctr]->getSeasonEndDate());
+                $option = new FormOption(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: $startDate == NULL || $endDate == NULL ? "" : $seasonId . "::" . DateTimeUtility::formatDatabaseDate(value: $startDate) . "::" . DateTimeUtility::formatDatabaseDate(value: $endDate), suffix: NULL, text: $seasonText, value: $seasonValue);
                 $output .= $option->getHtml();
                 $ctr++;
             }

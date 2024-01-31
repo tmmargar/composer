@@ -60,7 +60,7 @@ if (!isset($tournamentId) || "" == $tournamentId) {
             if ($registered) {
                 $tournamentFind = $entityManager->find(Constant::ENTITY_TOURNAMENTS, $tournamentId);
                 $playerFind = $entityManager->find(Constant::ENTITY_PLAYERS, $userId);
-                $results = $entityManager->getRepository(Constant::ENTITY_RESULTS)->findOneBy(array("tournaments" => $tournamentFind, "players" => $playerFind));
+//                 $results = $entityManager->getRepository(Constant::ENTITY_RESULTS)->findOneBy(array("tournaments" => $tournamentFind, "players" => $playerFind));
                 $results->setResultRegistrationFood($food);
                 $entityManager->persist($results);
                 $entityManager->flush();
@@ -77,7 +77,8 @@ if (!isset($tournamentId) || "" == $tournamentId) {
                 $re->setResultPlaceFinished(0);
                 $re->setResultRebuyCount(0);
                 $re->setResultRegistrationFood($food);
-                $re->setResultRegistrationOrder(1);
+                $resultList = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getMaxRegistrationOrder(tournamentId: $tournamentId);
+                $re->setResultRegistrationOrder($resultList[0]["resultRegistrationOrderMax"]);
                 $statusCode = $entityManager->find(Constant::ENTITY_STATUS_CODES, Constant::CODE_STATUS_REGISTERED);
                 $re->setStatusCodes($statusCode);
                 $tournament = $entityManager->find(Constant::ENTITY_TOURNAMENTS, $tournamentId);
@@ -142,9 +143,9 @@ if (!isset($tournamentId) || "" == $tournamentId) {
 //                         $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $tournament->getId(), description: NULL, comment: NULL, limitType: NULL, gameType: NULL, specialType: NULL, chipCount: 0, location: NULL, date: $tournament->getDate(), startTime: $tournament->getStartTime(), buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: NULL, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
                         $tournaments = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getById(tournamentId: $tournamentId);
                         $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, description: NULL, comment: NULL, limitType: NULL, gameType: NULL, specialType: NULL, chipCount: 0, location: NULL, date: NULL, startTime: NULL, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: NULL, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0, earnings: 0);
-                        $emailTournament->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), tournaments: $tournaments[0]);
+                        $emailTournament->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), tournaments: $tournaments);
                         $emailLocation = new Location(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, name: "", address: "", city: "", state: "", zipCode: 00000, player: NULL, count: 0, active: "0", map: NULL, mapName: NULL, tournamentCount: 0);
-                        $emailLocation->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), locations: $tournaments[0]->getLocations());
+                        $emailLocation->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), locations: $tournaments->getLocations());
                         if ("cancelling" == $state) {
                             $output .= "aryMessages.push(\"" . $email->sendCancelledEmail(location: $emailLocation, tournament: $emailTournament) . "\");\n";
                         } else {

@@ -1,9 +1,8 @@
 <?php
 declare(strict_types = 1);
 namespace Poker\Ccp\classes\model;
-
+use Poker\Ccp\classes\utility\DateTimeUtility;
 use Poker\Ccp\Entity\Tournaments;
-
 class Tournament extends Base {
     private Tournaments $tournaments;
     public function createFromEntity(bool $debug, Tournaments $tournaments): Tournament {
@@ -20,7 +19,7 @@ class Tournament extends Base {
         $location->createFromEntity(debug: $debug, locations: $tournaments->getLocations());
         $groupPayout = new GroupPayout(debug: false, id: NULL, group: NULL, payouts: array());
         $groupPayout->createFromEntity(debug: $debug, groupPayouts: $tournaments->getGroups()->getGroupPayouts()[0]);
-        return $this->create(debug: $debug, id: $tournaments->getTournamentId(), description: $tournaments->getTournamentDescription(), comment: $tournaments->getTournamentComment(), limitType: $limitType,  gameType: $gameType,  specialType: $specialType, chipCount: $tournaments->getTournamentChipCount(), location: $location, date: new DateTime(debug: false, id: NULL, time: $tournaments->getTournamentDate()->format("Y-m-d")), startTime: new DateTime(debug: false, id: NULL, time: $tournaments->getTournamentStartTime()->format("H:i")), buyinAmount: $tournaments->getTournamentBuyinAmount(), maxPlayers: $tournaments->getTournamentMaxPlayers(), maxRebuys: $tournaments->getTournamentMaxRebuys(), rebuyAmount: $tournaments->getTournamentRebuyAmount(), addonAmount: $tournaments->getTournamentAddonAmount(), addonChipCount: $tournaments->getTournamentAddonChipCount(), groupPayout: $groupPayout, rake: (float) $tournaments->getTournamentRake(), registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
+        return $this->create(debug: $debug, id: $tournaments->getTournamentId(), description: $tournaments->getTournamentDescription(), comment: $tournaments->getTournamentComment(), limitType: $limitType,  gameType: $gameType,  specialType: $specialType, chipCount: $tournaments->getTournamentChipCount(), location: $location, date: new DateTime(debug: false, id: NULL, time: DateTimeUtility::formatDatabaseDate(value: $tournaments->getTournamentDate())), startTime: new DateTime(debug: false, id: NULL, time: DateTimeUtility::formatDatabaseTime(value: $tournaments->getTournamentStartTime())), buyinAmount: $tournaments->getTournamentBuyinAmount(), maxPlayers: $tournaments->getTournamentMaxPlayers(), maxRebuys: $tournaments->getTournamentMaxRebuys(), rebuyAmount: $tournaments->getTournamentRebuyAmount(), addonAmount: $tournaments->getTournamentAddonAmount(), addonChipCount: $tournaments->getTournamentAddonChipCount(), groupPayout: $groupPayout, rake: (float) $tournaments->getTournamentRake(), registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0);
     }
     public function __construct(protected bool $debug, protected string|int $id, protected ?string $description, protected ?string $comment, protected ?LimitType $limitType, protected ?GameType $gameType, protected ?SpecialType $specialType, protected int $chipCount, protected ?Location $location, protected ?DateTime $date, protected ?DateTime $startTime, protected int $buyinAmount, protected int $maxPlayers, protected int $maxRebuys, protected int $rebuyAmount, protected int $addonAmount, protected int $addonChipCount, protected ?GroupPayout $groupPayout, protected float $rake, protected int $registeredCount, protected int $buyinsPaid, protected int $rebuysPaid, protected int $rebuysCount, protected int $addonsPaid, protected int $enteredCount, protected int $earnings = 0) {
         parent::__construct(debug: $debug, id: $id);
