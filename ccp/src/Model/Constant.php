@@ -176,7 +176,7 @@ abstract class Constant {
   public const PATH_HOME_LOCAL = "C:/Users/n082832/git/composer/ccp";
   public const PATH_HOME_SERVER = "/home/chipch5/public_html";
   public static function CONTEXT_ROOT(): string {
-    return self::FLAG_LOCAL() ? "/ccpTest/" : "/new/";
+    return self::FLAG_LOCAL() ? "/ccp/" : "/new/";
   }
   public static function EMAIL_STAFF(): string {
     return self::FLAG_LOCAL() ? "staff@localhost.com" : "staff@chipchairprayer.com";
