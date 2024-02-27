@@ -175,6 +175,13 @@ abstract class Constant {
   public const FOLDER_MAP = "maps";
   public const PATH_HOME_LOCAL = "C:/Users/n082832/git/composer/ccp";
   public const PATH_HOME_SERVER = "/home/chipch5/public_html";
+  public const DATABASE_HOST_NAME = "localhost";
+  public const DATABASE_NAME  = "chipch5_stats";
+  public const DATABASE_PASSWORD_LOCAL = "toor";
+  public const DATABASE_PASSWORD_SERVER = "app_chipch5";
+  public const DATABASE_PORT = 3306;
+  public const DATABASE_USER_NAME_LOCAL = "root";
+  public const DATABASE_USER_NAME_SERVER = "chipch5_app";
   public static function CONTEXT_ROOT(): string {
     return self::FLAG_LOCAL() ? "/ccp/" : "/new/";
   }

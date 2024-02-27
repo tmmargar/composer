@@ -9,9 +9,11 @@ $outputChange =
   "<h1>Change Log</h1>\n" .
   "<section class=\"version\" id=\"1.3.0\">" .
   " <h3>Version 1.3.0</h3>\n" .
-  " <b><time datetime=\"2024-1-31\">Jan 31, 2024</time></b>\n" .
+  " <b><time datetime=\"2024-2-27\">Feb 27, 2024</time></b>\n" .
   " <ul>\n" .
   "  <li>Change to use ORM for database connectivity</li>\n" .
+  "  <li>Fix namespace and folder naming</li>\n" .
+  "  <li>Fix fees report to handle hosts not paying</li>\n" .
   " </ul>\n" .
   "</section>\n" .
   "<section class=\"version\" id=\"1.2.8\">" .
