@@ -2,10 +2,10 @@
 declare(strict_types = 1);
 namespace ccp;
 use Exception;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\FormControl;
-use Poker\Ccp\classes\model\HtmlTable;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\FormControl;
+use Poker\Ccp\Model\HtmlTable;
+use Poker\Ccp\Utility\SessionUtility;
 use Poker\Ccp\Entity\SpecialTypes;
 require_once "init.php";
 define("SPECIAL_TYPE_DESCRIPTION_FIELD_LABEL", "Description");

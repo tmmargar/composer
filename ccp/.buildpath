@@ -76,7 +76,7 @@
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/doctrine/orm/lib/Doctrine/ORM">
+	<buildpathentry kind="src" path="vendor/doctrine/orm/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>

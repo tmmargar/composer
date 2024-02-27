@@ -1,8 +1,8 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\SessionUtility;
 require_once "init.php";
 if (!defined("REPORT_ID_PARAM_NAME")) {define("PLAYER_ID_PARAM_NAME", "playerId");}
 $playerId = (int) ((isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME])) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue("userid"));

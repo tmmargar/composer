@@ -3,12 +3,12 @@ declare(strict_types = 1);
 namespace ccp;
 use DateInterval;
 use DateTime;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\Email;
-use Poker\Ccp\classes\model\FormControl;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\Email;
+use Poker\Ccp\Model\FormControl;
+use Poker\Ccp\Utility\SessionUtility;
 require_once "init.php";
-define("USERNAME_FIELD_NAME", "username");
+define("PLAYERNAME_FIELD_NAME", "username");
 define("EMAIL_FIELD_NAME", "email");
 define("PASSWORD_FIELD_NAME", "password");
 define("CONFIRM_PASSWORD_FIELD_NAME", "confirmPassword");
@@ -24,7 +24,7 @@ if (isset($_GET["nav"])) {
     $smarty->assign("navigation", "");
 }
 $emailAddress = isset($_POST[EMAIL_FIELD_NAME]) ? $_POST[EMAIL_FIELD_NAME] : (isset($_GET[EMAIL_FIELD_NAME]) ? $_GET[EMAIL_FIELD_NAME] : DEFAULT_VALUE_BLANK);
-$username = isset($_POST[USERNAME_FIELD_NAME]) ? $_POST[USERNAME_FIELD_NAME] : (isset($_GET[USERNAME_FIELD_NAME]) ? $_GET[USERNAME_FIELD_NAME] : DEFAULT_VALUE_BLANK);
+$username = isset($_POST[PLAYERNAME_FIELD_NAME]) ? $_POST[PLAYERNAME_FIELD_NAME] : (isset($_GET[PLAYERNAME_FIELD_NAME]) ? $_GET[PLAYERNAME_FIELD_NAME] : DEFAULT_VALUE_BLANK);
 $password = isset($_POST[PASSWORD_FIELD_NAME]) ? $_POST[PASSWORD_FIELD_NAME] : DEFAULT_VALUE_BLANK;
 $output .=
     "<script type=\"module\">\n" .
@@ -91,7 +91,7 @@ if (Constant::MODE_RESET_PASSWORD_REQUEST == $mode) {
 if (Constant::MODE_VIEW == $mode) {
     $output .= "</script>\n";
     $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
-    $textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_USERNAME, autoComplete: "off", autoFocus: true, checked: NULL, class: NULL, cols: NULL, disabled: false, id: USERNAME_FIELD_NAME, maxLength: 30, name: USERNAME_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: 20, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: $username, wrap: NULL);
+    $textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_PLAYERNAME, autoComplete: "off", autoFocus: true, checked: NULL, class: NULL, cols: NULL, disabled: false, id: PLAYERNAME_FIELD_NAME, maxLength: 30, name: PLAYERNAME_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: 20, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: $username, wrap: NULL);
     $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxUsername->getId() . "\">Username:</label></div>";
     $output .= " <div class=\"responsive-cell responsive-cell--value\">" . $textBoxUsername->getHtml() . "</div>";
     $textBoxEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_EMAIL, autoComplete: "email", autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: EMAIL_FIELD_NAME, maxLength: 50, name: EMAIL_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: 20, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: $emailAddress, wrap: NULL);

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\SessionUtility;
 require_once "bootstrap.php";
 // check if site is down
 $file_handle = fopen(filename: "status.txt", mode: "a+");
@@ -32,10 +32,10 @@ if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false && strpos($_SERVER["S
 // if any auto or manage pages and not administrator display not authorized message
 //if (strpos($_SERVER["SCRIPT_NAME"], "auto") !== false || strpos($_SERVER["SCRIPT_NAME"], "manage") !== false) {
   //echo "<br>adm -> " . SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_ADMINISTRATOR);
-  //echo "<br>uid -> " . SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_USERID);
+  //echo "<br>uid -> " . SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_PLAYERID);
   //echo "<BR>GET -> " . print_r($_GET, true);
   //echo "<br>get id -> " . $_GET["id"];
-  //if (SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_ADMINISTRATOR) != 1 && (!isset($_GET["id"]) || SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_USERID) != $_GET["id"])) {
+//if (SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_ADMINISTRATOR) != Constant::FLAG_YES_DATABASE && (!isset($_GET["id"]) || SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_PLAYERID) != $_GET["id"])) {
     //echo "<h1 style=\"color: red;\">You are not authorized to access this page!!</h1>";
     //die();
   //}

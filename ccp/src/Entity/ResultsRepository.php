@@ -4,8 +4,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 use PDO;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\utility\DateTimeUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\DateTimeUtility;
 class ResultsRepository extends BaseRepository {
     public function getBullies(int $knockedOutBy, ?int $limitCount, bool $indexed) {
         //       case "bullyForPlayer":
@@ -13,7 +13,8 @@ class ResultsRepository extends BaseRepository {
             "SELECT CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_active_flag, COUNT(r.player_id) AS kos " .
             "FROM poker_results r " .
             "INNER JOIN poker_players p ON r.player_id = p.player_id " .
-            "WHERE r.player_id_ko = :knockedOutBy " .
+            "WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE .
+            " AND r.player_id_ko = :knockedOutBy " .
             "GROUP BY r.player_id " .
             "ORDER BY kOs DESC, p.player_last_name, p.player_first_name";
         if (isset($limitCount)) {
@@ -45,7 +46,8 @@ class ResultsRepository extends BaseRepository {
         $sql =
              "SELECT CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_active_flag, COUNT(r.player_id_ko) AS kos " .
              "FROM poker_results r INNER JOIN poker_players p ON r.player_id_ko = p.player_id " .
-             "WHERE r.player_id = :playerId " .
+             "WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE .
+             " AND r.player_id = :playerId " .
              "GROUP BY r.player_id_ko " .
              "ORDER BY kOs DESC, p.player_last_name, p.player_first_name";
         if (isset($limitCount)) {
@@ -79,13 +81,18 @@ class ResultsRepository extends BaseRepository {
 //         case "resultSelectAllFinishedByTournamentId":
 //         case "resultSelectPaidByTournamentId":
         $sql = "SELECT r.tournament_id, r.player_id, CONCAT(p.player_first_name, ' ' , p.player_last_name) AS name, p.player_email, r.status_code, s.status_code_name AS status, r.result_registration_order, r.result_paid_buyin_flag, r.result_paid_rebuy_flag, r.result_rebuy_count AS rebuy, r.result_paid_addon_flag AS addon, r.result_addon_flag, r.result_place_finished AS place, r.player_id_ko, CONCAT(p2.player_first_name, ' ' , p2.player_last_name) AS 'knocked out by', r.result_registration_food, p.player_active_flag, p2.player_active_flag AS knockedOutActive, " .
-                "IF(se.season_fee IS NULL OR f.fee_amount IS NULL, '', IF(se.season_fee - f.fee_amount = 0, 'Paid', CONCAT('Owes $', (se.season_fee - f.fee_amount)))) AS feeStatus " .
+                "IF(se.season_fee IS NULL OR f.fee_amount IS NULL, '', IF(se.season_fee - f.fee_amount - IF(fh.player_id IS NULL, 0, se.season_fee) = 0, 'Paid', CONCAT('Owes $', (se.season_fee - f.fee_amount)))) AS feeStatus " .
                 "FROM poker_results r INNER JOIN poker_players p ON r.player_id = p.player_id " .
                 "LEFT JOIN poker_players p2 ON r.player_id_ko = p2.player_id " .
                 "INNER JOIN poker_status_codes s ON r.status_code = s.status_code " .
                 "INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id " .
                 "INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
-                "INNER JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON se.season_id = f.season_id AND p.player_id = f.player_id";
+                "INNER JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON se.season_id = f.season_id AND p.player_id = f.player_id " .
+                "LEFT JOIN (SELECT DISTINCT se.season_id, l.location_id, l.location_name, l.player_id, p.player_first_name, p.player_last_name " .
+                "           FROM poker_tournaments t INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
+                "           INNER JOIN poker_locations l ON t.location_id = l.location_id " .
+                "           INNER JOIN poker_players p ON l.player_id = p.player_id " .
+                "           GROUP BY se.season_id, l.location_id) fh ON se.season_id = fh.season_id AND p.player_id = fh.player_id";
         if (isset($tournamentId) && isset($playerId)) {
             $sql .=
                 " WHERE r.tournament_id = :tournamentId" .
@@ -510,12 +517,11 @@ class ResultsRepository extends BaseRepository {
             } else {
                 $sql .= "      GROUP BY xx.player_id, xx.player_last_name, xx.player_first_name) cc ";
             }
-            $sql .= "GROUP BY player_id) z ON p.player_id = z.player_id ";
+            $sql .= "GROUP BY player_id) z ON p.player_id = z.player_id " .
+                    " WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE;
             if ($totalAndAverage) {
-                $whereClause = "WHERE p.player_id = " . $playerId;
-                $sql .= " WHERE p.player_id = " . $playerId;
-            } else {
-                $sql .= " WHERE p.player_active_flag = 1";
+                $whereClause = " AND p.player_id = " . $playerId;
+                $sql .= " AND p.player_id = " . $playerId;
             }
             if (!$totalAndAverage) {
                 $sql .= " ORDER BY ";
@@ -991,7 +997,7 @@ class ResultsRepository extends BaseRepository {
             "                       GROUP BY t.tournament_id, r.player_id_ko) k " .
             "                 GROUP BY player_id) km ON b.player_id = km.player_id " .
             "      LEFT JOIN (SELECT r.player_id, COUNT(*) AS wins " .
-            "                 FROM poker_tournaments t INNER JOIN poker_results r ON t.tournament_id = r.tournament_id AND r.result_place_finished = 1 " .
+            "                 FROM poker_tournaments t INNER JOIN poker_results r ON t.tournament_id = r.tournament_id AND r.result_place_finished = " . Constant::FLAG_YES_DATABASE .
             "                 AND t.tournament_date BETWEEN :startDate11 AND :endDate11 " .
             "                 GROUP BY r.player_id) w ON b.player_id = w.player_id " .
             "      WHERE b.player_id IN (SELECT DISTINCT player_id FROM poker_results WHERE status_code = '" . Constant::CODE_STATUS_FINISHED . "') " .

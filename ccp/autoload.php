@@ -41,4 +41,4 @@ function CcpAutoload($class_name) {
     }
   }
 }
-spl_autoload_register("\Poker\Ccp\classes\CcpAutoload");
+spl_autoload_register("Poker\Ccp\\CcpAutoload");

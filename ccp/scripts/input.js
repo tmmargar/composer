@@ -241,7 +241,9 @@ document.addEventListener("click", (event) => {
     document.querySelector("#mode").value = "confirm";
   } else if (event.target && (event.target.id.includes("view") || event.target.id.includes("cancel"))) {
     document.querySelector("#mode").value = "view";
-    document.querySelector("#ids").value = "";
+    if (document.querySelector("#ids")) {
+        document.querySelector("#ids").value = "";
+    }
   } else if (event.target && event.target.id.includes("save") && document.forms[0].reportValidity()) {
     document.querySelector("#mode").value = "save" + document.querySelector("#mode").value;
   } else if (event.target && event.target.id.includes("reset")) {

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\SessionUtility;
 $header = "";
 $smarty->assign("header", $header);
 $aryScriptFull = explode(separator: "/", string: $_SERVER["SCRIPT_NAME"]);

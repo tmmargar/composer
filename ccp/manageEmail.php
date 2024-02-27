@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\Email;
-use Poker\Ccp\classes\model\FormControl;
-use Poker\Ccp\classes\model\FormOption;
-use Poker\Ccp\classes\model\FormSelect;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\Email;
+use Poker\Ccp\Model\FormControl;
+use Poker\Ccp\Model\FormOption;
+use Poker\Ccp\Model\FormSelect;
+use Poker\Ccp\Utility\SessionUtility;
 require_once "init.php";
 define("TO_FIELD_NAME", "to");
 define("SUBJECT_FIELD_NAME", "subject");

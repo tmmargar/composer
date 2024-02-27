@@ -107,7 +107,7 @@ export const reportsInputLocal = {
               const nf = new Intl.NumberFormat();
               const feesPaidSumFormatted = rows.data().pluck(5).reduce( function (a, b) { return "$" + nf.format(parseInt(a.toString().replace(/[$,]/g, '')) + parseInt(b.toString().replace(/[$,]/g, ''))); }, 0);
               const feesTotalSumFormatted = rows.data().pluck(4).reduce( function (a, b) { return b; }, 0);
-              const feesBalanceSumFormatted = "$" + (parseInt(feesTotalSumFormatted.substring(1, feesTotalSumFormatted.length)) - parseInt(feesPaidSumFormatted.substring(1, feesPaidSumFormatted.length)));
+              const feesBalanceSumFormatted = rows.data().pluck(6).reduce( function (a, b) { return "$" + nf.format(parseInt(a.toString().replace(/[$,]/g, '')) + parseInt(b.toString().replace(/[$,]/g, ''))); }, 0);
               const objRow = document.createElement("tr");
               const objColumn = document.createElement("td");
               objColumn.classList.add("bold");

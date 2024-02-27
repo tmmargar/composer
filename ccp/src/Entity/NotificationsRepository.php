@@ -4,7 +4,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 use PDO;
-use Poker\Ccp\classes\utility\DateTimeUtility;
+use Poker\Ccp\Utility\DateTimeUtility;
 class NotificationsRepository extends BaseRepository {
     public function getByDate(DateTime $date) {
 //      case "notifcationSelectAll":

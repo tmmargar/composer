@@ -2,12 +2,12 @@
 declare(strict_types = 1);
 namespace ccp;
 use Exception;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\FormControl;
-use Poker\Ccp\classes\model\HtmlTable;
-use Poker\Ccp\classes\model\Payout;
-use Poker\Ccp\classes\model\Structure;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\FormControl;
+use Poker\Ccp\Model\HtmlTable;
+use Poker\Ccp\Model\Payout;
+use Poker\Ccp\Model\Structure;
+use Poker\Ccp\Utility\SessionUtility;
 use Poker\Ccp\Entity\Payouts;
 use Poker\Ccp\Entity\Structures;
 require_once "init.php";
@@ -69,7 +69,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
                 $resultList[0] = $payout;
             }
             foreach ($resultList[$ctr]->getStructures() as $structures) {
-                if (get_class(object: $structures) != "Poker\Ccp\classes\model\Structure") {
+                if (get_class(object: $structures) != "Poker\Ccp\Model\Structure") {
                     $structure = new Structure(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, place: 0, percentage : 0);
                     $structure->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), structures: $structures);
                     $payout = new Payout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, name: "", minPlayers: 0, maxPlayers: 0, structures: array($structure));

@@ -5,8 +5,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Parameter;
 use PDO;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\utility\DateTimeUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\DateTimeUtility;
 class TournamentsRepository extends BaseRepository {
     public function getById(?int $tournamentId) {
         $qb = $this->createQueryBuilder("t")
@@ -37,7 +37,7 @@ class TournamentsRepository extends BaseRepository {
         $dtStartFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
         $dtEndFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
         return $qb->innerJoin("t.locations", "l", Expr\Join::WITH, $qb->expr()->between("t.tournamentDate", ":startDate", "DATE_ADD(:endDate, 14, 'DAY')"))
-                  ->innerJoin("l.players", "p", Expr\Join::WITH, "p.playerActiveFlag = 1")
+                  ->innerJoin("l.players", "p", Expr\Join::WITH, "p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
                   ->leftJoin("t.results", "r", Expr\Join::WITH, "p.playerId = r.players")
                   ->where("r.players IS NULL")
                   ->setParameters(new ArrayCollection(array(new Parameter("startDate", $dtStartFormatted), new Parameter("endDate", $dtEndFormatted))))
@@ -157,7 +157,7 @@ class TournamentsRepository extends BaseRepository {
     public function getRegistrationList(DateTime $tournamentDate, bool $max) {
 //         case "registrationList":
         $sql =
-            "SELECT p.player_first_name, p.player_last_name, r.result_registration_food, IF(s.season_fee - f.fee_amount = 0, 'Paid', CONCAT('Owes ', s.season_fee - f.fee_amount)) AS 'fee status' " .
+            "SELECT p.player_first_name, p.player_last_name, r.result_registration_food, IF(s.season_fee - f.fee_amount - IF(fh.player_id IS NULL, 0, s.season_fee) = 0, 'Paid', CONCAT('Owes ', s.season_fee - f.fee_amount)) AS 'fee status' " .
             "FROM (SELECT t1.tournament_id, t1.tournament_date " .
             "      FROM poker_tournaments t1 INNER JOIN (SELECT tournament_date, MIN(tournament_start_time) startTimeMin, MAX(tournament_start_time) startTimeMax " .
             "                                           FROM poker_tournaments " .
@@ -167,6 +167,11 @@ class TournamentsRepository extends BaseRepository {
             "INNER JOIN poker_players p ON r.player_id = p.player_id " .
             "INNER JOIN poker_seasons s ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date " .
             "INNER JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON s.season_id = f.season_id AND p.player_id = f.player_id " .
+            "LEFT JOIN (SELECT DISTINCT se.season_id, l.location_id, l.location_name, l.player_id, p.player_first_name, p.player_last_name " .
+            "           FROM poker_tournaments t INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
+            "           INNER JOIN poker_locations l ON t.location_id = l.location_id " .
+            "           INNER JOIN poker_players p ON l.player_id = p.player_id " .
+            "           GROUP BY se.season_id, l.location_id) fh ON se.season_id = fh.season_id AND p.player_id = fh.player_id " .
             "ORDER BY r.result_registration_order";
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($tournamentDate)) {
@@ -303,14 +308,19 @@ class TournamentsRepository extends BaseRepository {
 //      case "tournamentSelectAllRegistrationStatus":
         $sql =
             "SELECT pt.player_id, CONCAT(pt.player_first_name, ' ', pt.player_last_name) AS name, " .
-            "IF(pt.season_fee - IFNULL(pt.fee_amount, 0) = 0, 'Paid', CONCAT('Owes $', season_fee - IFNULL(pt.fee_amount, 0))) AS 'season fee', " .
+            "IF(pt.season_fee - IFNULL(pt.fee_amount, 0) - IF(fh.player_id IS NULL, 0, pt.season_fee) = 0, 'Paid', CONCAT('Owes $', season_fee - IFNULL(pt.fee_amount, 0))) AS 'season fee', " .
             "IF(r.result_registration_order IS NULL, 'Not registered', 'Registered') AS status, " .
             "IF(r.result_registration_order IS NULL, 'N/A', IF(r.result_registration_order > pt.tournament_max_players, CONCAT(r.result_registration_order, ' (Wait list #', r.result_registration_order - pt.tournament_max_players, ')'), r.result_registration_order)) AS 'order' " .
-            "FROM (SELECT p.player_id, p.player_first_name, p.player_last_name, t.tournament_id, t.tournament_max_players, s.season_fee, f.fee_amount " .
-            "      FROM poker_players p CROSS JOIN poker_tournaments t ON p.player_active_flag = 1 AND t.tournament_id = :tournamentId" .
+            "FROM (SELECT p.player_id, p.player_first_name, p.player_last_name, t.tournament_id, t.tournament_max_players, s.season_fee, f.fee_amount, s.season_id " .
+            "      FROM poker_players p CROSS JOIN poker_tournaments t ON p.player_active_flag = " . Constant::FLAG_YES_DATABASE . " AND t.tournament_id = :tournamentId" .
             "      LEFT JOIN poker_seasons s ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date " .
             "      LEFT JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON s.season_id = f.season_id AND p.player_id = f.player_id) pt " .
-            "LEFT JOIN poker_results r ON pt.player_id = r.player_id AND r.tournament_id = pt.tournament_id AND r.status_code IN ('" . Constant::CODE_STATUS_REGISTERED . "', '" . Constant::CODE_STATUS_PAID . "');";
+            "LEFT JOIN poker_results r ON pt.player_id = r.player_id AND r.tournament_id = pt.tournament_id AND r.status_code IN ('" . Constant::CODE_STATUS_REGISTERED . "', '" . Constant::CODE_STATUS_PAID . "')" .
+            "LEFT JOIN (SELECT DISTINCT se.season_id, l.location_id, l.location_name, l.player_id, p.player_first_name, p.player_last_name " .
+            "           FROM poker_tournaments t INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
+            "           INNER JOIN poker_locations l ON t.location_id = l.location_id " .
+            "           INNER JOIN poker_players p ON l.player_id = p.player_id " .
+            "           GROUP BY se.season_id, l.location_id) fh ON pt.season_id = fh.season_id AND pt.player_id = fh.player_id";
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         $statement->bindValue("tournamentId", $tournamentId, PDO::PARAM_STR);
         if ($indexed) {
@@ -356,8 +366,8 @@ class TournamentsRepository extends BaseRepository {
             "t.tournament_addon_chip_count AS 'chips ', t.group_id, t.tournament_rake AS rake, l.location_map AS mapHide, l.location_map_link AS map, IFNULL(ec.enteredCount, 0) AS enteredCount, p.player_active_flag, t.special_type_id, st.special_type_description AS std, " .
             "(((t.tournament_buyin_amount * ec.enteredCount) + (IFNULL(nr.numRebuys, 0) * t.tournament_rebuy_amount) + (IFNULL(na.numAddons, 0) * t.tournament_addon_amount)) * .8)* s.structure_percentage AS earnings, st.special_type_multiplier " .
             "FROM poker_players p INNER JOIN poker_results r ON p.player_id = r.player_id AND p.player_id = :playerId " .
-            "INNER JOIN poker_tournaments t ON t.tournament_id = r.tournament_id AND r.result_place_finished = 1 " .
-            "LEFT JOIN poker_special_types st ON t.special_type_id = st.special_type_id " .
+            "INNER JOIN poker_tournaments t ON t.tournament_id = r.tournament_id AND r.result_place_finished = " . Constant::FLAG_YES_DATABASE .
+            " LEFT JOIN poker_special_types st ON t.special_type_id = st.special_type_id " .
             "INNER JOIN poker_game_types gt ON t.game_type_id = gt.game_type_id " .
             "INNER JOIN poker_limit_types lt ON t.limit_type_id = lt.limit_type_id " .
             "INNER JOIN poker_locations l ON t.location_id = l.location_id " .
@@ -404,8 +414,8 @@ class TournamentsRepository extends BaseRepository {
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_active_flag, COUNT(*) AS tourneys " .
             "FROM poker_players p LEFT JOIN poker_results r ON p.player_id = r.player_id AND r.result_place_finished > 0 " .
-            "WHERE p.player_active_flag = 1 " .
-            "GROUP BY p.player_id <REPLACE>";
+            "WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE .
+            " GROUP BY p.player_id <REPLACE>";
         $whereClause = "<REPLACE>";
         $orderByFieldName = "tourneys DESC, p.player_last_name, p.player_first_name";
         $selectFieldNames = "player_id, name, tourneys";

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\SessionUtility;
 require_once "../bootstrap.php";
 // check if site is down
 $file_handle = fopen(filename: "../status.txt", mode: "a+");
@@ -16,8 +16,8 @@ if ($values[1] != "") {
 // TODO: NOT SURE WHERE TO PUT THIS
 date_default_timezone_set(timezoneId: Constant::NAME_TIME_ZONE);
 if (strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "index.php") === false) {
-  require_once "../initDefine.php";
-  require_once "initSmarty.php";
-  require_once "../initTidy.php";
+    require_once "../initDefine.php";
+    require_once "initSmarty.php";
+    require_once "../initTidy.php";
 }
 require_once "initDefaults.php";

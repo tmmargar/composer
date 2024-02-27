@@ -2,12 +2,12 @@
 declare(strict_types = 1);
 namespace ccp;
 use DateTime;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\HtmlLink;
-use Poker\Ccp\classes\model\HtmlMenu;
-use Poker\Ccp\classes\utility\DateTimeUtility;
-use Poker\Ccp\classes\utility\HtmlUtility;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\HtmlLink;
+use Poker\Ccp\Model\HtmlMenu;
+use Poker\Ccp\Utility\DateTimeUtility;
+use Poker\Ccp\Utility\HtmlUtility;
+use Poker\Ccp\Utility\SessionUtility;
 // $accessKey, $class, $debug, $href, $id, $paramName, $paramValue, $tabIndex, $text, $title)
 $htmlLinkHome = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "home.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Home", title: NULL);
 $htmlLinkEvents = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "registrationList.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Events", title: NULL);
@@ -177,7 +177,7 @@ if (SessionUtility::getValue(SessionUtility::OBJECT_NAME_ADMINISTRATOR) != 0) {
     array_push($levels, $htmlMenuReportAdministration);
 }
 $htmlMenuReportMyProfile = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "My profile");
-$htmlLinkEdit = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "managePlayer.php", id: NULL, paramName: array("mode","playerId"), paramValue: array("modify",SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID)), tabIndex: - 1, text: "Edit my profile", title: NULL);
+$htmlLinkEdit = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "managePlayer.php", id: NULL, paramName: array("mode","playerId"), paramValue: array("modify",SessionUtility::getValue(SessionUtility::OBJECT_NAME_PLAYERID)), tabIndex: - 1, text: "Edit my profile", title: NULL);
 $htmlLinkLogout = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "logout.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Logout", title: NULL);
 $htmlLinkResetPassword = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "resetPassword.php", id: NULL, paramName: array("nav"), paramValue: array("Y"), tabIndex: - 1, text: "Password reset", title: NULL);
 $htmlLinkMyProfileArray = array($htmlLinkEdit,$htmlLinkLogout,$htmlLinkResetPassword);

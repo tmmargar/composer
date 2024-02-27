@@ -2,15 +2,15 @@
 declare(strict_types = 1);
 namespace ccp;
 use DateTime;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\FormControl;
-use Poker\Ccp\classes\model\Login;
-use Poker\Ccp\classes\model\Security;
-use Poker\Ccp\classes\model\Player;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\FormControl;
+use Poker\Ccp\Model\Login;
+use Poker\Ccp\Model\Security;
+use Poker\Ccp\Model\Player;
+use Poker\Ccp\Utility\SessionUtility;
 use tidy;
 require_once "init.php";
-define("NAME_FIELD_USERNAME", "username");
+define("NAME_FIELD_PLAYERNAME", "username");
 define("NAME_FIELD_PASSWORD", "password");
 define("NAME_FIELD_REMEMBER_ME", "rememberMe");
 define("NAME_FIELD_LOGIN", "login");
@@ -40,7 +40,7 @@ if (Constant::MODE_LOGIN == $mode) {
   }
 }
 $output .= "<div class=\"responsive responsive--2cols responsive--collapse\">";
-$textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_USERNAME, autoComplete: "username", autoFocus: true, checked: NULL, class: NULL, cols: NULL, disabled: false, id: NAME_FIELD_USERNAME, maxLength: 30, name: NAME_FIELD_USERNAME, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 10, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: NULL, wrap: NULL);
+$textBoxUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_PLAYERNAME, autoComplete: "username", autoFocus: true, checked: NULL, class: NULL, cols: NULL, disabled: false, id: NAME_FIELD_PLAYERNAME, maxLength: 30, name: NAME_FIELD_PLAYERNAME, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 10, suffix: NULL, type: FormControl::TYPE_INPUT_TEXTBOX, value: NULL, wrap: NULL);
 $output .= " <div class=\"responsive-cell responsive-cell--head\"><label class=\"label\" for=\"" . $textBoxUsername->getId() . "\">Username:</label></div>";
 $output .= " <div class=\"responsive-cell\">" . $textBoxUsername->getHtml() . "</div>";
 $textBoxPassword = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_PASSWORD, autoComplete: "current-password", autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: NAME_FIELD_PASSWORD, maxLength: NULL, name: NAME_FIELD_PASSWORD, onClick: NULL, placeholder: NULL, readOnly: false, required: true, rows: NULL, size: 10, suffix: NULL, type: FormControl::TYPE_INPUT_PASSWORD, value: NULL, wrap: NULL);

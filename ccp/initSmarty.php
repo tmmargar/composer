@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace ccp;
-use Poker\Ccp\classes\model\SmartyLocal;
+use Poker\Ccp\Model\SmartyLocal;
 require_once "vendor/autoload.php";
 $smartyCcp = new SmartyLocal();
 $smartyCcp->initialize(debug: false);

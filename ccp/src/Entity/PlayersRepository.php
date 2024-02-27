@@ -6,11 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Parameter;
 use PDO;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\utility\DateTimeUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\DateTimeUtility;
 class PlayersRepository extends BaseRepository {
     public function getActives() {
-        return $this->createQueryBuilder("p")->where("p.playerActiveFlag = 1")->getQuery()->getResult();
+        return $this->createQueryBuilder("p")->where("p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)->getQuery()->getResult();
     }
 
     public function getByName(string $name) {
@@ -54,7 +54,7 @@ class PlayersRepository extends BaseRepository {
         //             "AND player_email <>  '' " .
         //             "ORDER BY player_id";
         return $this->createQueryBuilder("p")
-                    ->where("p.playerActiveFlag = 1")
+                    ->where("p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
                     ->andWhere("p.playerApprovalDate IS NOT NULL")
                     ->andWhere("p.playerRejectionDate IS NULL")
                     ->addOrderBy("p.playerId")
@@ -109,8 +109,8 @@ class PlayersRepository extends BaseRepository {
             "       nt.numTourneys AS tourneys, " .
             "       SUM((np.numPlayers - r.result_place_finished + 1) * IFNULL(st.special_type_multiplier, 1) + IF(r.result_place_finished BETWEEN 1 AND se.season_final_table_players, se.season_final_table_bonus_points, 0)) / nt.numTourneys AS 'average points', " .
             "       ta.player_id AS playerIdAbsence, IF(ta.player_id IS NULL, 'Attending', 'Not attending') AS 'absence status' " .
-            "FROM poker_players p INNER JOIN poker_results r ON p.player_id = r.player_id AND p.player_active_flag = 1 " .
-            "INNER JOIN poker_tournaments t on r.tournament_id = t.tournament_id AND t.tournament_date BETWEEN :startDate1 AND :endDate1 " .
+            "FROM poker_players p INNER JOIN poker_results r ON p.player_id = r.player_id AND p.player_active_flag = " . Constant::FLAG_YES_DATABASE .
+            " INNER JOIN poker_tournaments t on r.tournament_id = t.tournament_id AND t.tournament_date BETWEEN :startDate1 AND :endDate1 " .
             "LEFT JOIN poker_special_types st ON t.special_type_Id = st.special_type_Id " .
             "INNER JOIN (SELECT r1.player_id, COUNT(*) AS numTourneys " .
             "            FROM poker_results r1 " .
@@ -149,9 +149,14 @@ class PlayersRepository extends BaseRepository {
     public function getFeeDetail(bool $indexed) {
         //         case "feeDetail":
         $sql =
-            "SELECT s.season_id, s.season_description AS description, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, f.tournament_id, s.season_fee AS fee, IFNULL(f.fee_amount, 0) AS paid, IF(f.fee_amount IS NULL, s.season_fee, s.season_fee - f.fee_amount) AS balance " .
-            "FROM poker_players p CROSS JOIN poker_seasons s ON p.player_active_flag = 1 " .
-            "LEFT JOIN poker_fees f ON s.season_id = f.season_id AND p.player_id = f.player_id AND f.fee_amount > 0 " .
+            "SELECT s.season_id, s.season_description AS description, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, f.tournament_id, s.season_fee AS fee, IFNULL(f.fee_amount, 0) AS paid, IF(f.fee_amount IS NULL, s.season_fee, s.season_fee - f.fee_amount) - IF(fh.player_id IS NULL, 0, s.season_fee) AS balance " .
+            "FROM poker_players p CROSS JOIN poker_seasons s ON p.player_active_flag = " . Constant::FLAG_YES_DATABASE .
+            " LEFT JOIN poker_fees f ON s.season_id = f.season_id AND p.player_id = f.player_id AND f.fee_amount > 0 " .
+            "LEFT JOIN (SELECT DISTINCT se.season_id, l.location_id, l.location_name, l.player_id, p.player_first_name, p.player_last_name " .
+            "           FROM poker_tournaments t INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
+            "           INNER JOIN poker_locations l ON t.location_id = l.location_id " .
+            "           INNER JOIN poker_players p ON l.player_id = p.player_id " .
+            "           GROUP BY se.season_id, l.location_id) fh ON s.season_id = fh.season_id AND p.player_id = fh.player_id " .
             "ORDER BY s.season_description, f.player_id";
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if ($indexed) {
@@ -161,7 +166,7 @@ class PlayersRepository extends BaseRepository {
         }
         //         $qb = $this->createQueryBuilder("p");
 //         return $qb->select("p, s, f")
-//                   ->innerJoin(Seasons::class, "s", Expr\Join::WITH, "p.playerActiveFlag = 1")
+//                   ->innerJoin(Seasons::class, "s", Expr\Join::WITH, "p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
 //                   ->leftJoin("s.fees", "f", Expr\Join::WITH, "p.playerId = f.players AND f.feeAmount > 0")
 //                   ->getQuery()->getResult();
     }
@@ -258,12 +263,12 @@ class PlayersRepository extends BaseRepository {
         if (isset($startDate) && isset($endDate)) {
             $sql .= "   AND t.tournament_date BETWEEN :startDate2 AND :endDate2 ";
         }
-        $sql .= "    GROUP BY r.player_id) nt ON k.player_id = nt.player_id) a ON p.player_id = a.player_id";
+        $sql .= "    GROUP BY r.player_id) nt ON k.player_id = nt.player_id) a ON p.player_id = a.player_id " .
+                "WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE;
         if (isset($playerId)) {
-            $whereClause = "WHERE p.player_id = " . $playerId;
-            $sql .= " WHERE p.player_id = " . $playerId;
+            $whereClause = "AND p.player_id = " . $playerId;
+            $sql .= " AND p.player_id = " . $playerId;
         } else {
-            $sql .= " WHERE p.player_active_flag = 1";
         }
         if (!$rank && isset($orderBy)) {
             $sql .= " ORDER BY ";
@@ -339,12 +344,11 @@ class PlayersRepository extends BaseRepository {
             "                                        WHERE result_place_finished > 0 " .
             "                                        GROUP BY tournament_id) np ON r.tournament_id = np.tournament_id " .
             "WHERE st.special_type_description IS NULL OR st.special_type_description <> '" . Constant::DESCRIPTION_CHAMPIONSHIP ."' " .
-            "GROUP BY r.player_id) a ON p.player_id = a.player_id";
+            "GROUP BY r.player_id) a ON p.player_id = a.player_id " .
+            "WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE;
         if (isset($playerId)) {
-            $whereClause = "WHERE p.player_id = " . $playerId;
-            $sql .= " WHERE p.player_id = " . $playerId;
-        } else {
-            $sql .= " WHERE p.player_active_flag = 1";
+            $whereClause = " AND p.player_id = " . $playerId;
+            $sql .= " AND p.player_id = " . $playerId;
         }
         if (!$rank && isset($orderBy)) {
             $sql .= " ORDER BY ";
@@ -392,18 +396,23 @@ class PlayersRepository extends BaseRepository {
 //         case "statusSelectPaid":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, " .
-            "       IF(s.season_fee - IFNULL(f.fee_amount, 0) = 0, 'Paid', 'Not paid') AS fee_status_logic, " .
-            "       IF(s.season_fee IS NULL, '', IF(s.season_fee - IFNULL(f.fee_amount, 0) = 0, 'Paid', CONCAT('Owes ', (s.season_fee - IFNULL(f.fee_amount, 0))))) AS 'fee status', " .
+            "       IF(s.season_fee - IFNULL(f.fee_amount, 0) - IF(fh.player_id IS NULL, 0, s.season_fee) = 0, 'Paid', 'Not paid') AS fee_status_logic, " .
+            "       IF(s.season_fee IS NULL, '', IF(s.season_fee - IFNULL(f.fee_amount, 0) - IF(fh.player_id IS NULL, 0, s.season_fee) = 0, 'Paid', CONCAT('Owes ', (s.season_fee - IFNULL(f.fee_amount, 0))))) AS 'fee status', " .
             "       IFNULL(f.fee_amount, 0) AS fee_amount, " .
-            "       IF(f.fee_amount = s.season_fee, f.fee_amount, IFNULL(f2.fee_amount, 0)) AS amount2, " .
+            "       IF(f.fee_amount = s.season_fee, f.fee_amount, IFNULL(f2.fee_amount, 0) + IF(fh.player_id IS NULL, 0, s.season_fee)) AS amount2, " .
             "       IF(r.result_paid_buyin_flag = '" . Constant::FLAG_YES . "', 'Paid', 'Not paid') AS buyin_status, " .
             "       IF(r.result_paid_rebuy_flag = '" . Constant::FLAG_YES . "', 'Paid', 'Not paid') AS rebuy_status, " .
             "       r.result_rebuy_count, IF(r.result_paid_addon_flag = '" . Constant::FLAG_YES . "', 'Paid', 'Not paid') AS addon_status " .
-            "FROM poker_players p INNER JOIN poker_results r ON p.player_id = r.player_id AND p.player_active_flag = 1 " .
+            "FROM poker_players p INNER JOIN poker_results r ON p.player_id = r.player_id AND p.player_active_flag = " . Constant::FLAG_YES_DATABASE .
             " INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id AND t.tournament_id = :tournamentId AND r.status_code IN ('" . Constant::CODE_STATUS_REGISTERED . "', '" . Constant::CODE_STATUS_PAID . "') AND r.result_registration_order <= t.tournament_max_players" .
             " INNER JOIN poker_seasons s ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date" .
             " LEFT JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON s.season_id = f.season_id AND p.player_id = f.player_id" .
-            " LEFT JOIN (SELECT season_id, player_id, tournament_id, fee_amount FROM poker_fees) f2 ON s.season_id = f2.season_id AND p.player_id = f2.player_id AND t.tournament_id = f2.tournament_id";
+            " LEFT JOIN (SELECT season_id, player_id, tournament_id, fee_amount FROM poker_fees) f2 ON s.season_id = f2.season_id AND p.player_id = f2.player_id AND t.tournament_id = f2.tournament_id" .
+            " LEFT JOIN (SELECT DISTINCT se.season_id, l.location_id, l.location_name, l.player_id, p.player_first_name, p.player_last_name " .
+            "            FROM poker_tournaments t INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
+            "            INNER JOIN poker_locations l ON t.location_id = l.location_id " .
+            "            INNER JOIN poker_players p ON l.player_id = p.player_id " .
+            "            GROUP BY se.season_id, l.location_id) fh ON s.season_id = fh.season_id AND p.player_id = fh.player_id";
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         $statement->bindValue("tournamentId", $tournamentId, PDO::PARAM_INT);
         if ($indexed) {
@@ -461,7 +470,7 @@ class PlayersRepository extends BaseRepository {
 //             " INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id AND r.result_registration_order = t.tournament_max_players";
         $qb = $this->createQueryBuilder("p");
         return $qb->select("p")
-                  ->innerJoin("p.results", "r", Expr\Join::WITH, "r.tournaments = :tournamentId AND p.playerActiveFlag = 1")
+                  ->innerJoin("p.results", "r", Expr\Join::WITH, "r.tournaments = :tournamentId AND p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
                   ->innerJoin("r.tournaments", "t", Expr\Join::WITH, "r.resultRegistrationOrder = t.tournamentMaxPlayers")
                   ->setParameters(new ArrayCollection(array(new Parameter("tournamentId", $tournamentId))))
                   ->getQuery()->getResult();
@@ -476,7 +485,7 @@ class PlayersRepository extends BaseRepository {
             "FROM poker_players p " .
             "LEFT JOIN (SELECT r.player_id, COUNT(*) AS wins, numTourneys AS trnys " .
             "           FROM poker_tournaments t " .
-            "           INNER JOIN poker_results r ON t.tournament_id = r.tournament_id AND r.result_place_finished = 1 ";
+            "           INNER JOIN poker_results r ON t.tournament_id = r.tournament_id AND r.result_place_finished = " . Constant::FLAG_YES_DATABASE;
         if (!$winsForPlayer && isset($startDate) && isset($endDate)) {
             $sql .= "            AND t.tournament_date BETWEEN :startDate1 AND :endDate1 ";
         }
@@ -489,17 +498,17 @@ class PlayersRepository extends BaseRepository {
         }
         $sql .=
             "                        GROUP BY r.player_id) nt ON r.player_id = nt.player_id " .
-            "            GROUP BY r.player_id) a ON p.player_id = a.player_id AND p.player_active_flag = 1 ";
+            "            GROUP BY r.player_id) a ON p.player_id = a.player_id AND p.player_active_flag = " . Constant::FLAG_YES_DATABASE .
+            " WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE;
         if (isset($playerId)) {
-            $whereClause = "WHERE p.player_id = :playerId";
-            $sql .= " WHERE p.player_id = :playerId";
+            $whereClause = " AND p.player_id = :playerId";
+            $sql .= " AND p.player_id = :playerId";
         } else if ($winsForSeason) {
-            $sql .= " WHERE wins > 0";
+            $sql .= " AND wins > 0";
         }
         if ($winsForSeason) {
             $sql .= " ORDER BY wins DESC, p.player_last_name, p.player_first_name";
         }
-//         echo "<br>bef->".$sql;
         if ($rank) {
             if (1 == $orderBy[0]) {
                 $orderByFieldName = "wins DESC, p.player_last_name, p.player_first_name";

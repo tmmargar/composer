@@ -2,8 +2,8 @@
 declare(strict_types = 1);
 namespace ccp;
 use Exception;
-use Poker\Ccp\classes\utility\HtmlUtility;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Utility\HtmlUtility;
+use Poker\Ccp\Utility\SessionUtility;
 require_once "init.php";
 define("PLAYER_ID_PARAM_NAME", "playerId");
 $playerId = isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME]) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue("userid");

@@ -4,11 +4,12 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 use PDO;
-use Poker\Ccp\classes\utility\DateTimeUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\DateTimeUtility;
 class SeasonsRepository extends BaseRepository {
     public function getActives() {
 //       case "seasonSelectOneByActive":
-        return $this->createQueryBuilder("s")->where("s.seasonActiveFlag = 1")->getQuery()->getSingleResult();
+        return $this->createQueryBuilder("s")->where("s.seasonActiveFlag = " . Constant::FLAG_YES_DATABASE)->getQuery()->getSingleResult();
     }
 
     public function getById(?int $seasonId) {
@@ -36,25 +37,6 @@ class SeasonsRepository extends BaseRepository {
         $statement->bindValue("tournamentId", $tournamentId);
         $statement->bindValue("typeDescription", $specialTypeDescription);
         return $statement->executeQuery()->fetchAllAssociative();
-    }
-
-    public function getFeesBySeason(bool $indexed) {
-//         case "feeSelectBySeason":
-        $sql =
-            "SELECT s.season_id, s.season_description AS description, s.season_start_date AS 'start date', s.season_end_date AS 'end date', SUM(f.fee_amount) AS amount " .
-            "FROM poker_fees f INNER JOIN poker_seasons s ON f.season_id = s.season_id " .
-            "GROUP BY s.season_id";
-//             $qb = $this->createQueryBuilder("s");
-//             return $qb->select("s, SUM(f.feeAmount) AS amount")
-//                       ->innerJoin("s.fees", "f")
-//                       ->groupBy("s.seasonId")
-//                       ->getQuery()->getResult();
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        if ($indexed) {
-            return $statement->executeQuery()->fetchAllNumeric();
-        } else {
-            return $statement->executeQuery()->fetchAllAssociative();
-        }
     }
 
     public function getMaxId() {

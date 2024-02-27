@@ -2,14 +2,14 @@
 declare(strict_types = 1);
 namespace ccp;
 use DateTime;
-use Poker\Ccp\classes\model\Base;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\FormControl;
-use Poker\Ccp\classes\model\FormOption;
-use Poker\Ccp\classes\model\FormSelect;
-use Poker\Ccp\classes\model\HtmlTable;
-use Poker\Ccp\classes\utility\DateTimeUtility;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Base;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\FormControl;
+use Poker\Ccp\Model\FormOption;
+use Poker\Ccp\Model\FormSelect;
+use Poker\Ccp\Model\HtmlTable;
+use Poker\Ccp\Utility\DateTimeUtility;
+use Poker\Ccp\Utility\SessionUtility;
 require_once "init.php";
 define("REPORT_ID_PARAM_NAME", "reportId");
 define("PLAYER_ID_PARAM_NAME", "playerId");
@@ -235,8 +235,8 @@ if (!isset($reportId)) {
             $width = "100%";
             break;
         case REPORT_ID_FEES:
-            $result = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getFeesBySeason(indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getFeesBySeason(indexed: false);
+            $result = $entityManager->getRepository(Constant::ENTITY_FEES)->getBySeason(indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_FEES)->getBySeason(indexed: false);
             $colFormats = array(array(2, "date", 0), array(3, "date", 0), array(4, "currency", 0));
             $hideColIndexes = array(0);
             $width = "100%";

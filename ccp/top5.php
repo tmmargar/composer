@@ -3,22 +3,22 @@ declare(strict_types = 1);
 namespace ccp;
 use DateTime;
 use PDO;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\FormControl;
-use Poker\Ccp\classes\model\HtmlTable;
-use Poker\Ccp\classes\model\GameType;
-use Poker\Ccp\classes\model\Group;
-use Poker\Ccp\classes\model\GroupPayout;
-use Poker\Ccp\classes\model\LimitType;
-use Poker\Ccp\classes\model\Location;
-use Poker\Ccp\classes\model\Payout;
-use Poker\Ccp\classes\model\Player;
-use Poker\Ccp\classes\model\SpecialType;
-use Poker\Ccp\classes\model\Structure;
-use Poker\Ccp\classes\model\Tournament;
-use Poker\Ccp\classes\utility\HtmlUtility;
-use Poker\Ccp\classes\utility\SessionUtility;
-use Poker\Ccp\classes\utility\DateTimeUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\FormControl;
+use Poker\Ccp\Model\HtmlTable;
+use Poker\Ccp\Model\GameType;
+use Poker\Ccp\Model\Group;
+use Poker\Ccp\Model\GroupPayout;
+use Poker\Ccp\Model\LimitType;
+use Poker\Ccp\Model\Location;
+use Poker\Ccp\Model\Payout;
+use Poker\Ccp\Model\Player;
+use Poker\Ccp\Model\SpecialType;
+use Poker\Ccp\Model\Structure;
+use Poker\Ccp\Model\Tournament;
+use Poker\Ccp\Utility\HtmlUtility;
+use Poker\Ccp\Utility\SessionUtility;
+use Poker\Ccp\Utility\DateTimeUtility;
 require_once "init.php";
 if (!defined("REPORT_ID_PARAM_NAME")) {
     define("REPORT_ID_PARAM_NAME", "reportId");
@@ -35,89 +35,89 @@ if (!defined("PRIZE_POOL_FOR_SEASON")) {
 if (!defined("POINTS_TOTAL_FOR_SEASON")) {
     define("POINTS_TOTAL_FOR_SEASON", "pointsTotalForSeason");
 }
-if (!defined("POINTS_TOTAL_FOR_SEASON_FOR_USER")) {
-    define("POINTS_TOTAL_FOR_SEASON_FOR_USER", "pointsTotalForSeasonForPlayer");
+if (!defined("POINTS_TOTAL_FOR_SEASON_FOR_PLAYER")) {
+    define("POINTS_TOTAL_FOR_SEASON_FOR_PLAYER", "pointsTotalForSeasonForPlayer");
 }
-if (!defined("POINTS_TOTAL_FOR_USER")) {
-    define("POINTS_TOTAL_FOR_USER", "pointsTotalForPlayer");
+if (!defined("POINTS_TOTAL_FOR_PLAYER")) {
+    define("POINTS_TOTAL_FOR_PLAYER", "pointsTotalForPlayer");
 }
 if (!defined("POINTS_AVERAGE_FOR_SEASON")) {
     define("POINTS_AVERAGE_FOR_SEASON", "pointsAverageForSeason");
 }
-if (!defined("POINTS_AVERAGE_FOR_SEASON_FOR_USER")) {
-    define("POINTS_AVERAGE_FOR_SEASON_FOR_USER", "pointsAverageForSeasonForPlayer");
+if (!defined("POINTS_AVERAGE_FOR_SEASON_FOR_PLAYER")) {
+    define("POINTS_AVERAGE_FOR_SEASON_FOR_PLAYER", "pointsAverageForSeasonForPlayer");
 }
-if (!defined("POINTS_AVERAGE_FOR_USER")) {
-    define("POINTS_AVERAGE_FOR_USER", "pointsAverageForPlayer");
+if (!defined("POINTS_AVERAGE_FOR_PLAYER")) {
+    define("POINTS_AVERAGE_FOR_PLAYER", "pointsAverageForPlayer");
 }
 if (!defined("KNOCKOUTS_TOTAL_FOR_SEASON")) {
     define("KNOCKOUTS_TOTAL_FOR_SEASON", "knockoutsTotalForSeason");
 }
-if (!defined("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER")) {
-    define("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER", "knockoutsTotalForSeasonForPlayer");
+if (!defined("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_PLAYER")) {
+    define("KNOCKOUTS_TOTAL_FOR_SEASON_FOR_PLAYER", "knockoutsTotalForSeasonForPlayer");
 }
-if (!defined("KNOCKOUTS_TOTAL_FOR_USER")) {
-    define("KNOCKOUTS_TOTAL_FOR_USER", "knockoutsTotalForPlayer");
+if (!defined("KNOCKOUTS_TOTAL_FOR_PLAYER")) {
+    define("KNOCKOUTS_TOTAL_FOR_PLAYER", "knockoutsTotalForPlayer");
 }
 if (!defined("KNOCKOUTS_AVERAGE_FOR_SEASON")) {
     define("KNOCKOUTS_AVERAGE_FOR_SEASON", "knockoutsAverageForSeason");
 }
-if (!defined("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER")) {
-    define("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER", "knockoutsAverageForSeasonForPlayer");
+if (!defined("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_PLAYER")) {
+    define("KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_PLAYER", "knockoutsAverageForSeasonForPlayer");
 }
-if (!defined("KNOCKOUTS_AVERAGE_FOR_USER")) {
-    define("KNOCKOUTS_AVERAGE_FOR_USER", "knockoutsAverageForPlayer");
+if (!defined("KNOCKOUTS_AVERAGE_FOR_PLAYER")) {
+    define("KNOCKOUTS_AVERAGE_FOR_PLAYER", "knockoutsAverageForPlayer");
 }
 if (!defined("EARNINGS_TOTAL_FOR_SEASON")) {
     define("EARNINGS_TOTAL_FOR_SEASON", "earningsTotalForSeason");
 }
-if (!defined("EARNINGS_TOTAL_FOR_SEASON_FOR_USER")) {
-    define("EARNINGS_TOTAL_FOR_SEASON_FOR_USER", "earningsTotalForSeasonForPlayer");
+if (!defined("EARNINGS_TOTAL_FOR_SEASON_FOR_PLAYER")) {
+    define("EARNINGS_TOTAL_FOR_SEASON_FOR_PLAYER", "earningsTotalForSeasonForPlayer");
 }
-if (!defined("EARNINGS_TOTAL_FOR_USER")) {
-    define("EARNINGS_TOTAL_FOR_USER", "earningsTotalForPlayer");
+if (!defined("EARNINGS_TOTAL_FOR_PLAYER")) {
+    define("EARNINGS_TOTAL_FOR_PLAYER", "earningsTotalForPlayer");
 }
 if (!defined("EARNINGS_AVERAGE_FOR_SEASON")) {
     define("EARNINGS_AVERAGE_FOR_SEASON", "earningsAverageForSeason");
 }
-if (!defined("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER")) {
-    define("EARNINGS_AVERAGE_FOR_SEASON_FOR_USER", "earningsAverageForSeasonForPlayer");
+if (!defined("EARNINGS_AVERAGE_FOR_SEASON_FOR_PLAYER")) {
+    define("EARNINGS_AVERAGE_FOR_SEASON_FOR_PLAYER", "earningsAverageForSeasonForPlayer");
 }
-if (!defined("EARNINGS_AVERAGE_FOR_USER")) {
-    define("EARNINGS_AVERAGE_FOR_USER", "earningsAverageForPlayer");
+if (!defined("EARNINGS_AVERAGE_FOR_PLAYER")) {
+    define("EARNINGS_AVERAGE_FOR_PLAYER", "earningsAverageForPlayer");
 }
 if (!defined("WINNERS_FOR_SEASON")) {
     define("WINNERS_FOR_SEASON", "winnersForSeason");
 }
-if (!defined("WINS_FOR_USER")) {
-    define("WINS_FOR_USER", "winsForPlayer");
+if (!defined("WINS_FOR_PLAYER")) {
+    define("WINS_FOR_PLAYER", "winsForPlayer");
 }
-if (!defined("WINS_TOTAL_FOR_SEASON_FOR_USER")) {
-    define("WINS_TOTAL_FOR_SEASON_FOR_USER", "winsTotalForSeasonForPlayer");
+if (!defined("WINS_TOTAL_FOR_SEASON_FOR_PLAYER")) {
+    define("WINS_TOTAL_FOR_SEASON_FOR_PLAYER", "winsTotalForSeasonForPlayer");
 }
-if (!defined("WINS_AVERAGE_FOR_SEASON_FOR_USER")) {
-    define("WINS_AVERAGE_FOR_SEASON_FOR_USER", "winsAverageForSeasonForPlayer");
+if (!defined("WINS_AVERAGE_FOR_SEASON_FOR_PLAYER")) {
+    define("WINS_AVERAGE_FOR_SEASON_FOR_PLAYER", "winsAverageForSeasonForPlayer");
 }
-if (!defined("NEMESIS_FOR_USER")) {
-    define("NEMESIS_FOR_USER", "nemesisForPlayer");
+if (!defined("NEMESIS_FOR_PLAYER")) {
+    define("NEMESIS_FOR_PLAYER", "nemesisForPlayer");
 }
-if (!defined("BULLY_FOR_USER")) {
-    define("BULLY_FOR_USER", "bullyForPlayer");
+if (!defined("BULLY_FOR_PLAYER")) {
+    define("BULLY_FOR_PLAYER", "bullyForPlayer");
 }
-if (!defined("TOURNAMENTS_WON_FOR_USER")) {
-    define("TOURNAMENTS_WON_FOR_USER", "tournamentsWonForPlayer");
+if (!defined("TOURNAMENTS_WON_FOR_PLAYER")) {
+    define("TOURNAMENTS_WON_FOR_PLAYER", "tournamentsWonForPlayer");
 }
-if (!defined("FINISHES_FOR_USER")) {
-    define("FINISHES_FOR_USER", "finishesForPlayer");
+if (!defined("FINISHES_FOR_PLAYER")) {
+    define("FINISHES_FOR_PLAYER", "finishesForPlayer");
 }
-if (!defined("TOURNAMENTS_PLAYED_FOR_USER")) {
-    define("TOURNAMENTS_PLAYED_FOR_USER", "tournamentsPlayedForPlayer");
+if (!defined("TOURNAMENTS_PLAYED_FOR_PLAYER")) {
+    define("TOURNAMENTS_PLAYED_FOR_PLAYER", "tournamentsPlayedForPlayer");
 }
-if (!defined("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER")) {
-    define("TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER", "tournamentsPlayedByTypeForPlayer");
+if (!defined("TOURNAMENTS_PLAYED_BY_TYPE_FOR_PLAYER")) {
+    define("TOURNAMENTS_PLAYED_BY_TYPE_FOR_PLAYER", "tournamentsPlayedByTypeForPlayer");
 }
-if (!defined("TOURNAMENTS_PLAYED_FIRST_FOR_USER")) {
-    define("TOURNAMENTS_PLAYED_FIRST_FOR_USER", "tournamentsPlayedFirstForPlayer");
+if (!defined("TOURNAMENTS_PLAYED_FIRST_FOR_PLAYER")) {
+    define("TOURNAMENTS_PLAYED_FIRST_FOR_PLAYER", "tournamentsPlayedFirstForPlayer");
 }
 $smarty->assign("title", "Chip Chair and a Prayer Top 5");
 $smarty->assign("heading", "");
@@ -129,7 +129,7 @@ if (!isset($parentObjectId)) {
 } else {
     $output = "";
 }
-$playerId = (int) ((isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME])) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::OBJECT_NAME_USERID));
+$playerId = (int) ((isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME])) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue(SessionUtility::OBJECT_NAME_PLAYERID));
 if (!isset($navigation)) {
     $navigation = (isset($_POST[NAVIGATION_PARAM_NAME]) ? $_POST[NAVIGATION_PARAM_NAME] : isset($_GET[NAVIGATION_PARAM_NAME])) ? $_GET[NAVIGATION_PARAM_NAME] : NULL;
 }
@@ -149,88 +149,88 @@ switch ($reportId) {
     case POINTS_TOTAL_FOR_SEASON:
         $title = "Total points for season";
         break;
-    case POINTS_TOTAL_FOR_SEASON_FOR_USER:
+    case POINTS_TOTAL_FOR_SEASON_FOR_PLAYER:
         $title = "Total points for season for player";
         break;
-    case POINTS_TOTAL_FOR_USER:
+    case POINTS_TOTAL_FOR_PLAYER:
         $title = "Total points for player";
         break;
     case POINTS_AVERAGE_FOR_SEASON:
         $title = "Average points for season";
         break;
-    case POINTS_AVERAGE_FOR_SEASON_FOR_USER:
+    case POINTS_AVERAGE_FOR_SEASON_FOR_PLAYER:
         $title = "Average points for season for player";
         break;
-    case POINTS_AVERAGE_FOR_USER:
+    case POINTS_AVERAGE_FOR_PLAYER:
         $title = "Average points for player";
         break;
     case EARNINGS_TOTAL_FOR_SEASON:
         $title = "Total earnings for season";
         break;
-    case EARNINGS_TOTAL_FOR_SEASON_FOR_USER:
+    case EARNINGS_TOTAL_FOR_SEASON_FOR_PLAYER:
         $title = "Total earnings for season for player";
         break;
-    case EARNINGS_TOTAL_FOR_USER:
+    case EARNINGS_TOTAL_FOR_PLAYER:
         $title = "Total earnings for player";
         break;
     case EARNINGS_AVERAGE_FOR_SEASON:
         $title = "Average earnings for season";
         break;
-    case EARNINGS_AVERAGE_FOR_SEASON_FOR_USER:
+    case EARNINGS_AVERAGE_FOR_SEASON_FOR_PLAYER:
         $title = "Average earnings for season for player";
         break;
-    case EARNINGS_AVERAGE_FOR_USER:
+    case EARNINGS_AVERAGE_FOR_PLAYER:
         $title = "Average earnings for player";
         break;
     case KNOCKOUTS_AVERAGE_FOR_SEASON:
         $title = "Average knockouts for season";
         break;
-    case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER:
+    case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_PLAYER:
         $title = "Average knockouts for season for player";
         break;
-    case KNOCKOUTS_AVERAGE_FOR_USER:
+    case KNOCKOUTS_AVERAGE_FOR_PLAYER:
         $title = "Average knockouts for player";
         break;
     case KNOCKOUTS_TOTAL_FOR_SEASON:
         $title = "Total knockouts for season";
         break;
-    case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER:
+    case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_PLAYER:
         $title = "Total knockouts for season for player";
         break;
-    case KNOCKOUTS_TOTAL_FOR_USER:
+    case KNOCKOUTS_TOTAL_FOR_PLAYER:
         $title = "Total knockouts for player";
         break;
     case WINNERS_FOR_SEASON:
         $title = "Winners for season";
         break;
-    case WINS_FOR_USER:
+    case WINS_FOR_PLAYER:
         $title = "Wins for Player";
         break;
-    case WINS_TOTAL_FOR_SEASON_FOR_USER:
+    case WINS_TOTAL_FOR_SEASON_FOR_PLAYER:
         $title = "Total Wins for season for player";
         break;
-    case WINS_AVERAGE_FOR_SEASON_FOR_USER:
+    case WINS_AVERAGE_FOR_SEASON_FOR_PLAYER:
         $title = "Average Wins for season for player";
         break;
-    case NEMESIS_FOR_USER:
+    case NEMESIS_FOR_PLAYER:
         $title = "Nemesis for player";
         break;
-    case BULLY_FOR_USER:
+    case BULLY_FOR_PLAYER:
         $title = "Bully for player";
         break;
-    case TOURNAMENTS_WON_FOR_USER:
+    case TOURNAMENTS_WON_FOR_PLAYER:
         $title = "Tournaments won";
         break;
-    case FINISHES_FOR_USER:
+    case FINISHES_FOR_PLAYER:
         $title = "Finishes";
         break;
-    case TOURNAMENTS_PLAYED_FOR_USER:
+    case TOURNAMENTS_PLAYED_FOR_PLAYER:
         $title = "Tournaments played";
         break;
-    case TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER:
+    case TOURNAMENTS_PLAYED_BY_TYPE_FOR_PLAYER:
         $title = "Tournaments played by type";
         break;
-    case TOURNAMENTS_PLAYED_FIRST_FOR_USER:
+    case TOURNAMENTS_PLAYED_FIRST_FOR_PLAYER:
         $title = "Tournaments played first";
         break;
     default:
@@ -305,10 +305,10 @@ if (!isset($reportId) || "" == $reportId) {
             $hideColIndexes = array(0, 3, 4, 5);
             $titleText = "Season Winners";
             break;
-        case POINTS_TOTAL_FOR_SEASON_FOR_USER:
-        case POINTS_AVERAGE_FOR_SEASON_FOR_USER:
+        case POINTS_TOTAL_FOR_SEASON_FOR_PLAYER:
+        case POINTS_AVERAGE_FOR_SEASON_FOR_PLAYER:
             $params = array($startDate, $endDate, $playerId);
-            if (POINTS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
+            if (POINTS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
                 $formatPlaces = 0;
@@ -322,10 +322,10 @@ if (!isset($reportId) || "" == $reportId) {
             $value = array(array("number", "center"), array(4, "number", $formatPlaces), "Points", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER:
-        case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER:
+        case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_PLAYER:
+        case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_PLAYER:
             $params = array($startDate, $endDate, $playerId);
-            if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
+            if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
                 $formatPlaces = 0;
@@ -339,9 +339,9 @@ if (!isset($reportId) || "" == $reportId) {
             $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case EARNINGS_TOTAL_FOR_SEASON_FOR_USER:
-        case EARNINGS_AVERAGE_FOR_SEASON_FOR_USER:
-            if (EARNINGS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
+        case EARNINGS_TOTAL_FOR_SEASON_FOR_PLAYER:
+        case EARNINGS_AVERAGE_FOR_SEASON_FOR_PLAYER:
+            if (EARNINGS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
                 $formatPlaces = 0;
@@ -357,10 +357,10 @@ if (!isset($reportId) || "" == $reportId) {
             $rank = array(array("center"), NULL, "Rank", 0);
             $hideColIndexes = array(0, 2);
             break;
-        case WINS_TOTAL_FOR_SEASON_FOR_USER:
-        case WINS_AVERAGE_FOR_SEASON_FOR_USER:
+        case WINS_TOTAL_FOR_SEASON_FOR_PLAYER:
+        case WINS_AVERAGE_FOR_SEASON_FOR_PLAYER:
             $params = array($startDate, $endDate, $playerId);
-            if (WINS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
+            if (WINS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
                 $formatPlaces = 0;
@@ -375,9 +375,9 @@ if (!isset($reportId) || "" == $reportId) {
             $value = array(array("number", "center"), array(4, "number", $formatPlaces), "Wins", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case POINTS_AVERAGE_FOR_USER:
-        case POINTS_TOTAL_FOR_USER:
-            if (POINTS_TOTAL_FOR_USER == $reportId) {
+        case POINTS_AVERAGE_FOR_PLAYER:
+        case POINTS_TOTAL_FOR_PLAYER:
+            if (POINTS_TOTAL_FOR_PLAYER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
                 $formatPlaces = 0;
@@ -391,9 +391,9 @@ if (!isset($reportId) || "" == $reportId) {
             $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Points", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case KNOCKOUTS_AVERAGE_FOR_USER:
-        case KNOCKOUTS_TOTAL_FOR_USER:
-            if (KNOCKOUTS_TOTAL_FOR_USER == $reportId) {
+        case KNOCKOUTS_AVERAGE_FOR_PLAYER:
+        case KNOCKOUTS_TOTAL_FOR_PLAYER:
+            if (KNOCKOUTS_TOTAL_FOR_PLAYER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
                 $formatPlaces = 0;
@@ -407,9 +407,9 @@ if (!isset($reportId) || "" == $reportId) {
             $value = array(array("number", "center"), array(3, "number", $formatPlaces), "Knockouts", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case EARNINGS_AVERAGE_FOR_USER:
-        case EARNINGS_TOTAL_FOR_USER:
-            if (EARNINGS_TOTAL_FOR_USER == $reportId) {
+        case EARNINGS_AVERAGE_FOR_PLAYER:
+        case EARNINGS_TOTAL_FOR_PLAYER:
+            if (EARNINGS_TOTAL_FOR_PLAYER == $reportId) {
                 $orderBy = array(1);
                 $valueIndex = 3;
                 $formatPlaces = 0;
@@ -423,40 +423,40 @@ if (!isset($reportId) || "" == $reportId) {
             $value = array(array("currency", "center"), array(3, "currency", $formatPlaces), "Earnings", $valueIndex);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case WINS_FOR_USER:
+        case WINS_FOR_PLAYER:
             $orderBy = array(1);
             $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $playerId, winsForPlayer: true, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: true);
             $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: $playerId, winsForPlayer: true, winsForSeason: false, rank: true, orderBy: $orderBy, indexed: false);
             $value = array(array("number", "center"), array(3, "number", 0), "Wins", 3);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case NEMESIS_FOR_USER:
+        case NEMESIS_FOR_PLAYER:
             $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getNemesises(playerId: $playerId, limitCount: NULL, indexed: true);
             $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getNemesises(playerId: $playerId, limitCount: NULL, indexed: false);
             $colFormats = array(array(1, "number", 0));
             $hideColIndexes = array(1);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case BULLY_FOR_USER:
+        case BULLY_FOR_PLAYER:
             $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getBullies(knockedOutBy: $playerId, limitCount: NULL, indexed: true);
             $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getBullies(knockedOutBy: $playerId, limitCount: NULL, indexed: false);
             $colFormats = array(array(1, "number", 0));
             $hideColIndexes = array(1);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case FINISHES_FOR_USER:
+        case FINISHES_FOR_PLAYER:
             $result = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $playerId, startDate: NULL, endDate: NULL, indexed: true);
             $resultHeaders = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getFinishesForDates(playerId: $playerId, startDate: NULL, endDate: NULL, indexed: false);
             $colFormats = array(array(2, "percentage", 2));
             $titleText = "Place of Finish";
             break;
-        case TOURNAMENTS_PLAYED_FOR_USER:
+        case TOURNAMENTS_PLAYED_FOR_PLAYER:
             $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPlayed(indexed: true);
             $resultHeaders = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPlayed(indexed: false);
             $value = array(array("number", "center"), array(4, "number", 0), "Tourneys", 3);
             $rank = array(array("center"), NULL, "Rank", 0);
             break;
-        case TOURNAMENTS_PLAYED_BY_TYPE_FOR_USER:
+        case TOURNAMENTS_PLAYED_BY_TYPE_FOR_PLAYER:
             $result = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPlayedByType(playerId: $playerId, indexed: true);
             $resultHeaders = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPlayedByType(playerId: $playerId, indexed: false);
             $colFormats = array(array(4, "number", 0));
@@ -486,94 +486,94 @@ if (!isset($reportId) || "" == $reportId) {
         $tableIdSuffix = NULL;
         $rankClasses = "";
         switch ($reportId) {
-            case POINTS_TOTAL_FOR_SEASON_FOR_USER:
-            case POINTS_AVERAGE_FOR_SEASON_FOR_USER:
-            case EARNINGS_TOTAL_FOR_SEASON_FOR_USER:
-            case EARNINGS_AVERAGE_FOR_SEASON_FOR_USER:
-            case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER:
-            case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER:
-            case WINS_TOTAL_FOR_SEASON_FOR_USER:
-            case WINS_AVERAGE_FOR_SEASON_FOR_USER:
-            case POINTS_TOTAL_FOR_USER:
-            case POINTS_AVERAGE_FOR_USER:
-            case EARNINGS_TOTAL_FOR_USER:
-            case EARNINGS_AVERAGE_FOR_USER:
-            case KNOCKOUTS_TOTAL_FOR_USER:
-            case KNOCKOUTS_AVERAGE_FOR_USER:
-            case WINS_FOR_USER:
-            case TOURNAMENTS_PLAYED_FOR_USER:
-                if (POINTS_TOTAL_FOR_SEASON_FOR_USER == $reportId || POINTS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
+            case POINTS_TOTAL_FOR_SEASON_FOR_PLAYER:
+            case POINTS_AVERAGE_FOR_SEASON_FOR_PLAYER:
+            case EARNINGS_TOTAL_FOR_SEASON_FOR_PLAYER:
+            case EARNINGS_AVERAGE_FOR_SEASON_FOR_PLAYER:
+            case KNOCKOUTS_TOTAL_FOR_SEASON_FOR_PLAYER:
+            case KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_PLAYER:
+            case WINS_TOTAL_FOR_SEASON_FOR_PLAYER:
+            case WINS_AVERAGE_FOR_SEASON_FOR_PLAYER:
+            case POINTS_TOTAL_FOR_PLAYER:
+            case POINTS_AVERAGE_FOR_PLAYER:
+            case EARNINGS_TOTAL_FOR_PLAYER:
+            case EARNINGS_AVERAGE_FOR_PLAYER:
+            case KNOCKOUTS_TOTAL_FOR_PLAYER:
+            case KNOCKOUTS_AVERAGE_FOR_PLAYER:
+            case WINS_FOR_PLAYER:
+            case TOURNAMENTS_PLAYED_FOR_PLAYER:
+                if (POINTS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId || POINTS_AVERAGE_FOR_SEASON_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "number", 2));
                     $hideColIndexes = array(0, 2, 5);
-                    if (POINTS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
+                    if (POINTS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId) {
                         $titleText = "Season Points";
-                    } else if (POINTS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
+                    } else if (POINTS_AVERAGE_FOR_SEASON_FOR_PLAYER == $reportId) {
                         $titleText = "Season Avg Points";
                     }
                     $dialogParameters = array($titleText);
-                } else if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER == $reportId || KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
+                } else if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId || KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "number", 2));
                     $hideColIndexes = array(0, 2, 5);
-                    if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
+                    if (KNOCKOUTS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId) {
                         $titleText = "Season Knockouts";
-                    } else if (KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
+                    } else if (KNOCKOUTS_AVERAGE_FOR_SEASON_FOR_PLAYER == $reportId) {
                         $titleText = "Season Avg Knockouts";
                     }
                     $dialogParameters = array($titleText);
-                } else if (EARNINGS_TOTAL_FOR_SEASON_FOR_USER == $reportId || EARNINGS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
+                } else if (EARNINGS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId || EARNINGS_AVERAGE_FOR_SEASON_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(4, "currency", 0), array(5, "currency", 2));
                     $hideColIndexes = array(0, 2, 5);
-                    if (EARNINGS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
+                    if (EARNINGS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId) {
                         $titleText = "Season Earnings";
-                    } else if (EARNINGS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
+                    } else if (EARNINGS_AVERAGE_FOR_SEASON_FOR_PLAYER == $reportId) {
                         $titleText = "Season Avg Earnings";
                     }
                     $dialogParameters = array($titleText);
-                } else if (WINS_TOTAL_FOR_SEASON_FOR_USER == $reportId || WINS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
+                } else if (WINS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId || WINS_AVERAGE_FOR_SEASON_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "percentage", 2));
                     $hideColIndexes = array(0, 2, 5);
-                    if (WINS_TOTAL_FOR_SEASON_FOR_USER == $reportId) {
+                    if (WINS_TOTAL_FOR_SEASON_FOR_PLAYER == $reportId) {
                         $titleText = "Season Wins";
-                    } else if (WINS_AVERAGE_FOR_SEASON_FOR_USER == $reportId) {
+                    } else if (WINS_AVERAGE_FOR_SEASON_FOR_PLAYER == $reportId) {
                         $titleText = "Season Avg Wins";
                     }
                     $dialogParameters = array($titleText);
-                } else if (POINTS_TOTAL_FOR_USER == $reportId || POINTS_AVERAGE_FOR_USER == $reportId) {
+                } else if (POINTS_TOTAL_FOR_PLAYER == $reportId || POINTS_AVERAGE_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "number", 2));
-                    if (POINTS_TOTAL_FOR_USER == $reportId) {
+                    if (POINTS_TOTAL_FOR_PLAYER == $reportId) {
                         $titleText = "Lifetime Points";
                         $hideColIndexes = array(0, 2, 5);
-                    } else if (POINTS_AVERAGE_FOR_USER == $reportId) {
+                    } else if (POINTS_AVERAGE_FOR_PLAYER == $reportId) {
                         $titleText = "Lifetime Avg Points";
                         $hideColIndexes = array(0, 2, 4);
                     }
                     $dialogParameters = array($titleText);
-                } else if (EARNINGS_TOTAL_FOR_USER == $reportId || EARNINGS_AVERAGE_FOR_USER == $reportId) {
+                } else if (EARNINGS_TOTAL_FOR_PLAYER == $reportId || EARNINGS_AVERAGE_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(4, "currency", 0), array(5, "currency", 2));
-                    if (EARNINGS_TOTAL_FOR_USER == $reportId) {
+                    if (EARNINGS_TOTAL_FOR_PLAYER == $reportId) {
                         $titleText = "Lifetime Earnings";
                         $hideColIndexes = array(0, 2, 5);
-                    } else if (EARNINGS_AVERAGE_FOR_USER == $reportId) {
+                    } else if (EARNINGS_AVERAGE_FOR_PLAYER == $reportId) {
                         $titleText = "Lifetime Avg Earnings";
                         $hideColIndexes = array(0, 2, 4);
                     }
                     $dialogParameters = array($titleText);
-                } else if (KNOCKOUTS_TOTAL_FOR_USER == $reportId || KNOCKOUTS_AVERAGE_FOR_USER == $reportId) {
+                } else if (KNOCKOUTS_TOTAL_FOR_PLAYER == $reportId || KNOCKOUTS_AVERAGE_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(4, "number", 0), array(5, "number", 2));
-                    if (KNOCKOUTS_TOTAL_FOR_USER == $reportId) {
+                    if (KNOCKOUTS_TOTAL_FOR_PLAYER == $reportId) {
                         $titleText = "Lifetime KO";
                         $hideColIndexes = array(0, 2, 5);
-                    } else if (KNOCKOUTS_AVERAGE_FOR_USER == $reportId) {
+                    } else if (KNOCKOUTS_AVERAGE_FOR_PLAYER == $reportId) {
                         $titleText = "Lifetime Avg KO";
                         $hideColIndexes = array(0, 2, 4);
                     }
                     $dialogParameters = array($titleText);
-                } else if (WINS_FOR_USER == $reportId) {
+                } else if (WINS_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(5, "percentage", 2));
                     $hideColIndexes = array(0, 2, 5);
                     $dialogParameters = array("Lifetime Wins");
                     $titleText = "Lifetime Wins";
-                } else if (TOURNAMENTS_PLAYED_FOR_USER == $reportId) {
+                } else if (TOURNAMENTS_PLAYED_FOR_PLAYER == $reportId) {
                     $colFormats = array(array(1, "number", 0), array(4, "number", 0));
                     $hideColIndexes = array(0, 2);
                     $dialogParameters = array("Lifetime Tourneys");
@@ -624,7 +624,7 @@ if (!isset($reportId) || "" == $reportId) {
                     $output .= "</div>\n";
                 }
                 break;
-            case TOURNAMENTS_WON_FOR_USER:
+            case TOURNAMENTS_WON_FOR_PLAYER:
                 $titleText = "Tournaments Won";
                 $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
                 $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getWon(playerId: $playerId);
@@ -663,7 +663,7 @@ if (!isset($reportId) || "" == $reportId) {
                     $output .= "<div class=\"center\">No data found</div>\n";
                 }
                 break;
-            case TOURNAMENTS_PLAYED_FIRST_FOR_USER:
+            case TOURNAMENTS_PLAYED_FIRST_FOR_PLAYER:
                 $titleText = "";
                 $output .= "<div class=\"center title\" id=\"title" . ucfirst($reportId) . "\">" . $titleText . "</div>\n";
                 $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getResultsMinDate(playerId: $playerId);
@@ -673,11 +673,11 @@ if (!isset($reportId) || "" == $reportId) {
                 }
                 break;
             default:
-                if (NEMESIS_FOR_USER == $reportId || BULLY_FOR_USER == $reportId) {
-                    if (NEMESIS_FOR_USER == $reportId) {
+                if (NEMESIS_FOR_PLAYER == $reportId || BULLY_FOR_PLAYER == $reportId) {
+                    if (NEMESIS_FOR_PLAYER == $reportId) {
                         $tableIdSuffix = "Nemesis";
                         $titleText = "Your Nemesis";
-                    } else if (BULLY_FOR_USER == $reportId) {
+                    } else if (BULLY_FOR_PLAYER == $reportId) {
                         $tableIdSuffix = "Bully";
                         $titleText = "Your Victims";
                     }
@@ -690,12 +690,12 @@ if (!isset($reportId) || "" == $reportId) {
                 $output .= $htmlTable->getHtml(results: $result, resultHeaders: $resultHeaders);
                 $htmlTable2 = new HtmlTable(caption: $caption, class: $classNames, colspan: $colSpan, columnFormat: $colFormats, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), delimiter: $delimiter, foreignKeys: $foreignKeys, header: $headerRow, hiddenAdditional: $hiddenAdditional, hiddenId: $hiddenId, hideColumnIndexes: $hideColIndexes, html: $html, id: NULL, link: NULL, note: $showNote, selectedRow: $selectedColumnVals, suffix: "All" . $tableIdSuffix, width: $width);
                 $outputTemp = $htmlTable2->getHtml(results: $result, resultHeaders: $resultHeaders);
-                if (NEMESIS_FOR_USER == $reportId || BULLY_FOR_USER == $reportId) {
-                    if (NEMESIS_FOR_USER == $reportId) {
+                if (NEMESIS_FOR_PLAYER == $reportId || BULLY_FOR_PLAYER == $reportId) {
+                    if (NEMESIS_FOR_PLAYER == $reportId) {
                         $title = "Nemesises";
                         $tableIdSuffix = "Nemesis";
                         $titleText = "Nemesis";
-                    } else if (BULLY_FOR_USER == $reportId) {
+                    } else if (BULLY_FOR_PLAYER == $reportId) {
                         $title = "Bullies";
                         $tableIdSuffix = "Bullies";
                         $titleText = "Bullies";

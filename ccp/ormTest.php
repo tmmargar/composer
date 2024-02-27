@@ -15,8 +15,8 @@ use Poker\Ccp\Entity\Seasons;
 use Poker\Ccp\Entity\SpecialTypes;
 use Poker\Ccp\Entity\Structures;
 use Poker\Ccp\Entity\Tournaments;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\utility\DateTimeUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Utility\DateTimeUtility;
 date_default_timezone_set(timezoneId: "America/New_York");
 $entityManager = getEntityManager();
 // $fe = new Fees();
@@ -394,7 +394,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) { break; }
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getFeesBySeason(indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_FEES)->getBySeason(indexed: false);
 // echo "<br>fees by season count=" . count($result);
 // foreach ($result as $row) {
 //     echo "<br>season id=" . $row["season_id"] . "/total amount=" . $row["amount"];

@@ -1,7 +1,7 @@
 <?php
 namespace Poker\Ccp\Entity;
 use Doctrine\ORM\EntityRepository;
-use Poker\Ccp\classes\model\Constant;
+use Poker\Ccp\Model\Constant;
 class BaseRepository extends EntityRepository {
     // $query is query to modify
     // $whereClause is where clause to replace in query
@@ -13,7 +13,7 @@ class BaseRepository extends EntityRepository {
 //         echo "<br>q=".$queryTemp;
 //         echo "<br>w=".$whereClause;
 //         echo "<br>s=".$selectFieldName;
-        $queryTemp = str_replace(search: $whereClause, replace: "ORDER BY " . $selectFieldName . " DESC, player_last_name, player_first_name) z ORDER BY row, name", subject: $queryTemp);
+        $queryTemp = str_replace(search: $whereClause, replace: " ORDER BY " . $selectFieldName . " DESC, player_last_name, player_first_name) z ORDER BY row, name", subject: $queryTemp);
         return $queryTemp;
     }
     // returns array of query and array of parameters to bind

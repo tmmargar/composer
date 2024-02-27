@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace ccp;
 use DateTime;
-use Poker\Ccp\classes\model\Constant;
+use Poker\Ccp\Model\Constant;
 require_once "init.php";
 define("TOURNAMENT_ID_PARAMETER_NAME", "tournamentId");
 $smarty->assign("title", "Chip Chair and a Prayer Registration");
@@ -21,20 +21,20 @@ $entityManager = getEntityManager();
 // date (YYYY-MM-DD) and true if max false if not
 $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getRegistrationList(tournamentDate: new DateTime(datetime: $tournamentDate), max: $max);
 if (0 < count($resultList)) {
-  $count = 0;
-  $registered = false;
-  $output2 .= " <table id=\"output\">\n <tbody>\n";
-  foreach ($resultList as $result) {
-    $output2 .= "  <tr>\n";
-    $output2 .= "   <td>" . $result["player_first_name"] . " " . $result["player_last_name"] . "</td>\n";
-    $output2 .= "   <td>" . $result["result_registration_food"] . "</td>\n";
-    $output2 .= "   <td>" . $result["fee status"] . "</td>\n";
-    $output2 .= "  </tr>\n";
-    $count ++;
-  }
-  $output2 .= "</tbody>\n</table>\n";
+    $count = 0;
+    $registered = false;
+    $output2 .= " <table id=\"output\">\n <tbody>\n";
+    foreach ($resultList as $result) {
+        $output2 .= "  <tr>\n";
+        $output2 .= "   <td>" . $result["player_first_name"] . " " . $result["player_last_name"] . "</td>\n";
+        $output2 .= "   <td>" . $result["result_registration_food"] . "</td>\n";
+        $output2 .= "   <td>" . $result["fee status"] . "</td>\n";
+        $output2 .= "  </tr>\n";
+        $count++;
+    }
+    $output2 .= "</tbody>\n</table>\n";
 } else {
-  $output2 .= "  None\n";
+    $output2 .= "  None\n";
 }
 $output .= $output2;
 $smarty->assign("content", $output);

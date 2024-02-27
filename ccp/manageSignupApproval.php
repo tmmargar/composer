@@ -4,10 +4,10 @@ namespace ccp;
 use DateTime;
 use Exception;
 use PDO;
-use Poker\Ccp\classes\model\Constant;
-use Poker\Ccp\classes\model\Email;
-use Poker\Ccp\classes\model\FormControl;
-use Poker\Ccp\classes\utility\SessionUtility;
+use Poker\Ccp\Model\Constant;
+use Poker\Ccp\Model\Email;
+use Poker\Ccp\Model\FormControl;
+use Poker\Ccp\Utility\SessionUtility;
 use Poker\Ccp\Entity\Players;
 require_once "init.php";
 define("APPROVE_FIELD_NAME", "approve");
@@ -105,7 +105,7 @@ if (0 < count($result)) {
         for ($index = 1; $index < $count; $index ++) {
             $hiddenPlayer = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_PLAYER . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_PLAYER . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[1], wrap: NULL);
             $hiddenEmail = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_EMAIL . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_EMAIL . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[2], wrap: NULL);
-            $hiddenUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_USERNAME . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_USERNAME . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[3], wrap: NULL);
+            $hiddenUsername = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_PLAYERNAME . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_PLAYERNAME . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[3], wrap: NULL);
             $output .= "   <td>" . $row[$index] . ($index == 1 ? $hiddenPlayer->getHtml() : ($index == 2 ? $hiddenEmail->getHtml() : ($index == 3 ? $hiddenUsername->getHtml() : ""))) . "</td>\n";
         }
         $output .= "   <td class=\"center\"><input id=\"approvePlayer_" . $row[0] . "\" name=\"approvePlayer_" . $row[0] . "\" type=\"checkbox\" value=\"1\" /></td>\n";
