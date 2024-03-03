@@ -16,6 +16,9 @@ class PlayersRepository extends BaseRepository {
     public function getByName(string $name) {
         $names = explode(" ", $name);
         return $this->createQueryBuilder("p")
+                    ->addSelect("pa, pr")
+                    ->leftJoin("p.playerApproval", "pa")
+                    ->leftJoin("p.playerRejection", "pr")
                     ->where("p.playerFirstName = :firstName")
                     ->andWhere("p.playerLastName = :lastName")
                     ->setParameters(new ArrayCollection(array(new Parameter("firstName", $names[0]), new Parameter("lastName", $names[1]))))
@@ -24,6 +27,9 @@ class PlayersRepository extends BaseRepository {
 
     public function getByUsername(string $username) {
         return $this->createQueryBuilder("p")
+                    ->addSelect("pa, pr")
+                    ->leftJoin("p.playerApproval", "pa")
+                    ->leftJoin("p.playerRejection", "pr")
                     ->where("p.playerUsername = :username")
                     ->setParameters(new ArrayCollection(array(new Parameter("username", $username))))
                     ->getQuery()->getResult();
@@ -31,6 +37,9 @@ class PlayersRepository extends BaseRepository {
 
     public function getByEmail(string $email) {
         return $this->createQueryBuilder("p")
+                    ->addSelect("pa, pr")
+                    ->leftJoin("p.playerApproval", "pa")
+                    ->leftJoin("p.playerRejection", "pr")
                     ->where("p.playerEmail = :email")
                     ->setParameters(new ArrayCollection(array(new Parameter("email", $email))))
                     ->getQuery()->getResult();
@@ -38,6 +47,9 @@ class PlayersRepository extends BaseRepository {
 
     public function getByUsernameAndEmail(string $username, string $email) {
         return $this->createQueryBuilder("p")
+                    ->addSelect("pa, pr")
+                    ->leftJoin("p.playerApproval", "pa")
+                    ->leftJoin("p.playerRejection", "pr")
                     ->where("p.playerUsername = :username")
                     ->andWhere("p.playerEmail = :email")
                     ->setParameters(new ArrayCollection(array(new Parameter("username", $username), new Parameter("email", $email))))
@@ -54,6 +66,9 @@ class PlayersRepository extends BaseRepository {
         //             "AND player_email <>  '' " .
         //             "ORDER BY player_id";
         return $this->createQueryBuilder("p")
+                    ->addSelect("pa, pr")
+                    ->leftJoin("p.playerApproval", "pa")
+                    ->leftJoin("p.playerRejection", "pr")
                     ->where("p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
                     ->andWhere("p.playerApprovalDate IS NOT NULL")
                     ->andWhere("p.playerRejectionDate IS NULL")
@@ -62,9 +77,12 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getById(?int $playerId) {
-//      case "playersSelectAll":
-//      case "playersSelectById":
-        $qb = $this->createQueryBuilder("p");
+        //      case "playersSelectAll":
+        //      case "playersSelectById":
+        $qb = $this->createQueryBuilder("p")
+                    ->addSelect("pa, pr")
+                    ->leftJoin("p.playerApproval", "pa")
+                    ->leftJoin("p.playerRejection", "pr");
         if (isset($playerId)) {
             $qb = $qb->where("p.playerId = :playerId");
             $qb->setParameters(new ArrayCollection(array(new Parameter("playerId", $playerId))));
@@ -73,7 +91,7 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getChampionshipEarnings(string $groupBy, bool $group, bool $indexed) {
-//         case "championship":
+        //         case "championship":
         $sql = "SELECT ";
         if (!isset($group) || !$group) {
             $sql .= " yr, player_id, ";
@@ -101,7 +119,7 @@ class PlayersRepository extends BaseRepository {
         }
     }
     public function getChampionshipQualified(DateTime $startDate, DateTime $endDate, int $numTourneys, bool $indexed) {
-//         case "championshipQualifiedPlayers":
+        //         case "championshipQualifiedPlayers":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, " .
             "       SUM((np.numPlayers - r.result_place_finished + 1) * IFNULL(st.special_type_multiplier, 1) + IF(r.result_place_finished BETWEEN 1 AND se.season_final_table_players, se.season_final_table_bonus_points, 0)) AS points, " .
@@ -165,14 +183,14 @@ class PlayersRepository extends BaseRepository {
             return $statement->executeQuery()->fetchAllAssociative();
         }
         //         $qb = $this->createQueryBuilder("p");
-//         return $qb->select("p, s, f")
-//                   ->innerJoin(Seasons::class, "s", Expr\Join::WITH, "p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
-//                   ->leftJoin("s.fees", "f", Expr\Join::WITH, "p.playerId = f.players AND f.feeAmount > 0")
-//                   ->getQuery()->getResult();
+        //         return $qb->select("p, s, f")
+        //                   ->innerJoin(Seasons::class, "s", Expr\Join::WITH, "p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
+        //                   ->leftJoin("s.fees", "f", Expr\Join::WITH, "p.playerId = f.players AND f.feeAmount > 0")
+        //                   ->getQuery()->getResult();
     }
 
     public function getFeeForPlayerAndTournament(int $playerId, int $tournamentId) {
-//         case "feeSelectByTournamentIdAndPlayerId":
+        //         case "feeSelectByTournamentIdAndPlayerId":
         $sql =
             "SELECT se.season_id, p.player_id, " .
             "IFNULL(f.fee_amount, 0) AS fee_amount, IF(se.season_fee IS NULL, '', IF(se.season_fee - IFNULL(f.fee_amount, 0) = 0, 'Paid', CONCAT('Owes $', (se.season_fee - IFNULL(f.fee_amount, 0))))) AS status " .
@@ -186,7 +204,7 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getFinishesForDates(int $playerId, ?DateTime $startDate, ?DateTime $endDate, bool $indexed) {
-//         case "finishesSelectAllByPlayerId":
+        //         case "finishesSelectAllByPlayerId":
         $sql =
             "SELECT a.result_place_finished AS place, IFNULL(b.finishes, 0) AS finishes, IFNULL(b.pct, 0) AS pct " .
             "FROM (SELECT DISTINCT result_place_finished " .
@@ -227,11 +245,11 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getResults(int $tournamentId, int $playerId) {
-//         case "foodByTournamentIdAndPlayerId":
-//             $query =
-//             "SELECT CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, r.result_registration_food, p.player_active_flag " .
-//             "FROM poker_players p LEFT JOIN poker_results r ON p.player_id = r.player_id AND r.tournament_id = :tournamentId " .
-//             "WHERE p.player_id = :playerId";
+        //         case "foodByTournamentIdAndPlayerId":
+        //             $query =
+        //             "SELECT CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, r.result_registration_food, p.player_active_flag " .
+        //             "FROM poker_players p LEFT JOIN poker_results r ON p.player_id = r.player_id AND r.tournament_id = :tournamentId " .
+        //             "WHERE p.player_id = :playerId";
         $qb = $this->createQueryBuilder("p");
         return $qb->select("p, r")
                   ->leftJoin("p.results", "r", Expr\Join::WITH, "r.tournaments = :tournamentId")
@@ -241,10 +259,10 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getKo(?int $playerId, ?DateTime $startDate, ?DateTime $endDate, ?array $orderBy, bool $rank, ?int $limitCount, bool $indexed) {
-//         case "knockoutsAverageForSeason":
-//         case "knockoutsTotalForSeason":
-//         case "knockoutsTotalAndAverageForSeasonForPlayer":
-//         case "knockoutsTotalAndAverageForPlayer":
+        //         case "knockoutsAverageForSeason":
+        //         case "knockoutsTotalForSeason":
+        //         case "knockoutsTotalAndAverageForSeasonForPlayer":
+        //         case "knockoutsTotalAndAverageForPlayer":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(kO, 0) AS ko, IFNULL(avg, 0) AS avg, IFNULL(trnys, 0) AS trnys, p.player_active_flag " .
             "FROM poker_players p LEFT JOIN (SELECT k.player_id, k.knockouts AS kO, ROUND(k.knockouts / nt.numTourneys, 2) AS avg, nt.numTourneys AS trnys " .
@@ -259,12 +277,13 @@ class PlayersRepository extends BaseRepository {
             "                                   INNER JOIN poker_players p ON r.player_id_ko = p.player_id " .
             "                                   GROUP BY r.player_id_ko) k " .
             "INNER JOIN (SELECT r.player_id, COUNT(*) AS numTourneys " .
-            "            FROM poker_tournaments t INNER JOIN poker_results r ON t.tournament_id = r.tournament_id AND r.result_place_finished > 0 ";
+        "            FROM poker_tournaments t INNER JOIN poker_results r ON t.tournament_id = r.tournament_id AND r.result_place_finished > 0 ";
         if (isset($startDate) && isset($endDate)) {
             $sql .= "   AND t.tournament_date BETWEEN :startDate2 AND :endDate2 ";
         }
-        $sql .= "    GROUP BY r.player_id) nt ON k.player_id = nt.player_id) a ON p.player_id = a.player_id " .
-                "WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE;
+        $sql .=
+            "    GROUP BY r.player_id) nt ON k.player_id = nt.player_id) a ON p.player_id = a.player_id " .
+            "WHERE p.player_active_flag = " . Constant::FLAG_YES_DATABASE;
         if (isset($playerId)) {
             $whereClause = "AND p.player_id = " . $playerId;
             $sql .= " AND p.player_id = " . $playerId;
@@ -302,9 +321,9 @@ class PlayersRepository extends BaseRepository {
             $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
         }
-//         if (isset($playerId)) {
-//             $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
-//         }
+        //         if (isset($playerId)) {
+        //             $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
+        //         }
         if (isset($limitCount)) {
             $statement->bindValue(':limitCount', $limitCount, PDO::PARAM_INT);
         }
@@ -316,10 +335,10 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getPoints(?int $playerId, ?DateTime $startDate, ?DateTime $endDate, ?array $orderBy, bool $rank, ?int $limitCount, bool $indexed) {
-//         case "pointsAverageForSeason":
-//         case "pointsTotalForSeason":
-//         case "pointsTotalAndAverageForSeasonForPlayer":
-//         case "pointsTotalAndAverageForPlayer":
+        //         case "pointsAverageForSeason":
+        //         case "pointsTotalForSeason":
+        //         case "pointsTotalAndAverageForSeasonForPlayer":
+        //         case "pointsTotalAndAverageForPlayer":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(a.points, 0) AS pts, IFNULL(ROUND(a.points / a.trnys, 2), 0) AS avg, IFNULL(a.trnys, 0) AS trnys, p.player_active_flag " .
             "FROM poker_players p LEFT JOIN (SELECT p.player_id, SUM((np.numPlayers - r.result_place_finished + 1) * IFNULL(st.special_type_multiplier, 1) + IF(r.result_place_finished BETWEEN 1 AND se.season_final_table_players, se.season_final_table_bonus_points, 0)) AS points, nt.trnys " .
@@ -393,7 +412,7 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getStatuses(int $tournamentId, bool $indexed) {
-//         case "statusSelectPaid":
+        //         case "statusSelectPaid":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, " .
             "       IF(s.season_fee - IFNULL(f.fee_amount, 0) - IF(fh.player_id IS NULL, 0, s.season_fee) = 0, 'Paid', 'Not paid') AS fee_status_logic, " .
@@ -423,12 +442,12 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getTournamentAbsences(DateTime $tournamentDate) {
-//         case "playerAbsencesByTournamentId":
-//         SELECT ta.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS NAME
-//         FROM poker_players p INNER JOIN poker_tournament_absences ta ON p.player_id = ta.player_id
-//         INNER JOIN poker_tournaments t ON ta.tournament_id = t.tournament_id
-//         INNER JOIN poker_seasons s ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date AND '2020-01-01' BETWEEN s.season_start_date AND s.season_end_date
-//         INNER JOIN poker_special_types st ON t.special_type_id = st.special_type_id AND st.special_type_description = 'Championship';
+        //         case "playerAbsencesByTournamentId":
+        //         SELECT ta.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS NAME
+        //         FROM poker_players p INNER JOIN poker_tournament_absences ta ON p.player_id = ta.player_id
+        //         INNER JOIN poker_tournaments t ON ta.tournament_id = t.tournament_id
+        //         INNER JOIN poker_seasons s ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date AND '2020-01-01' BETWEEN s.season_start_date AND s.season_end_date
+        //         INNER JOIN poker_special_types st ON t.special_type_id = st.special_type_id AND st.special_type_description = 'Championship';
         $qb = $this->createQueryBuilder("p");
         $tournamentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $tournamentDate);
         return $qb->select("p")
@@ -449,10 +468,10 @@ class PlayersRepository extends BaseRepository {
             "FROM poker_players p " .
             "LEFT JOIN poker_players p2 ON p.player_rejection_player_id = p2.player_id " .
             "WHERE p.player_approval_date IS NULL AND p.player_rejection_date IS NULL";
-//         return $this->createQueryBuilder("p")
-//                     ->where("p.playerApprovalDate IS NULL")
-//                     ->andWhere("p.playerRejectionDate IS NULL")
-//                     ->getQuery()->getResult();
+        //         return $this->createQueryBuilder("p")
+        //                     ->where("p.playerApprovalDate IS NULL")
+        //                     ->andWhere("p.playerRejectionDate IS NULL")
+        //                     ->getQuery()->getResult();
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -462,12 +481,12 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getWaitListed(int $tournamentId) {
-//         case "waitListedPlayerByTournamentId":
-//             $query =
-//             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, t.tournament_max_players " .
-//             "FROM poker_players p " .
-//             "INNER JOIN poker_results r ON p.player_id = r.player_id AND r.tournament_id = :tournamentId AND " . $this->buildPlayerActive(alias: "p") .
-//             " INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id AND r.result_registration_order = t.tournament_max_players";
+        //         case "waitListedPlayerByTournamentId":
+        //             $query =
+        //             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, t.tournament_max_players " .
+        //             "FROM poker_players p " .
+        //             "INNER JOIN poker_results r ON p.player_id = r.player_id AND r.tournament_id = :tournamentId AND " . $this->buildPlayerActive(alias: "p") .
+        //             " INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id AND r.result_registration_order = t.tournament_max_players";
         $qb = $this->createQueryBuilder("p");
         return $qb->select("p")
                   ->innerJoin("p.results", "r", Expr\Join::WITH, "r.tournaments = :tournamentId AND p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
@@ -477,9 +496,9 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getWins(?DateTime $startDate, ?DateTime $endDate, ?int $playerId, bool $winsForPlayer, bool $winsForSeason, bool $rank, array $orderBy, bool $indexed) {
-//         case "winnersForSeason":
-//         case "winsForPlayer":
-//         case "winsTotalAndAverageForSeasonForPlayer":
+        //         case "winnersForSeason":
+        //         case "winsForPlayer":
+        //         case "winsTotalAndAverageForSeasonForPlayer":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(wins, 0) AS wins, IFNULL(wins / trnys, 0) AS avg, IFNULL(trnys, 0) AS trnys, p.player_active_flag " .
             "FROM poker_players p " .
@@ -529,10 +548,10 @@ class PlayersRepository extends BaseRepository {
             $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
         }
-//         if (isset($playerId)) {
-//             $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
-//         }
-//         echo "<br>aft->".$sql;
+        //         if (isset($playerId)) {
+        //             $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
+        //         }
+        //         echo "<br>aft->".$sql;
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
         } else {

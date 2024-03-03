@@ -1,9 +1,8 @@
 <?php
 namespace Poker\Ccp\Utility;
-use DateTime;
-use Exception;
 use Poker\Ccp\Model\Constant;
 use Poker\Ccp\Model\Season;
+use DateTime;
 abstract class SessionUtility {
     public const OBJECT_NAME_ADMINISTRATOR = "administrator";
     public const OBJECT_NAME_DEBUG = "debug";
@@ -129,49 +128,5 @@ abstract class SessionUtility {
     }
     public static function setValue(string $name, mixed $value) {
         $_SESSION[$name] = serialize(value: $value);
-    }
-    public static function unserialize($session_data): array {
-        $method = ini_get(option: "session.serialize_handler");
-        switch ($method) {
-            case "php":
-                return self::unserialize_php(data: $session_data);
-                break;
-            case "php_binary":
-                return self::unserialize_phpbinary(data: $session_data);
-                break;
-            default:
-                throw new Exception(message: "Unsupported session.serialize_handler: " . $method . ". Supported: php, php_binary");
-        }
-    }
-    private static function unserialize_php($session_data): array {
-        $return_data = array();
-        $offset = 0;
-        while ($offset < strlen(string: $session_data)) {
-            if (! strstr(haystack: substr(string: $session_data, offset: $offset), needle: "|")) {
-                throw new Exception(message: "invalid data, remaining: " . substr($session_data, $offset));
-            }
-            $pos = strpos(haystack: $session_data, needle: "|", offset: $offset);
-            $num = $pos - $offset;
-            $varname = substr(string: $session_data, offset: $offset, length: $num);
-            $offset += $num + 1;
-            $data = unserialize(substr(string: $session_data, offset: $offset));
-            $return_data[$varname] = $data;
-            $offset += strlen(string: serialize(value: $data));
-        }
-        return $return_data;
-    }
-    private static function unserialize_phpbinary($session_data): array {
-        $return_data = array();
-        $offset = 0;
-        while ($offset < strlen(string: $session_data)) {
-            $num = ord(character: $session_data[$offset]);
-            $offset += 1;
-            $varname = substr(string: $session_data, offset: $offset, length: $num);
-            $offset += $num;
-            $data = unserialize(data: substr(string: $session_data, offset: $offset));
-            $return_data[$varname] = $data;
-            $offset += strlen(serialize(value: $data));
-        }
-        return $return_data;
     }
 }

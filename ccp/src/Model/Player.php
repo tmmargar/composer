@@ -7,7 +7,7 @@ use Poker\Ccp\Entity\Players;
 class Player extends Base {
     private string $firstName;
     private string $lastName;
-    private int $idPrevious;
+    private ?int $idPrevious;
     private Players $players;
     public function createFromEntity(bool $debug, Players $players): Player {
         $this->idPrevious = $players->getPlayerIdPrevious();
@@ -111,7 +111,7 @@ class Player extends Base {
     public function getName(): string {
         return $this->firstName . (isset($this->lastName) ? (" " . $this->lastName) : "");
     }
-    public function getIdPrevious(): int {
+    public function getIdPrevious(): ?int {
         return $this->idPrevious;
     }
     public function getPlayers(): Players {
@@ -201,7 +201,7 @@ class Player extends Base {
         $this->rememberExpires = $rememberExpires;
         return $this;
     }
-    public function setIdPrevious(int $idPrevious): Player {
+    public function setIdPrevious(?int $idPrevious): Player {
         $this->idPrevious = $idPrevious;
         return $this;
     }
