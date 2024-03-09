@@ -171,7 +171,7 @@ class TournamentsRepository extends BaseRepository {
             "           FROM poker_tournaments t INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
             "           INNER JOIN poker_locations l ON t.location_id = l.location_id " .
             "           INNER JOIN poker_players p ON l.player_id = p.player_id " .
-            "           GROUP BY se.season_id, l.location_id) fh ON se.season_id = fh.season_id AND p.player_id = fh.player_id " .
+            "           GROUP BY se.season_id, l.location_id) fh ON s.season_id = fh.season_id AND p.player_id = fh.player_id " .
             "ORDER BY r.result_registration_order";
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($tournamentDate)) {
