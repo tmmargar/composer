@@ -8,7 +8,9 @@ class PayoutsRepository extends BaseRepository {
 //         case "payoutSelectAll":
 //         case "payoutSelectOneById":
 //         case "payoutSelectNameList":
-        $qb = $this->createQueryBuilder("p");
+        $qb = $this->createQueryBuilder("p")
+                   ->addSelect("s")
+                   ->innerJoin("p.structures", "s");
         if (isset($payoutId)) {
             $qb = $qb->where("p.payoutId = :payout");
             $qb->setParameters(new ArrayCollection(array(new Parameter("payout", $payoutId))));

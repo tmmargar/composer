@@ -86,6 +86,8 @@ class PlayersRepository extends BaseRepository {
         if (isset($playerId)) {
             $qb = $qb->where("p.playerId = :playerId");
             $qb->setParameters(new ArrayCollection(array(new Parameter("playerId", $playerId))));
+        } else {
+            $qb->addOrderBy("p.playerLastName, p.playerFirstName", "ASC");
         }
         return $qb->getQuery()->getResult();
     }

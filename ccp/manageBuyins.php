@@ -183,12 +183,18 @@ if ($mode == Constant::MODE_VIEW) {
             $result = $entityManager->getRepository(Constant::ENTITY_GROUPS)->getById(groupId: $row["group_id"]);
             $group->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), groups: $result[0]);
             $structure = new Structure(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, place: 0, percentage: 0);
-            $result = $entityManager->getRepository(Constant::ENTITY_STRUCTURES)->getById(payoutId: $group->getGroups()->getGroupPayouts()[0]->getPayouts()->getPayoutId());
-            $structure->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), structures: $result[0]);
-            $payout = new Payout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", minPlayers: 0, maxPlayers: 0, structures: array($structure));
-            $result = $entityManager->getRepository(Constant::ENTITY_PAYOUTS)->getById(payoutId: $group->getGroups()->getGroupPayouts()[0]->getPayouts()->getPayoutId());
-            $payout->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), payouts: $result[0]);
-            $groupPayout = new GroupPayout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: "", group: $group, payouts: array($payout));
+            $payoutsTemp = array();
+            $counterPayout = 0;
+            foreach($group->getGroups()->getGroupPayouts() as $groupPayout) {
+                $result = $entityManager->getRepository(Constant::ENTITY_STRUCTURES)->getById(payoutId: $groupPayout->getPayouts()->getPayoutId());
+                $structure->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), structures: $result[0]);
+                $payout = new Payout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, name: "", minPlayers: 0, maxPlayers: 0, structures: array($structure));
+                $result = $entityManager->getRepository(Constant::ENTITY_PAYOUTS)->getById(payoutId: $groupPayout->getPayouts()->getPayoutId());
+                $payout->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), payouts: $result[0]);
+                $payoutsTemp[$counterPayout] = $payout;
+                $counterPayout++;
+            }
+            $groupPayout = new GroupPayout(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: "", group: $group, payouts: $payoutsTemp);
             $tournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: $row["id"], description: $row["description"], comment: $row["comment"], limitType: $limitType, gameType: $gameType, specialType: $specialType, chipCount: $row["chips"], location: $location, date: new DateTime(datetime: $row["date"]), startTime: new DateTime(datetime: $row["start"]), buyinAmount: $row["buyin"], maxPlayers: $row["max players"], maxRebuys: $row["max"], rebuyAmount: $row["amt"], addonAmount: $row["amt "], addonChipCount: $row["chips "], groupPayout: $groupPayout, rake: (float) ($row["rake"] * 100), registeredCount: $row["registeredCount"], buyinsPaid: $row["buyinsPaid"], rebuysPaid: $row["rebuysPaid"], rebuysCount: (int) $row["rebuysCount"], addonsPaid: $row["addonsPaid"], enteredCount: $row["enteredCount"], earnings: 0);
             $option = new FormOption(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), class: NULL, disabled: false, id: NULL, name: NULL, selectedValue: $tournamentId, suffix: NULL, text: $tournament->getDisplayDetails(), value: $tournament->getId());
             $output .= $option->getHtml();
@@ -345,9 +351,9 @@ if ($mode == Constant::MODE_VIEW) {
             }
             if ($structures != "") {
                 foreach ($structures as $structure) {
-                    $output .= " <div class=\"responsive-cell responsive-cell-label-footer responsive-cell--head\">Place " . $structure->getPlace() . " (" . ($structure->getPercentage() * 100) . "%):</div>\n";
-                    $output .= " <div class=\"responsive-cell responsive-cell-value-footer positive\">$" . number_format((($total[$tournamentId] - $rake[$tournamentId]) * $structure->getPercentage()), 0, ".", "") . "</div>\n";
-                    $output .= " <div class=\"responsive-cell responsive-cell-value-after-footer\">(" . ($structure->getPercentage() * 100) . "% x $" . ($total[$tournamentId] - $rake[$tournamentId]) . ")</div>\n";
+                    $output .= " <div class=\"responsive-cell responsive-cell-label-footer responsive-cell--head\">Place " . $structure->getStructurePlace() . " (" . ($structure->getStructurePercentage() * 100) . "%):</div>\n";
+                    $output .= " <div class=\"responsive-cell responsive-cell-value-footer positive\">$" . number_format((($total[$tournamentId] - $rake[$tournamentId]) * $structure->getStructurePercentage()), 0, ".", "") . "</div>\n";
+                    $output .= " <div class=\"responsive-cell responsive-cell-value-after-footer\">(" . ($structure->getStructurePercentage() * 100) . "% x $" . ($total[$tournamentId] - $rake[$tournamentId]) . ")</div>\n";
                     $ctr++;
                 }
             }
