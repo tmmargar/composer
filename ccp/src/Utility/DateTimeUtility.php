@@ -3,7 +3,7 @@ namespace Poker\Ccp\Utility;
 use DateTime;
 abstract class DateTimeUtility {
     private const DATE_FORMAT_DATABASE_DATE = "Y-m-d";
-    private const DATE_FORMAT_DATABASE_DATE_TIME = "Y-m-d h:i:s";
+    private const DATE_FORMAT_DATABASE_DATE_TIME = "Y-m-d H:i:s";
     private const DATE_FORMAT_DATABASE_TIME = "H:i";
     private const DATE_FORMAT_DISPLAY_DATE = "m/d/Y";
     private const DATE_FORMAT_DISPLAY_DATE_TIME = "m/d/Y h:i:s A";
