@@ -20,8 +20,8 @@ $resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(s
 if (0 < count($resultList)) {
     $ctr = 0;
     while ($ctr < count($resultList)) {
+        $aryWinners[$ctr] = $resultList[$ctr]["name"];
         $ctr++;
-        $aryWinners[$ctr] = $resultList[0]["wins"];
     }
   // $caption = "<strong>There are " . $ctr . " winners</strong>";
   // $hideColIndexes = array(0,2);
@@ -199,8 +199,9 @@ if (0 < $count) {
     $output .= "    <div class=\"column\"><strong><i>Position<br />(% of total)</i></strong></div>\n";
     $output .= "    <div class=\"column\"><strong><i>Payout</i></strong></div>\n";
     $output .= "    <div class=\"clear\"></div>\n";
-    $params = array(1,1);
-    $resultList = $entityManager->getRepository(Constant::ENTITY_GROUP_PAYOUTS)->getById(groupId: 1, payoutId: 1);
+    $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getChampionshipPayout();
+//     $resultList = $entityManager->getRepository(Constant::ENTITY_GROUP_PAYOUTS)->getById(groupId: 9, payoutId: 11);
+    $resultList = $entityManager->getRepository(Constant::ENTITY_GROUP_PAYOUTS)->getById(groupId: $resultList[0]["group_id"], payoutId: $resultList[0]["payout_id"]);
     if (0 < count(value: $resultList)) {
         $ctr = 0;
         while ($ctr < count(value: $resultList)) {

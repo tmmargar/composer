@@ -539,4 +539,19 @@ class TournamentsRepository extends BaseRepository {
                   ->setParameters(new ArrayCollection(array(new Parameter("tournamentDate", $tournamentDateFormatted), new Parameter("startTime", $timeFormatted))))
                   ->getQuery()->getResult();
     }
+
+    public function getChampionshipPayout() {
+        $sql =
+        //             "SELECT t.tournament_id, str.structure_place, str.structure_percentage " .
+            "SELECT t.tournament_id, t.group_id, gp.payout_id " .
+            "FROM poker_tournaments t cross join poker_seasons se ON se.season_active_flag = " . Constant::FLAG_YES_DATABASE .
+            " INNER JOIN poker_group_payouts gp ON t.group_id = gp.group_id " .
+            //             "INNER JOIN poker_payouts p ON gp.payout_id = p.payout_id " .
+            //             "INNER JOIN poker_structures str ON p.payout_id = str.payout_id " .
+            "LEFT JOIN poker_special_types st ON t.special_type_id = st.special_type_id " .
+            "WHERE st.special_type_description = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "' " .
+            "AND t.tournament_date BETWEEN se.season_start_date AND se.season_end_date";
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        return $statement->executeQuery()->fetchAllAssociative();
+    }
 }
