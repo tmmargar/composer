@@ -304,7 +304,7 @@ class Players
      * @param string $playerPassword
      */
     public function setPlayerPassword(string $playerPassword): self {
-        $this->playerPassword = $playerPassword;
+        $this->playerPassword = password_hash($playerPassword, PASSWORD_DEFAULT);
         return $this;
     }
 
