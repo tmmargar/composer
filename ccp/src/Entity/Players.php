@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 namespace Poker\Ccp\Entity;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
@@ -10,9 +9,10 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\OneToOne;
+use DateTime;
 
 #[Table(name: "poker_players")]
 #[Entity(repositoryClass: PlayersRepository::class)]
@@ -54,14 +54,14 @@ class Players
     #[Column(name: "player_approval_date", type: "date", nullable: true)]
     private ?DateTime $playerApprovalDate;
 
-    #[OneToOne(targetEntity: Players::class)]
+    #[ManyToOne(targetEntity: Players::class, inversedBy: "playerApproval")]
     #[JoinColumn(name: "player_approval_player_id", referencedColumnName: "player_id")]
     private ?Players $playerApproval;
 
     #[Column(name: "player_rejection_date", type: "date", nullable: true)]
     private ?DateTime $playerRejectionDate;
 
-    #[OneToOne(targetEntity: Players::class)]
+    #[ManyToOne(targetEntity: Players::class, inversedBy: "playerRejection")]
     #[JoinColumn(name: "player_rejection_player_id", referencedColumnName: "player_id")]
     private ?Players $playerRejection;
 

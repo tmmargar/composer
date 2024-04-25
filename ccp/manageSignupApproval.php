@@ -43,7 +43,7 @@ if (Constant::MODE_SAVE_VIEW == $mode) {
     // update approval date or rejection date and set active flag
     foreach ($approval as $key => $value) {
         $player = $entityManager->find(Constant::ENTITY_PLAYERS, (int) $key);
-        $playerApproval = $entityManager->find(Constant::ENTITY_PLAYERS, (int) $key);
+        $playerApproval = $entityManager->find(Constant::ENTITY_PLAYERS, (int) SessionUtility::getValue(SessionUtility::OBJECT_NAME_PLAYERID));
         $player->setPlayerApproval($playerApproval);
         $player->setPlayerApprovalDate(new DateTime());
         $player->setPlayerActiveFlag("1");
@@ -59,7 +59,7 @@ if (Constant::MODE_SAVE_VIEW == $mode) {
     }
     foreach ($rejection as $key => $value) {
         $player = $entityManager->find(Constant::ENTITY_PLAYERS, (int) $key);
-        $playerRejection = $entityManager->find(Constant::ENTITY_PLAYERS, (int) $key);
+        $playerRejection = $entityManager->find(Constant::ENTITY_PLAYERS, (int) SessionUtility::getValue(SessionUtility::OBJECT_NAME_PLAYERID));
         $player->setPlayerRejection($playerRejection);
         $player->setPlayerRejectionDate(new DateTime());
         $entityManager->persist($player);
