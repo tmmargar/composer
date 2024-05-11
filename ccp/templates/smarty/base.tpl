@@ -41,6 +41,6 @@
   </div>
   {block name=content}{$content}{/block}
  </div>
- {block name=footer}<footer class="footer"><a href="changeLog.php" target="_new">Change Log</a></footer>{/block}
+ {block name=footer}<footer class="footer"><a href="changeLog.php" target="_blank">Change Log</a></footer>{/block}
 </body>
 </html>

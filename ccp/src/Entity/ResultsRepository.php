@@ -81,13 +81,13 @@ class ResultsRepository extends BaseRepository {
 //         case "resultSelectAllFinishedByTournamentId":
 //         case "resultSelectPaidByTournamentId":
         $sql = "SELECT r.tournament_id, r.player_id, CONCAT(p.player_first_name, ' ' , p.player_last_name) AS name, p.player_email, r.status_code, s.status_code_name AS status, r.result_registration_order, r.result_paid_buyin_flag, r.result_paid_rebuy_flag, r.result_rebuy_count AS rebuy, r.result_paid_addon_flag AS addon, r.result_addon_flag, r.result_place_finished AS place, r.player_id_ko, CONCAT(p2.player_first_name, ' ' , p2.player_last_name) AS 'knocked out by', r.result_registration_food, p.player_active_flag, p2.player_active_flag AS knockedOutActive, " .
-                "IF(se.season_fee IS NULL OR f.fee_amount IS NULL, '', IF(se.season_fee - f.fee_amount - IF(fh.player_id IS NULL, 0, se.season_fee) = 0, 'Paid', CONCAT('Owes $', (se.season_fee - f.fee_amount)))) AS feeStatus " .
+                "IF(se.season_fee IS NULL, '', IF(se.season_fee - IFNULL(f.fee_amount, 0) - IF(fh.player_id IS NULL, 0, se.season_fee) = 0, 'Paid', CONCAT('Owes $', (se.season_fee - IFNULL(f.fee_amount, 0))))) AS feeStatus " .
                 "FROM poker_results r INNER JOIN poker_players p ON r.player_id = p.player_id " .
                 "LEFT JOIN poker_players p2 ON r.player_id_ko = p2.player_id " .
                 "INNER JOIN poker_status_codes s ON r.status_code = s.status_code " .
                 "INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id " .
                 "INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
-                "INNER JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON se.season_id = f.season_id AND p.player_id = f.player_id " .
+                "LEFT JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON se.season_id = f.season_id AND p.player_id = f.player_id " .
                 "LEFT JOIN (SELECT DISTINCT se.season_id, l.location_id, l.location_name, l.player_id, p.player_first_name, p.player_last_name " .
                 "           FROM poker_tournaments t INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
                 "           INNER JOIN poker_locations l ON t.location_id = l.location_id " .
