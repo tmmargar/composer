@@ -183,7 +183,8 @@ $htmlLinkResetPassword = new HtmlLink(accessKey: NULL, class: NULL, debug: Sessi
 $htmlLinkMyProfileArray = array($htmlLinkEdit,$htmlLinkLogout,$htmlLinkResetPassword);
 $htmlMenuReportMyProfile->setItems($htmlLinkMyProfileArray);
 array_push($levels, $htmlMenuReportMyProfile);
-$htmlLinkRules = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "rules/ccp_rules_2023.pdf", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Rules", title: NULL);
+$year = DateTimeUtility::formatYear(value: new \DateTime());
+$htmlLinkRules = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "rules/ccp_rules_" . $year . ".pdf", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Rules", title: NULL);
 array_push($levels, $htmlLinkRules);
 // echo print_r($levels, true);
 $htmlMenuRoot = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: $levels, text: NULL);
