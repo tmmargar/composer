@@ -348,3 +348,15 @@ input:invalid:out-of-range {
     font-size: 1.4em;
   }
 }
+.championshipQualified {
+  color: green !important;
+  font-weight: bold;
+}
+.championshipEligible {
+  color: orange !important;
+  font-weight: bold;
+}
+.championshipOther {
+  color: red !important;
+  font-weight: bold;
+}
