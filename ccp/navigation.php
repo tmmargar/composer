@@ -166,13 +166,19 @@ if (SessionUtility::getValue(SessionUtility::OBJECT_NAME_ADMINISTRATOR) != 0) {
     $htmlLinkPayout = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "managePayout.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Payouts", title: NULL);
     $htmlLinkPayoutArray = array($htmlLinkGroup,$htmlLinkPayout,$htmlLinkGroupPayout);
     $htmlMenuReportPayouts->setItems($htmlLinkPayoutArray);
+    $htmlMenuReportInventories = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Inventories");
+    $htmlLinkInventoryType = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageInventoryType.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Manage inventory type", title: NULL);
+    $htmlLinkInventory = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageInventory.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Manage inventory", title: NULL);
+    $htmlLinkInventoryGauge = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "inventoryGauge.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "View inventory", title: NULL);
+    $htmlLinkInventoryArray = array($htmlLinkInventoryType,$htmlLinkInventory,$htmlLinkInventoryGauge);
+    $htmlMenuReportInventories->setItems($htmlLinkInventoryArray);
     $htmlLinkEmail = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "manageEmail.php", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Send email", title: NULL);
     $htmlMenuReportScheduledJobs = new HtmlMenu(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Scheduled Jobs");
     $htmlLinkAutoRegisterHost = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "autoRegisterHost.php", id: NULL, paramName: array(Constant::FIELD_NAME_MODE), paramValue: array(Constant::MODE_VIEW), tabIndex: - 1, text: "Run auto register host", title: NULL);
     $htmlLinkAutoReminder = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "autoReminder.php", id: NULL, paramName: array(Constant::FIELD_NAME_MODE), paramValue: array(Constant::MODE_VIEW), tabIndex: - 1, text: "Run auto reminder", title: NULL);
     $htmlLinkScheduledJobsArray = array($htmlLinkAutoRegisterHost,$htmlLinkAutoReminder);
     $htmlMenuReportScheduledJobs->setItems($htmlLinkScheduledJobsArray);
-    $htmlLinkAdministrationArray = array($htmlMenuReportGames,$htmlMenuReportPlayers,$htmlMenuReportPayouts,$htmlLinkEmail,$htmlMenuReportScheduledJobs);
+    $htmlLinkAdministrationArray = array($htmlMenuReportGames,$htmlMenuReportPlayers,$htmlMenuReportPayouts,$htmlMenuReportInventories,$htmlLinkEmail,$htmlLinkInventoryGauge,$htmlMenuReportScheduledJobs);
     $htmlMenuReportAdministration->setItems($htmlLinkAdministrationArray);
     array_push($levels, $htmlMenuReportAdministration);
 }

@@ -1,0 +1,9 @@
+body {
+  max-width: 720px;
+}
+.responsive--2cols > .responsive-cell-label {
+  width: 30%;
+}
+.responsive--2cols > .responsive-cell-value {
+  width: 70%;
+}
