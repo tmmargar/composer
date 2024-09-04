@@ -206,11 +206,11 @@ if (!isset($reportId)) {
             $width = "100%";
             break;
         case REPORT_ID_SUMMARY:
-            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(startDate: $startDate, endDate: $endDate, championship: $championship, stats: false, indexed: true);
-            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(startDate: $startDate, endDate: $endDate, championship: $championship, stats: false, indexed: false);
-            $colFormats = array(array(1, "number", 0), array(2, "number", 0), array(3, "number", 0), array(4, "number", 0), array(5, "percentage", 2), array(6, "number", 2), array(7, "number", 0), array(8, "number", 0), array(9, "currency", 0), array(10, "currency", 0), array(11, "currency", 0), array(12, "currency", 0), array(13, "currency", 0), array(14, "currency", 0), array(15, "currency", 0), array(16, "currency", 0));
-            $hideColIndexes = array(3, 17);
-            $colSpan = array(array("Final Tables", "Finish", "Money Out", "Money In"), array(4, 6, 9, 14), array(array(5), array(7, 8), array(10, 11, 12), array(13, 15, 16)));
+            $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(currentDate: new DateTime(), startDate: $startDate, endDate: $endDate, championship: $championship, stats: false, indexed: true);
+            $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(currentDate: new DateTime(), startDate: $startDate, endDate: $endDate, championship: $championship, stats: false, indexed: false);
+            $colFormats = array(array(1, "number", 0), array(2, "number", 0), array(3, "number", 0), array(4, "number", 0), array(5, "number", 0), array(6, "number", 0), array(7, "percentage", 2), array(8, "number", 2), array(9, "number", 0), array(10, "number", 0), array(11, "currency", 0), array(12, "currency", 0), array(13, "currency", 0), array(14, "currency", 0), array(15, "currency", 0), array(16, "currency", 0), array(17, "currency", 0), array(18, "currency", 0));
+            $hideColIndexes = array(5, 19);
+            $colSpan = array(array("Final Tables", "Finish", "Money Out", "Money In"), array(6, 8, 11, 16), array(array(6), array(9, 10), array(12, 13, 14), array(15, 17, 18)));
             $width = "100%";
             break;
         case REPORT_ID_WINNERS:

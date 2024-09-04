@@ -33,7 +33,7 @@ export const reportsInputLocal = {
       } else if (reportId == "summary") {
         dataTableId = "dataTblSummary";
         if (document.querySelector("#" + dataTableId)) {
-          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, {}, {}, {}, {}, {}, {}, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[12, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "render" : function (data, type, row, meta) { if (type === "display") { return display.formatNeeded({value: data, meta: meta, tableId: "dataTblSummary"}); } else { return data; } } }, { "visible": false }, { "visible": false }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, {}, {}, {}, {}, {}, {}, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[14, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "winners") {
         dataTableId = "dataTblWinners";
@@ -176,10 +176,24 @@ export const reportsInputLocal = {
         action.push("championship=" + document.querySelector("#championship").value);
     }
     return action;
+  },
+  championshipCount : function(tableId) {
+    let qualified = 0;
+    let eligible = 0;
+    document.querySelectorAll("#" + tableId + " tbody tr td:nth-of-type(2)").forEach(cell => {
+        if (cell.classList.contains("championshipQualified")) {
+            qualified++;
+        } else if (cell.classList.contains("championshipEligible")) {
+            eligible++;
+        }
+    });
+    document.querySelector(".dataTables_scrollHeadInner thead tr:nth-of-type(1) th:nth-of-type(2)").innerHTML += "<br>" + qualified + "q / " + eligible + "e";
+    $("#dataTblSummary").DataTable().draw();
   }
 };
 let documentReadyCallback = () => {
   reportsInputLocal.initializeDataTable();
+  reportsInputLocal.championshipCount("dataTblSummary");
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
   documentReadyCallback();

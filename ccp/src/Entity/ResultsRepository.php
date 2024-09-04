@@ -657,7 +657,7 @@ class ResultsRepository extends BaseRepository {
         }
     }
 
-    public function getOrderedSummary(?DateTime $startDate, ?DateTime $endDate, bool $championship, bool $stats, bool $indexed) {
+    public function getOrderedSummary(?DateTime $currentDate, ?DateTime $startDate, ?DateTime $endDate, bool $championship, bool $stats, bool $indexed) {
 //         case "resultAllOrderedSummary":
 //         case "resultAllOrderedSummaryStats":
         $sql = "SELECT ";
@@ -665,7 +665,8 @@ class ResultsRepository extends BaseRepository {
             $sql .= "player_id, ";
         }
         $sql .=
-            "name, d.tourneys AS '#', IFNULL(d.Points, 0) AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', " .
+            "name, d.tourneys AS '#', d.NumTourneysLeftSeason AS 'left', IF(d.tourneys >= d.ChampQualCount, 0, d.ChampQualCount - d.tourneys) AS needed, " .
+            "IFNULL(d.Points, 0) AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', " .
             "-(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount)) AS buyins, -(IFNULL(d.rebuys, 0)) AS rebuys, " .
             "-(IFNULL(d.addons, 0)) AS addons, -(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount)) + -(IFNULL(d.rebuys, 0)) + -(IFNULL(d.addons, 0)) AS 'total', " .
             "d.earnings,  " .
@@ -674,7 +675,7 @@ class ResultsRepository extends BaseRepository {
             "(d.earnings - IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount) - IFNULL(d.rebuys, 0) - IFNULL(d.addons, 0)) / d.numTourneys AS 'Net / Trny', " .
             "player_active_flag " .
             "FROM (SELECT a.player_id, a.name, a.player_active_flag, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, IFNULL(b.Earnings, 0) AS earnings, a.NumTourneys, " .
-            "             e.result_place_finished, e.NumPlayers, e.Points, e.Rebuys, e.Addons, e.NumRebuys, e.tournament_buyin_amount" .
+            "             e.result_place_finished, e.NumPlayers, e.Points, e.Rebuys, e.Addons, e.NumRebuys, e.tournament_buyin_amount, g.NumTourneysLeftSeason, h.ChampQualCount" .
             "      FROM (SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(nt.NumTourneys, 0) AS Tourneys, IFNULL(nft.NumFinalTables, 0) AS FTs, " .
             "                   IF(nt.NumTourneys IS NULL, 0, IFNULL(nft.NumFinalTables, 0) / nt.NumTourneys) AS PctFTs, " .
             "                   IF(nt.NumTourneys IS NULL, 0, IFNULL(nt.TotalPlaces, 0) / nt.NumTourneys) AS AvgPlace, " .
@@ -793,12 +794,16 @@ class ResultsRepository extends BaseRepository {
             "                                  FROM poker_results r7 WHERE result_paid_addon_flag = '" . Constant::FLAG_YES . "' GROUP BY tournament_id, player_id) na ON r.tournament_id = na.tournament_id AND r.player_id = na.player_id) a " .
             "                 ) c " .
             "           GROUP BY c.player_id) e ON b.player_id = e.player_id " .
+            "LEFT JOIN (SELECT p.player_id, t.NumTourneysLeftSeason FROM poker_players p CROSS JOIN (SELECT COUNT(*) - 1 AS NumTourneysLeftSeason FROM poker_tournaments t1 WHERE t1.tournament_date BETWEEN :startDate8 AND :endDate1) t ON p.player_active_flag = '" . Constant::FLAG_YES_DATABASE . "') g ON b.player_id = g.player_id " .
+            "LEFT JOIN (SELECT p.player_id, t.ChampQualCount FROM poker_players p CROSS JOIN (SELECT s.season_championship_qualification_count AS ChampQualCount FROM poker_seasons s WHERE s.season_start_date = :startDate1) t ON p.player_active_flag = '" . Constant::FLAG_YES_DATABASE . "') h ON b.player_id = h.player_id " .
             "WHERE b.player_id IN (SELECT DISTINCT player_id FROM poker_results WHERE status_code = '" . Constant::CODE_STATUS_FINISHED . "')) d ";
         if (!$stats) {
             $sql .= "ORDER BY ROUND(d.earnings, 0) DESC";
         }
+//         echo $sql;
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if (isset($startDate) && isset($endDate)) {
+            $currentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $currentDate);
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
             $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
@@ -815,6 +820,7 @@ class ResultsRepository extends BaseRepository {
             $statement->bindValue("endDate6", $endDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("startDate7", $startDateFormatted, PDO::PARAM_STR);
             $statement->bindValue("endDate7", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue("startDate8", $currentDateFormatted, PDO::PARAM_STR);
         }
         if ($championship) {
             if (isset($queryAndBindParams[1])) {
