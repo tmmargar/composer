@@ -774,7 +774,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), championship: true, stats: true, indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(currentDate: new DateTime(), startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), championship: true, stats: true, indexed: false);
 // echo "<br>results ordered summary stats count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -782,7 +782,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), championship: false, stats: true, indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(currentDate: new DateTime(), startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), championship: false, stats: true, indexed: false);
 // echo "<br>results ordered summary stats count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {
@@ -790,7 +790,7 @@ $entityManager = getEntityManager();
 //     $counter++;
 //     if ($counter == 5) {break;}
 // }
-// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), championship: false, stats: false, indexed: false);
+// $result = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(currentDate: new DateTime(), startDate: new DateTime("2023-01-01"), endDate: new DateTime("2023-12-31"), championship: false, stats: false, indexed: false);
 // echo "<br>results ordered summary count=" . count($result);
 // $counter = 0;
 // foreach ($result as $row) {

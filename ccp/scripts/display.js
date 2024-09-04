@@ -15,6 +15,14 @@ export const display = {
     if (value == "1") { document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 1) + ")").classList.add("highlight"); }
     return value == "1" ? "Yes" : "No";
   },
+  formatNeeded : function({value, meta, tableId} = {}) {
+    if (document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML == 0) {
+        document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 1) + ")").classList.add("championshipQualified");
+    } else if (document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML > 0) {
+        document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 1) + ")").classList.add("championshipEligible");
+    }
+    return value + (document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML > 0 ? " (" + document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML + "/" + document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 2) + ")").innerHTML + ")" : "");
+  },
   formatPhone : function({value} = {}) {
     //Filter only numbers from the input
     const cleaned = ('' + value).replace(/\D/g, '');
