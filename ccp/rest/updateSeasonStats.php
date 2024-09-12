@@ -5,8 +5,8 @@ use Poker\Ccp\Model\Constant;
 require_once "init.php";
 $output = "";
 $entityManager = getEntityManager();
-$resultList = $entityManager->getRepository(Constant::ENTITY_SEASONS)->getActives();
-$resultList = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getSeasonStats(startDate: $resultList->getSeasonStartDate(), endDate: $resultList->getSeasonEndDate());
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_SEASONS)->getActives();
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_RESULTS)->getSeasonStats(startDate: $resultList->getSeasonStartDate(), endDate: $resultList->getSeasonEndDate());
 if (0 < count(value: $resultList)) {
     $count = 0;
     $output .= " <table id=\"output\">\n";

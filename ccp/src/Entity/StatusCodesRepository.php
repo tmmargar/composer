@@ -5,10 +5,10 @@ use Doctrine\ORM\Query\Parameter;
 class StatusCodesRepository extends BaseRepository {
 
     public function getById(?int $statusCode) {
-        $qb = $this->createQueryBuilder("s");
+        $qb = $this->createQueryBuilder(alias: "s");
         if (isset($statusCode)) {
-            $qb = $qb->where("s.statusCode = :statusCode");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("statusCode", $statusCode))));
+            $qb = $qb->where(predicates: "s.statusCode = :statusCode")
+                     ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "statusCode", value: $statusCode))));
         }
         return $qb->getQuery()->getResult();
     }

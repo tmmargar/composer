@@ -5,13 +5,10 @@ use Doctrine\ORM\Query\Parameter;
 use PDO;
 class GroupsRepository extends BaseRepository {
     public function getById(?int $groupId) {
-//         case "groupSelectAll":
-//         case "groupSelectOneById":
-//         case "groupSelectNameList":
-        $qb = $this->createQueryBuilder("g");
+        $qb = $this->createQueryBuilder(alias: "g");
         if (isset($groupId)) {
-            $qb = $qb->where("g.groupId = :groupId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("groupId", $groupId))));
+            $qb = $qb->where(predicates: "g.groupId = :groupId");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "groupId", value: $groupId))));
         }
         return $qb->getQuery()->getResult();
     }
@@ -23,9 +20,9 @@ class GroupsRepository extends BaseRepository {
         if (isset($groupId)) {
             $sql .= "WHERE group_id = :groupId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($groupId)) {
-            $statement->bindValue("groupId", $groupId, PDO::PARAM_INT);
+            $statement->bindValue(param: "groupId", value: $groupId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();

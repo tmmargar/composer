@@ -5,14 +5,12 @@ use Doctrine\ORM\Query\Parameter;
 use PDO;
 class GameTypesRepository extends BaseRepository {
     public function getById(?int $gameTypeId) {
-//         case "gameTypeSelectAll":
-//         case "gameTypeSelectOneById":
-        $qb = $this->createQueryBuilder("gt");
+        $qb = $this->createQueryBuilder(alias: "gt");
         if (isset($gameTypeId)) {
-            $qb = $qb->where("gt.gameTypeId = :gameTypeId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("gameTypeId", $gameTypeId))));
+            $qb = $qb->where(predicates: "gt.gameTypeId = :gameTypeId");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "gameTypeId", value: $gameTypeId))));
         }
-        $qb = $qb->addOrderBy("gt.gameTypeName", "ASC");
+        $qb = $qb->addOrderBy(sort: "gt.gameTypeName", order: "ASC");
         return $qb->getQuery()->getResult();
     }
 
@@ -23,9 +21,9 @@ class GameTypesRepository extends BaseRepository {
         if (isset($gameTypeId)) {
             $sql .= "WHERE game_type_id = :gameTypeId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($gameTypeId)) {
-            $statement->bindValue("gameTypeId", $gameTypeId, PDO::PARAM_INT);
+            $statement->bindValue(param: "gameTypeId", value: $gameTypeId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();

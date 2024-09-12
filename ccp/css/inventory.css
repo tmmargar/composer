@@ -1,0 +1,4 @@
+div[id^="gaugeInventory"] table {
+    width: auto;
+    margin: 0 auto !important;
+}

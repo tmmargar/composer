@@ -6,9 +6,9 @@ use Poker\Ccp\Model\Constant;
 use Poker\Ccp\Utility\SessionUtility;
 require_once "vendor/autoload.php";
 $header = "";
-if (strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["SCRIPT_NAME"], "logout.php") === false && strpos($_SERVER["SCRIPT_NAME"], "resetPassword.php") === false) {
+if (strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "login.php") === false && strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "logout.php") === false && strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "resetPassword.php") === false) {
   require_once "navigation.php";
-  $resultList = $entityManager->getRepository(Constant::ENTITY_NOTIFICATIONS)->getByDate(date: new DateTime());
+  $resultList = $entityManager->getRepository(entityName: Constant::ENTITY_NOTIFICATIONS)->getByDate(date: new DateTime());
   foreach ($resultList as $notification) {
     if ("" != $header) {
       $header .= "<br>";

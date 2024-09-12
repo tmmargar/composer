@@ -17,16 +17,25 @@ export const inputLocal = {
     document.querySelector("#ids").value = ids;
   },
   setMinMax : function() {
+    if (document.querySelector("[id^='minAmount_']")) {
+        document.querySelector("[id^='minAmount_']").style.width = "50px";
+    }
+    if (document.querySelector("[id^='maxAmount_']")) {
+        document.querySelector("[id^='maxAmount_']").style.width = "50px";
+    }
     if (document.querySelector("[id^='currentAmount_']")) {
-      document.querySelector("[id^='currentAmount_']").min = 1;
+      document.querySelector("[id^='currentAmount_']").min = document.querySelector("[id^='warningAmount_']").value > 0 && document.querySelector("[id^='warningAmount_']").value > document.querySelector("[id^='minAmount_']").value ? document.querySelector("[id^='warningAmount_']").value : document.querySelector("[id^='minAmount_']").value;
+      document.querySelector("[id^='currentAmount_']").max = document.querySelector("[id^='maxAmount_']").value;
       document.querySelector("[id^='currentAmount_']").style.width = "50px";
     }
     if (document.querySelector("[id^='warningAmount_']")) {
-      document.querySelector("[id^='warningAmount_']").min = 1;
+      document.querySelector("[id^='warningAmount_']").min = document.querySelector("[id^='orderAmount_']").value > 0 && document.querySelector("[id^='orderAmount_']").value > document.querySelector("[id^='minAmount_']").value ? document.querySelector("[id^='orderAmount_']").value : document.querySelector("[id^='minAmount_']").value;
+      document.querySelector("[id^='warningAmount_']").max = document.querySelector("[id^='currentAmount_']").value > 0 ? parseInt(document.querySelector("[id^='currentAmount_']").value) - 1 : document.querySelector("[id^='minAmount_']").value;
       document.querySelector("[id^='warningAmount_']").style.width = "50px";
     }
     if (document.querySelector("[id^='orderAmount_']")) {
-      document.querySelector("[id^='orderAmount_']").min = 1;
+      document.querySelector("[id^='orderAmount_']").min = document.querySelector("[id^='minAmount_']").value;
+      document.querySelector("[id^='orderAmount_']").max = parseInt(document.querySelector("[id^='warningAmount_']").value) - 1;
       document.querySelector("[id^='orderAmount_']").style.width = "50px";
     }
   },
@@ -65,6 +74,17 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
     row.classList.add("selected");
   }
 }));
+document.addEventListener("change", (event) => {
+    if (event.target && event.target.id.includes("inventoryTypeId")) {
+        document.querySelectorAll("[id^='inventoryTypeId_']")?.forEach(obj => {
+            const id = obj.id.split("_");
+            const values = obj.options[obj.selectedIndex].value.split("::");
+            document.querySelector("#minAmount_" + id[1]).value = values[1];
+            document.querySelector("#maxAmount_" + id[1]).value = values[2];
+        });
+    }
+    inputLocal.setMinMax();
+});
 document.addEventListener("click", (event) => {
   inputLocal.validate();
   if (event.target && event.target.id.includes("reset")) {

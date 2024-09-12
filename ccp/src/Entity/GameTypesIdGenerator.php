@@ -9,10 +9,8 @@ class GameTypesIdGenerator extends AbstractIdGenerator
 {
   public function generateId(EntityManagerInterface $em, $entity)
   {
-    $queryBuilder = $em->createQueryBuilder();
-    $queryBuilder->select("MAX(gt.gameTypeId) + 1")->from(Constant::ENTITY_GAME_TYPES, "gt");
-    $query = $queryBuilder->getQuery();
-    $result = $query->getSingleScalarResult();
-    return $result;
+    return $em->createQueryBuilder()
+              ->select(select: "MAX(gt.gameTypeId) + 1")->from(from: Constant::ENTITY_GAME_TYPES, alias: "gt")
+              ->getQuery()->getSingleScalarResult();
   }
 }

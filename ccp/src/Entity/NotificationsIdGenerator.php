@@ -9,10 +9,9 @@ class NotificationsIdGenerator extends AbstractIdGenerator
 {
   public function generateId(EntityManagerInterface $em, $entity)
   {
-    $queryBuilder = $em->createQueryBuilder();
-    $queryBuilder->select("MAX(n.notificationId) + 1")->from(Constant::ENTITY_NOTIFICATIONS, "n");
-    $query = $queryBuilder->getQuery();
-    $result = $query->getSingleScalarResult();
-    return $result;
+    return $em->createQueryBuilder()
+              ->select(select: "MAX(n.notificationId) + 1")
+              ->from(from: Constant::ENTITY_NOTIFICATIONS, alias: "n")
+              ->getQuery()->getSingleScalarResult();
   }
 }

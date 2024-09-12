@@ -18,10 +18,12 @@ export const display = {
   formatNeeded : function({value, meta, tableId} = {}) {
     if (document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML == 0) {
         document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 1) + ")").classList.add("championshipQualified");
-    } else if (document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML > 0) {
+    } else if (document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML > 0 &&
+               parseInt(document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 2) + ")").innerHTML) >= parseInt(document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML)) {
         document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 1) + ")").classList.add("championshipEligible");
     }
-    return value + (document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML > 0 ? " (" + document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML + "/" + document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 2) + ")").innerHTML + ")" : "");
+    return value + (document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML > 0 &&
+                    (parseInt(document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML) <= parseInt(document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 2) + ")").innerHTML)) ? " (" + document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 3) + ")").innerHTML + "/" + document.querySelector("#" + tableId + " tbody tr:nth-of-type(" + (meta.row + 1) + ") td:nth-of-type(" + (meta.col + 2) + ")").innerHTML + ")" : "");
   },
   formatPhone : function({value} = {}) {
     //Filter only numbers from the input

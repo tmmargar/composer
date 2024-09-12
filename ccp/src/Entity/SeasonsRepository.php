@@ -8,24 +8,21 @@ use Poker\Ccp\Model\Constant;
 use Poker\Ccp\Utility\DateTimeUtility;
 class SeasonsRepository extends BaseRepository {
     public function getActives() {
-//       case "seasonSelectOneByActive":
-        return $this->createQueryBuilder("s")->where("s.seasonActiveFlag = " . Constant::FLAG_YES_DATABASE)->getQuery()->getSingleResult();
+        return $this->createQueryBuilder(alias: "s")
+                    ->where(predicates: "s.seasonActiveFlag = " . Constant::FLAG_YES_DATABASE)
+                    ->getQuery()->getSingleResult();
     }
 
     public function getById(?int $seasonId) {
-//         case "seasonSelectAll":
-//         case "seasonSelectOneById":
-//         case "seasonSelectOneByTournamentId":
-        $qb = $this->createQueryBuilder("s");
+        $qb = $this->createQueryBuilder(alias: "s");
         if (isset($seasonId)) {
-            $qb = $qb->where("s.seasonId = :seasonId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("seasonId", $seasonId))));
+            $qb = $qb->where(predicates: "s.seasonId = :seasonId");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "seasonId", value: $seasonId))));
         }
         return $qb->getQuery()->getResult();
     }
 
     public function getByTournamentIdAndSpecialTypeDescription(?int $tournamentId, ?string $specialTypeDescription) {
-//         case "seasonSelectOneByIdAndDesc":
         $sql =
             "SELECT s.season_id, s.season_description, s.season_start_date, s.season_end_date, s.season_championship_qualification_count, s.season_final_table_players, s.season_final_table_bonus_points, s.season_fee, s.season_active_flag " .
             "FROM poker_seasons s INNER JOIN poker_tournaments t " .
@@ -33,15 +30,15 @@ class SeasonsRepository extends BaseRepository {
             "WHERE t.tournament_date BETWEEN s.season_start_date AND s.season_end_date " .
             "AND t.tournament_id = :tournamentId " .
             "AND st.special_type_description = :typeDescription";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        $statement->bindValue("tournamentId", $tournamentId);
-        $statement->bindValue("typeDescription", $specialTypeDescription);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
+        $statement->bindValue(param: "tournamentId", value: $tournamentId);
+        $statement->bindValue(param: "typeDescription", value: $specialTypeDescription);
         return $statement->executeQuery()->fetchAllAssociative();
     }
 
     public function getMaxId() {
-        $qb = $this->createQueryBuilder("s");
-        return $qb->select("MAX(s.seasonId)")->getQuery()->getSingleResult();
+        return $this->createQueryBuilder(alias: "s")
+                    ->select(select: "MAX(s.seasonId)")->getQuery()->getSingleResult();
     }
 
     public function getTableOutput(?int $seasonId, bool $indexed) {
@@ -51,9 +48,9 @@ class SeasonsRepository extends BaseRepository {
         if (isset($seasonId)) {
             $sql .= " WHERE season_id = :seasonId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($seasonId)) {
-            $statement->bindValue("seasonId", $seasonId, PDO::PARAM_INT);
+            $statement->bindValue(param: "seasonId", value: $seasonId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -70,13 +67,13 @@ class SeasonsRepository extends BaseRepository {
         if (isset($seasonId)) {
             $sql .= " AND season_id <> :seasonId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         $date1Formatted = DateTimeUtility::formatDatabaseDate(value: $date1);
         $date2Formatted = DateTimeUtility::formatDatabaseDate(value: $date2);
-        $statement->bindValue("date1", $date1Formatted, PDO::PARAM_STR);
-        $statement->bindValue("date2", $date2Formatted, PDO::PARAM_STR);
+        $statement->bindValue(param: "date1", value: $date1Formatted, type: PDO::PARAM_STR);
+        $statement->bindValue(param: "date2", value: $date2Formatted, type: PDO::PARAM_STR);
         if (isset($seasonId)) {
-            $statement->bindValue("seasonId", $seasonId, PDO::PARAM_INT);
+            $statement->bindValue(param: "seasonId", value: $seasonId, type: PDO::PARAM_INT);
         }
         return $statement->executeQuery()->fetchAllNumeric();
     }
@@ -85,8 +82,8 @@ class SeasonsRepository extends BaseRepository {
         $sql =
             "SELECT s.season_id " .
             "FROM poker_seasons s INNER JOIN poker_tournaments t ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date AND t.tournament_id = :tournamentId";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        $statement->bindValue("tournamentId", $tournamentId, PDO::PARAM_INT);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
+        $statement->bindValue(param: "tournamentId", value: $tournamentId, type: PDO::PARAM_INT);
         return $statement->executeQuery()->fetchAllAssociative();
     }
 }

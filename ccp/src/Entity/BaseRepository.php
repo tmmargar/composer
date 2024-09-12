@@ -9,7 +9,7 @@ class BaseRepository extends EntityRepository {
     // $selectFieldNames is list of field names to search in
     // $orderByFieldName is order by field name to use when replacing
     protected function modifyQueryAddRank(string $query, string $whereClause, string $selectFieldName, string $selectFieldNames, string $orderByFieldName): string {
-        $queryTemp = substr_replace($query, "SELECT ROW_NUMBER() OVER (ORDER BY " . $selectFieldName . " DESC, name) AS row, RANK() OVER (ORDER BY " . $selectFieldName . " DESC) AS rank, " . $selectFieldNames . " FROM (SELECT ", 0, 6);
+        $queryTemp = substr_replace(string: $query, replace: "SELECT ROW_NUMBER() OVER (ORDER BY " . $selectFieldName . " DESC, name) AS row, RANK() OVER (ORDER BY " . $selectFieldName . " DESC) AS rank, " . $selectFieldNames . " FROM (SELECT ", offset: 0, length: 6);
 //         echo "<br>q=".$queryTemp;
 //         echo "<br>w=".$whereClause;
 //         echo "<br>s=".$selectFieldName;

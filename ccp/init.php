@@ -15,15 +15,15 @@ if ($values[1] != "") {
 }
 // TODO: NOT SURE WHERE TO PUT THIS
 date_default_timezone_set(timezoneId: Constant::NAME_TIME_ZONE);
-if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false) {
+if (strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "index.php") === false) {
   require_once "initDefine.php";
   require_once "initSmarty.php";
   require_once "initTidy.php";
 }
-if (strpos($_SERVER["SCRIPT_NAME"], "index.php") === false && strpos($_SERVER["SCRIPT_NAME"], "logout.php") === false) {
+if (strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "index.php") === false && strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "logout.php") === false) {
   SessionUtility::startSession();
   // if no session and not login or password reset pages capture page to redirect after login
-  if (!SessionUtility::existsSecurity() && strpos($_SERVER["SCRIPT_NAME"], "login.php") === false && strpos($_SERVER["SCRIPT_NAME"], "resetPassword.php") === false && strpos($_SERVER["SCRIPT_NAME"], "signup.php") === false) {
+  if (!SessionUtility::existsSecurity() && strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "login.php") === false && strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "resetPassword.php") === false && strpos(haystack: $_SERVER["SCRIPT_NAME"], needle: "signup.php") === false) {
     $scriptName = explode(separator: "/", string: $_SERVER["SCRIPT_NAME"]);
     // echo $scriptName[count($scriptName) - 1];
     header(header: "Location: login.php?" . $scriptName[count($scriptName) - 1]);

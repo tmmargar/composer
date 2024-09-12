@@ -8,7 +8,7 @@ class InventoryTypesRepository extends BaseRepository {
         $qb = $this->createQueryBuilder(alias: "it");
         if (isset($inventoryTypeId)) {
             $qb = $qb->where(predicates: "it.inventoryTypeId = :inventoryTypeId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("inventoryTypeId", $inventoryTypeId))));
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "inventoryTypeId", value: $inventoryTypeId))));
         }
         return $qb->getQuery()->getResult();
     }
@@ -18,7 +18,7 @@ class InventoryTypesRepository extends BaseRepository {
                    ->leftJoin(join: "it.inventories", alias: "i");
        if (isset($inventoryTypeId)) {
            $qb->where(predicates: "i.inventoryTypes IS NULL OR it.inventoryTypeId = :inventoryTypeId");
-           $qb->setParameters(new ArrayCollection(array(new Parameter("inventoryTypeId", $inventoryTypeId))));
+           $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "inventoryTypeId", value: $inventoryTypeId))));
        } else {
            $qb->where(predicates: "i.inventoryTypes IS NULL");
        }

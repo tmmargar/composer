@@ -1,99 +1,89 @@
 <?php
 namespace Poker\Ccp\Entity;
-use DateInterval;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Parameter;
-use PDO;
 use Poker\Ccp\Model\Constant;
 use Poker\Ccp\Utility\DateTimeUtility;
+use DateInterval;
+use DateTime;
+use PDO;
 class PlayersRepository extends BaseRepository {
     public function getActives() {
-        return $this->createQueryBuilder("p")->where("p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)->getQuery()->getResult();
+        return $this->createQueryBuilder(alias: "p")
+                    ->where(predicates: "p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
+                    ->getQuery()->getResult();
     }
 
     public function getByName(string $name) {
-        $names = explode(" ", $name);
-        return $this->createQueryBuilder("p")
-                    ->addSelect("pa, pr")
-                    ->leftJoin("p.playerApproval", "pa")
-                    ->leftJoin("p.playerRejection", "pr")
-                    ->where("p.playerFirstName = :firstName")
+        $names = explode(separator: " ", string: $name);
+        return $this->createQueryBuilder(alias: "p")
+                    ->addSelect(select: "pa, pr")
+                    ->leftJoin(join: "p.playerApproval", alias: "pa")
+                    ->leftJoin(join: "p.playerRejection", alias: "pr")
+                    ->where(predicates: "p.playerFirstName = :firstName")
                     ->andWhere("p.playerLastName = :lastName")
-                    ->setParameters(new ArrayCollection(array(new Parameter("firstName", $names[0]), new Parameter("lastName", $names[1]))))
+                    ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "firstName", value: $names[0]), new Parameter(name: "lastName", value: $names[1]))))
                     ->getQuery()->getResult();
     }
 
     public function getByUsername(string $username) {
-        return $this->createQueryBuilder("p")
-                    ->addSelect("pa, pr")
-                    ->leftJoin("p.playerApproval", "pa")
-                    ->leftJoin("p.playerRejection", "pr")
-                    ->where("p.playerUsername = :username")
-                    ->setParameters(new ArrayCollection(array(new Parameter("username", $username))))
+        return $this->createQueryBuilder(alias: "p")
+                    ->addSelect(select: "pa, pr")
+                    ->leftJoin(join: "p.playerApproval", alias: "pa")
+                    ->leftJoin(join: "p.playerRejection", alias: "pr")
+                    ->where(predicates: "p.playerUsername = :username")
+                    ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "username", value: $username))))
                     ->getQuery()->getResult();
     }
 
     public function getByEmail(string $email) {
-        return $this->createQueryBuilder("p")
-                    ->addSelect("pa, pr")
-                    ->leftJoin("p.playerApproval", "pa")
-                    ->leftJoin("p.playerRejection", "pr")
-                    ->where("p.playerEmail = :email")
-                    ->setParameters(new ArrayCollection(array(new Parameter("email", $email))))
+        return $this->createQueryBuilder(alias: "p")
+                    ->addSelect(select: "pa, pr")
+                    ->leftJoin(join: "p.playerApproval", alias: "pa")
+                    ->leftJoin(join: "p.playerRejection", alias: "pr")
+                    ->where(predicates: "p.playerEmail = :email")
+                    ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "email", value: $email))))
                     ->getQuery()->getResult();
     }
 
     public function getByUsernameAndEmail(string $username, string $email) {
-        return $this->createQueryBuilder("p")
-                    ->addSelect("pa, pr")
-                    ->leftJoin("p.playerApproval", "pa")
-                    ->leftJoin("p.playerRejection", "pr")
-                    ->where("p.playerUsername = :username")
+        return $this->createQueryBuilder(alias: "p")
+                    ->addSelect(select: "pa, pr")
+                    ->leftJoin(join: "p.playerApproval", alias: "pa")
+                    ->leftJoin(join: "p.playerRejection", alias: "pr")
+                    ->where(predicates: "p.playerUsername = :username")
                     ->andWhere("p.playerEmail = :email")
-                    ->setParameters(new ArrayCollection(array(new Parameter("username", $username), new Parameter("email", $email))))
+                    ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "username", value: $username), new Parameter(name: "email", value: $email))))
                     ->getQuery()->getResult();
     }
     public function getActivesForNotification() {
-        //         case "playersSelectForEmailNotifications":
-        //             $query =
-        //             "SELECT player_id, CONCAT(player_first_name, ' ', player_last_name) AS name, player_email " .
-        //             "FROM poker_players p " .
-        //             "WHERE " . $this->buildPlayerActive(alias: "p") .
-        //             " AND player_approval_date IS NOT NULL " .
-        //             "AND player_rejection_date IS NULL " .
-        //             "AND player_email <>  '' " .
-        //             "ORDER BY player_id";
-        return $this->createQueryBuilder("p")
-                    ->addSelect("pa, pr")
-                    ->leftJoin("p.playerApproval", "pa")
-                    ->leftJoin("p.playerRejection", "pr")
-                    ->where("p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
+        return $this->createQueryBuilder(alias: "p")
+                    ->addSelect(select: "pa, pr")
+                    ->leftJoin(join: "p.playerApproval", alias: "pa")
+                    ->leftJoin(join: "p.playerRejection", alias: "pr")
+                    ->where(predicates: "p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
                     ->andWhere("p.playerApprovalDate IS NOT NULL")
                     ->andWhere("p.playerRejectionDate IS NULL")
-                    ->addOrderBy("p.playerId")
+                    ->addOrderBy(sort: "p.playerId")
                     ->getQuery()->getResult();
     }
 
     public function getById(?int $playerId) {
-        //      case "playersSelectAll":
-        //      case "playersSelectById":
-        $qb = $this->createQueryBuilder("p")
-                    ->addSelect("pa, pr")
-                    ->leftJoin("p.playerApproval", "pa")
-                    ->leftJoin("p.playerRejection", "pr");
+        $qb = $this->createQueryBuilder(alias: "p")
+                   ->addSelect(select: "pa, pr")
+                   ->leftJoin(join: "p.playerApproval", alias: "pa")
+                   ->leftJoin(join: "p.playerRejection", alias: "pr");
         if (isset($playerId)) {
-            $qb = $qb->where("p.playerId = :playerId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("playerId", $playerId))));
+            $qb = $qb->where("p.playerId = :playerId")
+                     ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "playerId", value: $playerId))));
         } else {
-            $qb->addOrderBy("p.playerLastName, p.playerFirstName", "ASC");
+            $qb->addOrderBy(sort: "p.playerLastName, p.playerFirstName", order: "ASC");
         }
         return $qb->getQuery()->getResult();
     }
 
     public function getChampionshipEarnings(string $groupBy, bool $group, bool $indexed) {
-        //         case "championship":
         $sql = "SELECT ";
         if (!isset($group) || !$group) {
             $sql .= " yr, player_id, ";
@@ -102,16 +92,16 @@ class PlayersRepository extends BaseRepository {
         if (isset($group) && $group) {
             $sql .= "SUM(earnings) AS ";
         }
-        $queryAndBindParams = $this->buildChampionship(array(NULL, NULL));
+        $queryAndBindParams = $this->buildChampionship(params: array(NULL, NULL));
         $sql .=
             "earnings, SUM(earnings) / trnys AS avg, trnys " .
             "FROM (" . $queryAndBindParams[0] . ") a " .
             "WHERE earnings > 0 " .
             "GROUP BY " . $groupBy;
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($queryAndBindParams[1])) {
             foreach ($queryAndBindParams[1] as $key => $value) {
-                $statement->bindValue($key, $value, PDO::PARAM_STR);
+                $statement->bindValue(param: $key, value: $value, type: PDO::PARAM_STR);
             }
         }
         if ($indexed) {
@@ -121,7 +111,6 @@ class PlayersRepository extends BaseRepository {
         }
     }
     public function getChampionshipQualified(DateTime $startDate, DateTime $endDate, int $numTourneys, bool $indexed) {
-        //         case "championshipQualifiedPlayers":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, " .
             "       SUM((np.numPlayers - r.result_place_finished + 1) * IFNULL(st.special_type_multiplier, 1) + IF(r.result_place_finished BETWEEN 1 AND se.season_final_table_players, se.season_final_table_bonus_points, 0)) AS points, " .
@@ -149,15 +138,15 @@ class PlayersRepository extends BaseRepository {
             "WHERE nt.numTourneys >= :numTourneys " .
             "GROUP BY r.player_id " .
             "ORDER BY points DESC";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("numTourneys", $numTourneys, PDO::PARAM_INT);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "numTourneys", value: $numTourneys, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -167,7 +156,6 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getFeeDetail(bool $indexed) {
-        //         case "feeDetail":
         $sql =
             "SELECT s.season_id, s.season_description AS description, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, f.tournament_id, s.season_fee AS fee, IFNULL(f.fee_amount, 0) AS paid, IF(f.fee_amount IS NULL, s.season_fee, s.season_fee - f.fee_amount) - IF(fh.player_id IS NULL, 0, s.season_fee) AS balance " .
             "FROM poker_players p CROSS JOIN poker_seasons s ON p.player_active_flag = " . Constant::FLAG_YES_DATABASE .
@@ -178,35 +166,28 @@ class PlayersRepository extends BaseRepository {
             "           INNER JOIN poker_players p ON l.player_id = p.player_id " .
             "           GROUP BY se.season_id, l.location_id) fh ON s.season_id = fh.season_id AND p.player_id = fh.player_id " .
             "ORDER BY s.season_description, f.player_id";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
         } else {
             return $statement->executeQuery()->fetchAllAssociative();
         }
-        //         $qb = $this->createQueryBuilder("p");
-        //         return $qb->select("p, s, f")
-        //                   ->innerJoin(Seasons::class, "s", Expr\Join::WITH, "p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
-        //                   ->leftJoin("s.fees", "f", Expr\Join::WITH, "p.playerId = f.players AND f.feeAmount > 0")
-        //                   ->getQuery()->getResult();
     }
 
     public function getFeeForPlayerAndTournament(int $playerId, int $tournamentId) {
-        //         case "feeSelectByTournamentIdAndPlayerId":
         $sql =
             "SELECT se.season_id, p.player_id, " .
             "IFNULL(f.fee_amount, 0) AS fee_amount, IF(se.season_fee IS NULL, '', IF(se.season_fee - IFNULL(f.fee_amount, 0) = 0, 'Paid', CONCAT('Owes $', (se.season_fee - IFNULL(f.fee_amount, 0))))) AS status " .
             "FROM poker_players p INNER JOIN poker_tournaments t ON p.player_id = :playerId AND t.tournament_id = :tournamentId " .
             "INNER JOIN poker_seasons se ON t.tournament_date BETWEEN se.season_start_date AND se.season_end_date " .
             "LEFT JOIN (SELECT season_id, player_id, SUM(fee_amount) AS fee_amount FROM poker_fees GROUP BY season_id, player_id) f ON se.season_id = f.season_id AND p.player_id = f.player_id";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
-        $statement->bindValue("tournamentId", $tournamentId, PDO::PARAM_INT);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
+        $statement->bindValue(param: "playerId", value: $playerId, type: PDO::PARAM_INT);
+        $statement->bindValue(param: "tournamentId", value: $tournamentId, type: PDO::PARAM_INT);
         return $statement->executeQuery()->fetchAllAssociative();
     }
 
     public function getFinishesForDates(int $playerId, ?DateTime $startDate, ?DateTime $endDate, bool $indexed) {
-        //         case "finishesSelectAllByPlayerId":
         $sql =
             "SELECT a.result_place_finished AS place, IFNULL(b.finishes, 0) AS finishes, IFNULL(b.pct, 0) AS pct " .
             "FROM (SELECT DISTINCT result_place_finished " .
@@ -229,15 +210,15 @@ class PlayersRepository extends BaseRepository {
         $sql .=
             "           AND r1.player_id = :playerId" .
             "           GROUP BY r1.result_place_finished) b ON a.result_place_finished = b.result_place_finished";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
+        $statement->bindValue(param: "playerId", value: $playerId, type: PDO::PARAM_INT);
         if (isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -247,24 +228,15 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getResults(int $tournamentId, int $playerId) {
-        //         case "foodByTournamentIdAndPlayerId":
-        //             $query =
-        //             "SELECT CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, r.result_registration_food, p.player_active_flag " .
-        //             "FROM poker_players p LEFT JOIN poker_results r ON p.player_id = r.player_id AND r.tournament_id = :tournamentId " .
-        //             "WHERE p.player_id = :playerId";
-        $qb = $this->createQueryBuilder("p");
-        return $qb->select("p, r")
-                  ->leftJoin("p.results", "r", Expr\Join::WITH, "r.tournaments = :tournamentId")
-                  ->where("p.playerId = :playerId")
-                  ->setParameters(new ArrayCollection(array(new Parameter("tournamentId", $tournamentId), new Parameter("playerId", $playerId))))
-                  ->getQuery()->getResult();
+        return $this->createQueryBuilder(alias: "p")
+                    ->select(select: "p, r")
+                    ->leftJoin(join: "p.results", alias: "r", conditionType:  Expr\Join::WITH, condition: "r.tournaments = :tournamentId")
+                    ->where(predicates: "p.playerId = :playerId")
+                    ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "tournamentId", value: $tournamentId), new Parameter(name: "playerId", value: $playerId))))
+                    ->getQuery()->getResult();
     }
 
     public function getKo(?int $playerId, ?DateTime $startDate, ?DateTime $endDate, ?array $orderBy, bool $rank, ?int $limitCount, bool $indexed) {
-        //         case "knockoutsAverageForSeason":
-        //         case "knockoutsTotalForSeason":
-        //         case "knockoutsTotalAndAverageForSeasonForPlayer":
-        //         case "knockoutsTotalAndAverageForPlayer":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(kO, 0) AS ko, IFNULL(avg, 0) AS avg, IFNULL(trnys, 0) AS trnys, p.player_active_flag " .
             "FROM poker_players p LEFT JOIN (SELECT k.player_id, k.knockouts AS kO, ROUND(k.knockouts / nt.numTourneys, 2) AS avg, nt.numTourneys AS trnys " .
@@ -314,20 +286,17 @@ class PlayersRepository extends BaseRepository {
         if (isset($limitCount)) {
             $sql .= " LIMIT :limitCount";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
-        //         if (isset($playerId)) {
-        //             $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
-        //         }
         if (isset($limitCount)) {
-            $statement->bindValue(':limitCount', $limitCount, PDO::PARAM_INT);
+            $statement->bindValue(param: "limitCount", value: $limitCount, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -337,10 +306,6 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getPoints(?int $playerId, ?DateTime $startDate, ?DateTime $endDate, ?array $orderBy, bool $rank, ?int $limitCount, bool $indexed) {
-        //         case "pointsAverageForSeason":
-        //         case "pointsTotalForSeason":
-        //         case "pointsTotalAndAverageForSeasonForPlayer":
-        //         case "pointsTotalAndAverageForPlayer":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(a.points, 0) AS pts, IFNULL(ROUND(a.points / a.trnys, 2), 0) AS avg, IFNULL(a.trnys, 0) AS trnys, p.player_active_flag " .
             "FROM poker_players p LEFT JOIN (SELECT p.player_id, SUM((np.numPlayers - r.result_place_finished + 1) * IFNULL(st.special_type_multiplier, 1) + IF(r.result_place_finished BETWEEN 1 AND se.season_final_table_players, se.season_final_table_bonus_points, 0)) AS points, nt.trnys " .
@@ -394,17 +359,17 @@ class PlayersRepository extends BaseRepository {
         if (isset($limitCount)) {
             $sql .= " LIMIT :limitCount";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
         if (isset($limitCount)) {
-            $statement->bindValue(':limitCount', $limitCount, PDO::PARAM_INT);
+            $statement->bindValue(param: ":limitCount", value: $limitCount, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -414,7 +379,6 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getStatuses(int $tournamentId, bool $indexed) {
-        //         case "statusSelectPaid":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, " .
             "       IF(s.season_fee - IFNULL(f.fee_amount, 0) - IF(fh.player_id IS NULL, 0, s.season_fee) = 0, 'Paid', 'Not paid') AS fee_status_logic, " .
@@ -434,8 +398,8 @@ class PlayersRepository extends BaseRepository {
             "            INNER JOIN poker_locations l ON t.location_id = l.location_id " .
             "            INNER JOIN poker_players p ON l.player_id = p.player_id " .
             "            GROUP BY se.season_id, l.location_id) fh ON s.season_id = fh.season_id AND p.player_id = fh.player_id";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        $statement->bindValue("tournamentId", $tournamentId, PDO::PARAM_INT);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
+        $statement->bindValue(param: "tournamentId", value: $tournamentId, type: PDO::PARAM_INT);
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
         } else {
@@ -444,37 +408,26 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getTournamentAbsences(DateTime $tournamentDate) {
-        //         case "playerAbsencesByTournamentId":
-        //         SELECT ta.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS NAME
-        //         FROM poker_players p INNER JOIN poker_tournament_absences ta ON p.player_id = ta.player_id
-        //         INNER JOIN poker_tournaments t ON ta.tournament_id = t.tournament_id
-        //         INNER JOIN poker_seasons s ON t.tournament_date BETWEEN s.season_start_date AND s.season_end_date AND '2020-01-01' BETWEEN s.season_start_date AND s.season_end_date
-        //         INNER JOIN poker_special_types st ON t.special_type_id = st.special_type_id AND st.special_type_description = 'Championship';
-        $qb = $this->createQueryBuilder("p");
         $tournamentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $tournamentDate);
-        return $qb->select("p")
-                  ->innerJoin("p.tournamentAbsences", "ta")
-                  ->innerJoin("ta.tournaments", "t")
-                  ->innerJoin("t.specialTypes", "st")
-                  ->innerJoin(Seasons::class, "s", Expr\Join::WITH, "t.tournamentDate BETWEEN s.seasonStartDate AND s.seasonEndDate")
-                  ->where(":tournamentDate BETWEEN s.seasonStartDate AND s.seasonEndDate")
-                  ->andWhere("st.specialTypeDescription = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "'")
-                  ->setParameters(new ArrayCollection(array(new Parameter("tournamentDate", $tournamentDateFormatted))))
-                  ->getQuery()->getResult();
+        return $this->createQueryBuilder(alias: "p")
+                    ->select(select: "p")
+                    ->innerJoin(join: "p.tournamentAbsences", alias: "ta")
+                    ->innerJoin(join: "ta.tournaments", alias: "t")
+                    ->innerJoin(join: "t.specialTypes", alias: "st")
+                    ->innerJoin(join: Seasons::class, alias: "s", conditionType: Expr\Join::WITH, condition: "t.tournamentDate BETWEEN s.seasonStartDate AND s.seasonEndDate")
+                    ->where(predicates: ":tournamentDate BETWEEN s.seasonStartDate AND s.seasonEndDate")
+                    ->andWhere("st.specialTypeDescription = '" . Constant::DESCRIPTION_CHAMPIONSHIP . "'")
+                    ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "tournamentDate", value: $tournamentDateFormatted))))
+                    ->getQuery()->getResult();
     }
 
     public function getForApproval(bool $indexed) {
-        //         case "playersSelectForApproval":
         $sql =
-            "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, p.player_username, p.player_rejection_date AS 'Rejection Date', CONCAT(p2.player_first_name, ' ', p2.player_last_name) AS 'Rejection Name' " .
+            "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email AS email, p.player_username AS username, p.player_rejection_date AS 'Rejection Date', CONCAT(p2.player_first_name, ' ', p2.player_last_name) AS 'Rejection Name' " .
             "FROM poker_players p " .
             "LEFT JOIN poker_players p2 ON p.player_rejection_player_id = p2.player_id " .
             "WHERE p.player_approval_date IS NULL AND p.player_rejection_date IS NULL";
-        //         return $this->createQueryBuilder("p")
-        //                     ->where("p.playerApprovalDate IS NULL")
-        //                     ->andWhere("p.playerRejectionDate IS NULL")
-        //                     ->getQuery()->getResult();
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
         } else {
@@ -483,24 +436,15 @@ class PlayersRepository extends BaseRepository {
     }
 
     public function getWaitListed(int $tournamentId) {
-        //         case "waitListedPlayerByTournamentId":
-        //             $query =
-        //             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_email, t.tournament_max_players " .
-        //             "FROM poker_players p " .
-        //             "INNER JOIN poker_results r ON p.player_id = r.player_id AND r.tournament_id = :tournamentId AND " . $this->buildPlayerActive(alias: "p") .
-        //             " INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id AND r.result_registration_order = t.tournament_max_players";
-        $qb = $this->createQueryBuilder("p");
-        return $qb->select("p")
-                  ->innerJoin("p.results", "r", Expr\Join::WITH, "r.tournaments = :tournamentId AND p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
-                  ->innerJoin("r.tournaments", "t", Expr\Join::WITH, "r.resultRegistrationOrder = t.tournamentMaxPlayers")
-                  ->setParameters(new ArrayCollection(array(new Parameter("tournamentId", $tournamentId))))
-                  ->getQuery()->getResult();
+        return $this->createQueryBuilder(alias: "p")
+                    ->select(select: "p")
+                    ->innerJoin(join: "p.results", alias: "r", conditionType: Expr\Join::WITH, condition: "r.tournaments = :tournamentId AND p.playerActiveFlag = " . Constant::FLAG_YES_DATABASE)
+                    ->innerJoin(join: "r.tournaments", alias: "t", conditionType: Expr\Join::WITH, condition: "r.resultRegistrationOrder = t.tournamentMaxPlayers")
+                    ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "tournamentId", value: $tournamentId))))
+                    ->getQuery()->getResult();
     }
 
     public function getWins(?DateTime $startDate, ?DateTime $endDate, ?int $playerId, bool $winsForPlayer, bool $winsForSeason, bool $rank, array $orderBy, bool $indexed) {
-        //         case "winnersForSeason":
-        //         case "winsForPlayer":
-        //         case "winsTotalAndAverageForSeasonForPlayer":
         $sql =
             "SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(wins, 0) AS wins, IFNULL(wins / trnys, 0) AS avg, IFNULL(trnys, 0) AS trnys, p.player_active_flag " .
             "FROM poker_players p " .
@@ -541,19 +485,15 @@ class PlayersRepository extends BaseRepository {
             $selectFieldNames = "player_id, name, wins, avg, trnys";
             $sql = $this->modifyQueryAddRank(query: $sql, whereClause: $whereClause, selectFieldName: $selectFieldName, selectFieldNames: $selectFieldNames, orderByFieldName: $orderByFieldName);
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (!$winsForPlayer && isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
-        //         if (isset($playerId)) {
-        //             $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
-        //         }
-        //         echo "<br>aft->".$sql;
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
         } else {
@@ -570,9 +510,9 @@ class PlayersRepository extends BaseRepository {
         if (isset($playerId)) {
             $sql .= "WHERE p.player_id = :playerId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($playerId)) {
-            $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
+            $statement->bindValue(param: "playerId", value: $playerId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -590,9 +530,9 @@ class PlayersRepository extends BaseRepository {
         } else {
             $selector = bin2hex(random_bytes(length: 8));
             $token = random_bytes(length: 32);
-            $hash = hash(algo: 'sha256', data: $token);
+            $hash = hash(algo: "sha256", data: $token);
             $expires = new DateTime();
-            $expires->add(new DateInterval("P1D")); // 1 day
+            $expires->add(new DateInterval(duration: "P1D")); // 1 day
             $expiresFormatted = DateTimeUtility::formatSecondsSinceEpoch(value: $expires);
         }
         $sql =
@@ -604,18 +544,18 @@ class PlayersRepository extends BaseRepository {
         $params = array();
         $paramTypes = array();
         if (isset($password)) {
-            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $hash = password_hash(password: $password, algo: PASSWORD_DEFAULT);
             array_push($params, $hash);
             array_push($paramTypes, PDO::PARAM_STR);
         }
         array_push($params, $selector, $hash, $expiresFormatted, $username, $email);
         array_push($paramTypes, PDO::PARAM_STR, PDO::PARAM_STR, PDO::PARAM_STR, PDO::PARAM_STR, PDO::PARAM_STR);
-        $recordCount = $this->getEntityManager()->getConnection()->executeStatement($sql, $params, $paramTypes);
+        $recordCount = $this->getEntityManager()->getConnection()->executeStatement(sql: $sql, params: $params, types: $paramTypes);
         if (isset($password)) {
             $returnValue = $recordCount;
         } else {
             if (1 == $recordCount) {
-                $returnValue = array($selector, bin2hex($token), DateTimeUtility::formatSecondsSinceEpoch(value: $expires));
+                $returnValue = array($selector, bin2hex(string: $token), DateTimeUtility::formatSecondsSinceEpoch(value: $expires));
             } else {
                 $returnValue = "More than 1 record found!";
             }

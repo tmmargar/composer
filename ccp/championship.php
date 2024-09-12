@@ -12,14 +12,14 @@ $smarty->assign("style", "");
 $output = "";
 $startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE);
 $endDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE);
-$resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getPrizePool(startDate: $startDate, endDate: $endDate);
-if (0 < count($resultList)) {
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_TOURNAMENTS)->getPrizePool(startDate: $startDate, endDate: $endDate);
+if (0 < count(value: $resultList)) {
     $prizePool = $resultList[0]["total"];
 }
-$resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: NULL, winsForPlayer: false, winsForSeason: true, rank: false, orderBy: array(), indexed: false);
-if (0 < count($resultList)) {
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_PLAYERS)->getWins(startDate: $startDate, endDate: $endDate, playerId: NULL, winsForPlayer: false, winsForSeason: true, rank: false, orderBy: array(), indexed: false);
+if (0 < count(value: $resultList)) {
     $ctr = 0;
-    while ($ctr < count($resultList)) {
+    while ($ctr < count(value: $resultList)) {
         $aryWinners[$ctr] = $resultList[$ctr]["name"];
         $ctr++;
     }
@@ -27,10 +27,10 @@ if (0 < count($resultList)) {
   // $hideColIndexes = array(0,2);
 }
 // echo "<BR>winners -> " . print_r($aryWinners);
-$countWinners = isset($aryWinners) ? count($aryWinners) : 0;
+$countWinners = isset($aryWinners) ? count(value: $aryWinners) : 0;
 $aryAbsentIds = array();
 $aryAbsentNames = array();
-$resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getTournamentAbsences($startDate);
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_PLAYERS)->getTournamentAbsences(tournamentDate: $startDate);
 $ctr = - 1;
 foreach ($resultList as $players) {
     $ctr++;
@@ -47,7 +47,7 @@ $aryPosition[5] = 5;
 $aryPosition[6] = 4;
 $aryPosition[7] = 3;
 $aryPosition[8] = 2;
-$resultList = $entityManager->getRepository(Constant::ENTITY_PLAYERS)->getChampionshipQualified(startDate: $startDate, endDate: $endDate, numTourneys: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY), indexed: false);
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_PLAYERS)->getChampionshipQualified(startDate: $startDate, endDate: $endDate, numTourneys: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY), indexed: false);
 $count = count(value: $resultList) - count(value: $aryAbsentIds);
 if (0 < $count) {
   // $numPlayers = $count;
@@ -59,7 +59,7 @@ if (0 < $count) {
     while ($ctr < count(value: $resultList)) {
         $aryResult = $resultList[$ctr];
         // echo "<br>".$ctr."-->".$index."->".$aryResult[1];
-        if (in_array($aryResult["name"], $aryAbsentNames)) {
+        if (in_array(needle: $aryResult["name"], haystack: $aryAbsentNames)) {
             foreach ($aryAbsentNames as $aryAbsentName) {
             // echo "<Br>" . $aryResult[1] . " == " . $aryAbsentName;
                 if ($aryResult["name"] == $aryAbsentName) {
@@ -73,7 +73,7 @@ if (0 < $count) {
           // echo "<br>".$allowCtr . " <= " . $additionalPlayers;
             if ($allowCtr <= $additionalPlayers) {
             // if winner add * else increment additional players
-                if (in_array($aryResult["name"], $aryWinners)) {
+                if (in_array(needle: $aryResult["name"], haystack: $aryWinners)) {
                     $aryResult["name"] = "*" . $aryResult["name"];
                 } else {
                     $allowCtr++;
@@ -117,7 +117,7 @@ if (0 < $count) {
     }
       $topThird = ceil(num: $playerCount / 3);
       $topThirdChipCount = 11000;
-      $middleThird = floor(num: $playerCount / 3);
+      $middleThird = ceil(num: $playerCount / 3);
       $middleThirdChipCount = 10000;
       $bottomThird = floor(num: $playerCount / 3);
       $bottomThirdChipCount = 9000;
@@ -199,9 +199,9 @@ if (0 < $count) {
     $output .= "    <div class=\"column\"><strong><i>Position<br />(% of total)</i></strong></div>\n";
     $output .= "    <div class=\"column\"><strong><i>Payout</i></strong></div>\n";
     $output .= "    <div class=\"clear\"></div>\n";
-    $resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getChampionshipPayout();
-//     $resultList = $entityManager->getRepository(Constant::ENTITY_GROUP_PAYOUTS)->getById(groupId: 9, payoutId: 11);
-    $resultList = $entityManager->getRepository(Constant::ENTITY_GROUP_PAYOUTS)->getById(groupId: $resultList[0]["group_id"], payoutId: $resultList[0]["payout_id"]);
+    $resultList = $entityManager->getRepository(entityName: Constant::ENTITY_TOURNAMENTS)->getChampionshipPayout();
+    //     $resultList = $entityManager->getRepository(entityName: Constant::ENTITY_GROUP_PAYOUTS)->getById(groupId: 9, payoutId: 11);
+    $resultList = $entityManager->getRepository(entityName: Constant::ENTITY_GROUP_PAYOUTS)->getById(groupId: $resultList[0]["group_id"], payoutId: $resultList[0]["payout_id"]);
     if (0 < count(value: $resultList)) {
         $ctr = 0;
         while ($ctr < count(value: $resultList)) {
@@ -228,7 +228,7 @@ if (0 < $count) {
     foreach ($aryAbsentNames as $absentName) {
         $output .= "    <div class=\"column\">" . $absentName . "</div>\n";
         $tableNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? 4 : ($aryAbsentSeeds[$absentName] % $numTables);
-        $positionNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? $aryPosition[floor($aryAbsentSeeds[$absentName] / $numTables) - 1] : $aryPosition[floor($aryAbsentSeeds[$absentName] / $numTables)];
+        $positionNum = ($aryAbsentSeeds[$absentName] % $numTables) == 0 ? $aryPosition[floor(num: $aryAbsentSeeds[$absentName] / $numTables) - 1] : $aryPosition[floor(num: $aryAbsentSeeds[$absentName] / $numTables)];
         // echo "<br>".$absentName ." -> " .$aryAbsentSeeds[$absentName]." --> " . ($aryAbsentSeeds[$absentName] / $numTables);
         $output .= "    <div class=\"column2\">Table " . $tableNum . " Position " . $positionNum . "</div>\n";
         $output .= "    <div class=\"clear\"></div>\n";

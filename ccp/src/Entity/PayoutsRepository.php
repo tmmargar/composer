@@ -5,23 +5,20 @@ use Doctrine\ORM\Query\Parameter;
 use PDO;
 class PayoutsRepository extends BaseRepository {
     public function getById(?int $payoutId) {
-//         case "payoutSelectAll":
-//         case "payoutSelectOneById":
-//         case "payoutSelectNameList":
-        $qb = $this->createQueryBuilder("p")
-                   ->addSelect("s")
-                   ->innerJoin("p.structures", "s");
+        $qb = $this->createQueryBuilder(alias: "p")
+                   ->addSelect(select: "s")
+                   ->innerJoin(join: "p.structures", alias: "s");
         if (isset($payoutId)) {
             $qb = $qb->where("p.payoutId = :payout");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("payout", $payoutId))));
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "payout", value: $payoutId))));
         }
         return $qb->getQuery()->getResult();
     }
 
     public function getMaxId() {
-//      case "payoutSelectMaxId":
-        $qb = $this->createQueryBuilder("p");
-        return $qb->select("MAX(p.payoutId)")->getQuery()->getSingleResult();
+        return $this->createQueryBuilder(alias: "p")
+                    ->select(select: "MAX(p.payoutId)")
+                    ->getQuery()->getSingleResult();
     }
 
     public function getTableOutput(?int $payoutId, bool $indexed) {
@@ -31,9 +28,9 @@ class PayoutsRepository extends BaseRepository {
         if (isset($payoutId)) {
             $sql .= "WHERE p.payout_id = :payoutId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($payoutId)) {
-            $statement->bindValue("payoutId", $payoutId, PDO::PARAM_INT);
+            $statement->bindValue(param: "payoutId", value: $payoutId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();

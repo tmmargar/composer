@@ -9,10 +9,9 @@ class PayoutsIdGenerator extends AbstractIdGenerator
 {
   public function generateId(EntityManagerInterface $em, $entity)
   {
-    $queryBuilder = $em->createQueryBuilder();
-    $queryBuilder->select("MAX(pa.payoutId) + 1")->from(Constant::ENTITY_PAYOUTS, "pa");
-    $query = $queryBuilder->getQuery();
-    $result = $query->getSingleScalarResult();
-    return $result;
+    return $em->createQueryBuilder()
+              ->select(select: "MAX(pa.payoutId) + 1")
+              ->from(from: Constant::ENTITY_PAYOUTS, alias: "pa")
+              ->getQuery()->getSingleScalarResult();
   }
 }

@@ -19,10 +19,12 @@ export const inputLocal = {
   setMinMax : function() {
     if (document.querySelector("[id^='minAmount_']")) {
       document.querySelector("[id^='minAmount_']").min = 1;
+      document.querySelector("[id^='maxAmount_']").max = document.querySelector("[id^='maxAmount_']").value;
       document.querySelector("[id^='minAmount_']").style.width = "50px";
     }
     if (document.querySelector("[id^='maxAmount_']")) {
-      document.querySelector("[id^='maxAmount_']").min = 1;
+      document.querySelector("[id^='maxAmount_']").min = parseInt(document.querySelector("[id^='minAmount_']").value) + 1;
+      document.querySelector("[id^='maxAmount_']").max = "";
       document.querySelector("[id^='maxAmount_']").style.width = "50px";
     }
   },

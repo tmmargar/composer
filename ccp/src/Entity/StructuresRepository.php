@@ -6,15 +6,15 @@ use PDO;
 class StructuresRepository extends BaseRepository {
 
     public function getById(?int $payoutId) {
-        $qb = $this->createQueryBuilder("s");
+        $qb = $this->createQueryBuilder(alias: "s");
         if (isset($payoutId)) {
-            $qb = $qb->where("s.payouts = :payoutId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("payoutId", $payoutId))));
+            $qb = $qb->where(predicates: "s.payouts = :payoutId")
+                     ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "payoutId", value: $payoutId))));
         }
         return $qb->getQuery()->getResult();
     }
 
     public function deleteForPayout(int $payoutId) {
-        return $this->getEntityManager()->getConnection()->executeStatement("DELETE FROM poker_structures WHERE payout_id = ?", [$payoutId], [PDO::PARAM_INT]);
+        return $this->getEntityManager()->getConnection()->executeStatement(sql: "DELETE FROM poker_structures WHERE payout_id = ?", params: [$payoutId], types: [PDO::PARAM_INT]);
     }
 }

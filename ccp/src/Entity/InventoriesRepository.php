@@ -5,19 +5,19 @@ use Doctrine\ORM\Query\Parameter;
 use PDO;
 class InventoriesRepository extends BaseRepository {
     public function getById(?int $inventoryId) {
-        $qb = $this->createQueryBuilder("i")
-                    ->addSelect("it")
-                    ->innerJoin("i.inventoryTypes", "it");
+        $qb = $this->createQueryBuilder(alias: "i")
+                    ->addSelect(select: "it")
+                    ->innerJoin(join: "i.inventoryTypes", alias: "it");
         if (isset($inventoryId)) {
-            $qb = $qb->where("i.inventoryId = :inventoryId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("inventoryId", $inventoryId))));
+            $qb = $qb->where(predicates: "i.inventoryId = :inventoryId");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "inventoryId", value: $inventoryId))));
         }
         return $qb->getQuery()->getResult();
     }
 
     public function getMaxId() {
-        $qb = $this->createQueryBuilder("i");
-        return $qb->select("MAX(i.inventoryId)")->getQuery()->getSingleResult();
+        $qb = $this->createQueryBuilder(alias: "i");
+        return $qb->select(select: "MAX(i.inventoryId)")->getQuery()->getSingleResult();
     }
 
     public function getTableOutput(?int $inventoryId, bool $indexed) {
@@ -27,9 +27,9 @@ class InventoriesRepository extends BaseRepository {
         if (isset($inventoryId)) {
             $sql .= "WHERE i.inventory_id = :inventoryId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($inventoryId)) {
-            $statement->bindValue("inventoryId", $inventoryId, PDO::PARAM_INT);
+            $statement->bindValue(param: "inventoryId", value: $inventoryId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();

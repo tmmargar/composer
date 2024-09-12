@@ -8,7 +8,6 @@ use Poker\Ccp\Model\Constant;
 use Poker\Ccp\Utility\DateTimeUtility;
 class ResultsRepository extends BaseRepository {
     public function getBullies(int $knockedOutBy, ?int $limitCount, bool $indexed) {
-        //       case "bullyForPlayer":
         $sql =
             "SELECT CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_active_flag, COUNT(r.player_id) AS kos " .
             "FROM poker_results r " .
@@ -20,29 +19,19 @@ class ResultsRepository extends BaseRepository {
         if (isset($limitCount)) {
             $sql .= " LIMIT :limitCount";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        $statement->bindValue("knockedOutBy", $knockedOutBy, PDO::PARAM_INT);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
+        $statement->bindValue(param: "knockedOutBy", value: $knockedOutBy, type: PDO::PARAM_INT);
         if (isset($limitCount)) {
-            $statement->bindValue("limitCount", $limitCount, PDO::PARAM_INT);
+            $statement->bindValue(param: "limitCount", value: $limitCount, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
         } else {
             return $statement->executeQuery()->fetchAllAssociative();
         }
-//         $qb = $this->createQueryBuilder("r");
-//         return $qb->select("r, COUNT(r.players) AS kos")
-//                   ->innerJoin("r.players", "p")
-//                   ->where("r.playerKos = :knockedOutBy")
-//                   ->groupBy("r.players")
-//                   ->addOrderBy("kos", "DESC")->addOrderBy("p.playerLastName", "ASC")->addOrderBy("p.playerFirstName", "ASC")
-//                   ->setParameters(new ArrayCollection(array(new Parameter("knockedOutBy", $knockedOutBy))))
-//                   ->setMaxResults($limitCount)
-//                   ->getQuery()->getResult();
     }
 
     public function getNemesises(int $playerId, ?int $limitCount, bool $indexed) {
-        //      case "nemesisForPlayer":
         $sql =
              "SELECT CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, p.player_active_flag, COUNT(r.player_id_ko) AS kos " .
              "FROM poker_results r INNER JOIN poker_players p ON r.player_id_ko = p.player_id " .
@@ -53,33 +42,19 @@ class ResultsRepository extends BaseRepository {
         if (isset($limitCount)) {
             $sql .= " LIMIT :limitCount";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
-        $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
+        $statement->bindValue(param: "playerId", value: $playerId, type: PDO::PARAM_INT);
         if (isset($limitCount)) {
-            $statement->bindValue("limitCount", $limitCount, PDO::PARAM_INT);
+            $statement->bindValue(param: "limitCount", value: $limitCount, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
         } else {
             return $statement->executeQuery()->fetchAllAssociative();
         }
-//         $qb = $this->createQueryBuilder("r");
-//         return $qb->select("r, COUNT(r.playerKos) AS kos")
-//                   ->innerJoin("r.players", "p")
-//                   ->where("r.players = :playerId")
-//                   ->groupBy("r.playerKos")
-//                   ->addOrderBy("kos", "DESC")->addOrderBy("p.playerLastName", "ASC")->addOrderBy("p.playerFirstName", "ASC")
-//                   ->setParameters(new ArrayCollection(array(new Parameter("playerId", $playerId))))
-//                   ->setMaxResults($limitCount)
-//                   ->getQuery()->getResult();
     }
 
     public function getPaidOrRegisteredOrFinished(?int $tournamentId, ?int $playerId, bool $registered, bool $finished, bool $paid, bool $indexed) {
-//         case "resultSelectAll":
-//         case "resultSelectOneByTournamentIdAndPlayerId":
-//         case "resultSelectRegisteredByTournamentId":
-//         case "resultSelectAllFinishedByTournamentId":
-//         case "resultSelectPaidByTournamentId":
         $sql = "SELECT r.tournament_id, r.player_id, CONCAT(p.player_first_name, ' ' , p.player_last_name) AS name, p.player_email, r.status_code, s.status_code_name AS status, r.result_registration_order, r.result_paid_buyin_flag, r.result_paid_rebuy_flag, r.result_rebuy_count AS rebuy, r.result_paid_addon_flag AS addon, r.result_addon_flag, r.result_place_finished AS place, r.player_id_ko, CONCAT(p2.player_first_name, ' ' , p2.player_last_name) AS 'knocked out by', r.result_registration_food, p.player_active_flag, p2.player_active_flag AS knockedOutActive, " .
                 "IF(se.season_fee IS NULL, '', IF(se.season_fee - IFNULL(f.fee_amount, 0) - IF(fh.player_id IS NULL, 0, se.season_fee) = 0, 'Paid', CONCAT('Owes $', (se.season_fee - IFNULL(f.fee_amount, 0))))) AS feeStatus " .
                 "FROM poker_results r INNER JOIN poker_players p ON r.player_id = p.player_id " .
@@ -114,13 +89,13 @@ class ResultsRepository extends BaseRepository {
                 " AND r.result_paid_buyin_flag = '" . Constant::FLAG_YES . "'" .
                 " ORDER BY p.player_last_name, p.player_first_name";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($tournamentId) && isset($playerId)) {
-            $statement->bindValue("tournamentId", $tournamentId, PDO::PARAM_INT);
-            $statement->bindValue("playerId", $playerId, PDO::PARAM_INT);
+            $statement->bindValue(param: "tournamentId", value: $tournamentId, type: PDO::PARAM_INT);
+            $statement->bindValue(param: "playerId", value: $playerId, type: PDO::PARAM_INT);
         }
         if ($registered || $finished || $paid) {
-            $statement->bindValue("tournamentId", $tournamentId, PDO::PARAM_INT);
+            $statement->bindValue(param: "tournamentId", value: $tournamentId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -130,8 +105,6 @@ class ResultsRepository extends BaseRepository {
     }
 
     public function getForTournament(?int $prizePool, int $tournamentId, bool $indexed) {
-//         case "resultSelectAllByTournamentId":
-//      // prize pool used for championship resuls
         if (isset($prizePool)) {
             $temp = $prizePool;
         } else {
@@ -178,10 +151,10 @@ class ResultsRepository extends BaseRepository {
             "WHERE r.tournament_id = :tournamentId2 " .
             "AND r.result_place_finished > 0 " .
             "ORDER BY t.tournament_date DESC, t.tournament_start_time DESC, r.result_place_finished";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($tournamentId)) {
-            $statement->bindValue("tournamentId1", $tournamentId, PDO::PARAM_INT);
-            $statement->bindValue("tournamentId2", $tournamentId, PDO::PARAM_INT);
+            $statement->bindValue(param: "tournamentId1", value: $tournamentId, type: PDO::PARAM_INT);
+            $statement->bindValue(param: "tournamentId2", value: $tournamentId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -191,7 +164,6 @@ class ResultsRepository extends BaseRepository {
     }
 
     public function getOrderedByPoints(?DateTime $startDate, ?DateTime $endDate, bool $indexed) {
-//         case "resultAllOrderedPoints":
         $sql =
             "SELECT CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, " .
             "       SUM((np.numPlayers - r.result_place_finished + 1) * IFNULL(st.special_type_multiplier, 1) + IF(r.result_place_finished BETWEEN 1 AND se.season_final_table_players, se.season_final_table_bonus_points, 0)) AS pts, " .
@@ -219,14 +191,14 @@ class ResultsRepository extends BaseRepository {
             "WHERE st.special_type_description IS NULL OR st.special_type_description <> '" . Constant::DESCRIPTION_CHAMPIONSHIP . "'" .
             "GROUP BY r.player_id " .
             "ORDER BY pts DESC, p.player_last_name, p.player_first_name";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -236,7 +208,6 @@ class ResultsRepository extends BaseRepository {
     }
 
     public function getOrderedByEarnings(?DateTime $startDate, ?DateTime $endDate, bool $indexed) {
-//         case "resultAllOrderedEarnings":
         $sql =
             "SELECT name, SUM(totalEarnings) AS earnings, SUM(totalEarnings) / numTourneys AS avg, MAX(maxEarnings) AS max, numTourneys AS tourneys, player_active_flag " .
             "FROM (SELECT player_id, name, SUM(earnings) AS totalEarnings, MAX(earnings) AS maxEarnings, numTourneys, player_active_flag " .
@@ -339,20 +310,20 @@ class ResultsRepository extends BaseRepository {
             "            GROUP BY xx.player_id, xx.name) cc " .
             "GROUP BY player_id, name " .
             "ORDER BY earnings DESC";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate3", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate3", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate4", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate4", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate5", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate5", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate3", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate3", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate4", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate4", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate5", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate5", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -362,11 +333,6 @@ class ResultsRepository extends BaseRepository {
     }
 
     public function getEarnings(?int $playerId, ?DateTime $startDate, ?DateTime $endDate, ?int $year, bool $championship, bool $season, bool $totalAndAverage, bool $rank, ?array $orderBy, ?int $limitCount, bool $indexed) {
-//         case "earningsAverageForSeason":
-//         case "earningsTotalForChampionship":
-//         case "earningsTotalForSeason":
-//         case "earningsTotalAndAverageForSeasonForPlayer":
-//         case "earningsTotalAndAverageForPlayer":
         $sql = "";
         if (!$championship) {
             $sql .=
@@ -550,29 +516,29 @@ class ResultsRepository extends BaseRepository {
         if (isset($limitCount)) {
             $sql .= " LIMIT :limitCount";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (!$championship && !(isset($playerId) && !$season) && isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
             if (!($season && !isset($playerId))) {
-                $statement->bindValue("startDate3", $startDateFormatted, PDO::PARAM_STR);
-                $statement->bindValue("endDate3", $endDateFormatted, PDO::PARAM_STR);
-                $statement->bindValue("startDate4", $startDateFormatted, PDO::PARAM_STR);
-                $statement->bindValue("endDate4", $endDateFormatted, PDO::PARAM_STR);
-                $statement->bindValue("startDate5", $startDateFormatted, PDO::PARAM_STR);
-                $statement->bindValue("endDate5", $endDateFormatted, PDO::PARAM_STR);
+                $statement->bindValue(param: "startDate3", value: $startDateFormatted, type: PDO::PARAM_STR);
+                $statement->bindValue(param: "endDate3", value: $endDateFormatted, type: PDO::PARAM_STR);
+                $statement->bindValue(param: "startDate4", value: $startDateFormatted, type: PDO::PARAM_STR);
+                $statement->bindValue(param: "endDate4", value: $endDateFormatted, type: PDO::PARAM_STR);
+                $statement->bindValue(param: "startDate5", value: $startDateFormatted, type: PDO::PARAM_STR);
+                $statement->bindValue(param: "endDate5", value: $endDateFormatted, type: PDO::PARAM_STR);
             }
         } else if ($championship && isset($year)) {
-            $statement->bindValue('tournamentDate1', $year, PDO::PARAM_INT);
-            $statement->bindValue('tournamentDate2', $year, PDO::PARAM_INT);
-            $statement->bindValue('tournamentDate3', $year, PDO::PARAM_INT);
+            $statement->bindValue(param: "tournamentDate1", value: $year, type: PDO::PARAM_INT);
+            $statement->bindValue(param: "tournamentDate2", value: $year, type: PDO::PARAM_INT);
+            $statement->bindValue(param: "tournamentDate3", value: $year, type: PDO::PARAM_INT);
         }
         if (isset($limitCount)) {
-            $statement->bindValue("limitCount", $limitCount, PDO::PARAM_INT);
+            $statement->bindValue(param: "limitCount", value: $limitCount, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -581,8 +547,6 @@ class ResultsRepository extends BaseRepository {
         }
     }
     public function getOrderedByKos(?DateTime $startDate, ?DateTime $endDate, bool $indexed) {
-//         case "resultAllOrderedKnockouts":
-//         case "resultAllOrderedKnockoutsStats":
         $sql =
             "SELECT k.player_id, name, k.knockouts AS kos, k.knockouts / nt.numTourneys AS avgKo, b.bestKnockout AS bestKo, nt.numTourneys AS tourneys, k.player_active_flag " .
             "FROM (SELECT p3.player_id, CONCAT(p3.player_first_name, ' ', p3.player_last_name) AS name, p.player_active_flag, COUNT(*) AS knockouts " .
@@ -639,16 +603,16 @@ class ResultsRepository extends BaseRepository {
             "               FROM poker_results " .
             "               WHERE status_code = '" . Constant::CODE_STATUS_FINISHED . "') " .
             "ORDER BY k.knockouts DESC, nt.NumTourneys";
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate3", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate3", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate3", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate3", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();
@@ -658,14 +622,12 @@ class ResultsRepository extends BaseRepository {
     }
 
     public function getOrderedSummary(?DateTime $currentDate, ?DateTime $startDate, ?DateTime $endDate, bool $championship, bool $stats, bool $indexed) {
-//         case "resultAllOrderedSummary":
-//         case "resultAllOrderedSummaryStats":
         $sql = "SELECT ";
         if ($stats) {
             $sql .= "player_id, ";
         }
         $sql .=
-            "name, d.tourneys AS '#', d.NumTourneysLeftSeason AS 'left', IF(d.tourneys >= d.ChampQualCount, 0, d.ChampQualCount - d.tourneys) AS needed, " .
+            "name, d.tourneys AS '#', " . (NULL !== $startDate ? "d.NumTourneysLeftSeason" : 0) . " AS 'left', " . (NULL !== $startDate ? "IF(d.tourneys >= d.ChampQualCount, 0, d.ChampQualCount - d.tourneys)" : 0) . " AS needed, " .
             "IFNULL(d.Points, 0) AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', " .
             "-(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount)) AS buyins, -(IFNULL(d.rebuys, 0)) AS rebuys, " .
             "-(IFNULL(d.addons, 0)) AS addons, -(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount)) + -(IFNULL(d.rebuys, 0)) + -(IFNULL(d.addons, 0)) AS 'total', " .
@@ -675,8 +637,11 @@ class ResultsRepository extends BaseRepository {
             "(d.earnings - IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount) - IFNULL(d.rebuys, 0) - IFNULL(d.addons, 0)) / d.numTourneys AS 'Net / Trny', " .
             "player_active_flag " .
             "FROM (SELECT a.player_id, a.name, a.player_active_flag, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, IFNULL(b.Earnings, 0) AS earnings, a.NumTourneys, " .
-            "             e.result_place_finished, e.NumPlayers, e.Points, e.Rebuys, e.Addons, e.NumRebuys, e.tournament_buyin_amount, g.NumTourneysLeftSeason, h.ChampQualCount" .
-            "      FROM (SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(nt.NumTourneys, 0) AS Tourneys, IFNULL(nft.NumFinalTables, 0) AS FTs, " .
+            "             e.result_place_finished, e.NumPlayers, e.Points, e.Rebuys, e.Addons, e.NumRebuys, e.tournament_buyin_amount";
+        if (NULL !== $startDate) {
+            $sql .= ", IF(g.NumTourneysLeftSeason > 0, g.NumTourneysLeftSeason - 1, g.NumTourneysLeftSeason) AS NumTourneysLeftSeason, h.ChampQualCount";
+        }
+        $sql .= "      FROM (SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(nt.NumTourneys, 0) AS Tourneys, IFNULL(nft.NumFinalTables, 0) AS FTs, " .
             "                   IF(nt.NumTourneys IS NULL, 0, IFNULL(nft.NumFinalTables, 0) / nt.NumTourneys) AS PctFTs, " .
             "                   IF(nt.NumTourneys IS NULL, 0, IFNULL(nt.TotalPlaces, 0) / nt.NumTourneys) AS AvgPlace, " .
             "                   IFNULL(nt.MaxPlace, 0) AS Low, IFNULL(nt.MinPlace, 0) AS High, nt.NumTourneys, p.player_active_flag " .
@@ -685,6 +650,7 @@ class ResultsRepository extends BaseRepository {
             "                       FROM poker_results r1 " .
             "                       INNER JOIN poker_tournaments t1 ON r1.tournament_id = t1.tournament_id";
         if (isset($startDate) && isset($endDate)) {
+//         if (NULL !== $startDate) {
             $sql .= "                       AND t1.tournament_date BETWEEN :startDate1 AND :endDate1 ";
         }
         $sql .=
@@ -694,6 +660,7 @@ class ResultsRepository extends BaseRepository {
             "                       FROM poker_results r2 " .
             "                       INNER JOIN poker_tournaments t2 ON r2.tournament_id = t2.tournament_id";
         if (isset($startDate) && isset($endDate)) {
+//         if (NULL !== $startDate) {
             $sql .= "                       AND t2.tournament_date BETWEEN :startDate2 AND :endDate2 ";
         }
         $sql .=
@@ -709,6 +676,7 @@ class ResultsRepository extends BaseRepository {
             "                                   FROM poker_results r INNER JOIN poker_players p ON r.player_id = p.player_id " .
             "                                   INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id";
         if (isset($startDate) && isset($endDate)) {
+//         if (NULL !== $startDate) {
             $sql .= "                                   AND t.tournament_date BETWEEN :startDate3 AND :endDate3 ";
         }
         $sql .=
@@ -716,6 +684,7 @@ class ResultsRepository extends BaseRepository {
             "                                               FROM poker_results r1 " .
             "                                               INNER JOIN poker_tournaments t1 ON r1.tournament_id = t1.tournament_id AND r1.result_place_finished > 0";
         if (isset($startDate) && isset($endDate)) {
+//         if (NULL !== $startDate) {
             $sql .= "                                               AND t1.tournament_date BETWEEN :startDate4 AND :endDate4 ";
         }
         if ($championship) {
@@ -766,6 +735,7 @@ class ResultsRepository extends BaseRepository {
             "                 FROM (SELECT r.tournament_id, t.tournament_description, r.player_id, r.result_place_finished, np.NumPlayers, nr.NumRebuys, t.tournament_buyin_amount, t.tournament_rebuy_amount, t.tournament_addon_amount, na.NumAddons, st.special_type_description, st.special_type_multiplier, se.season_final_table_players, se.season_Final_table_bonus_points " .
             "                       FROM poker_results r INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id";
         if (isset($startDate) && isset($endDate)) {
+//         if (NULL !== $startDate) {
             $sql .= "                       AND t.tournament_date BETWEEN :startDate5 AND :endDate5 ";
         }
         $sql .=
@@ -775,6 +745,7 @@ class ResultsRepository extends BaseRepository {
             "                       INNER JOIN (SELECT r3.tournament_id, COUNT(*) AS NumPlayers " .
             "                                   FROM poker_results r3 INNER JOIN poker_tournaments t3 ON r3.tournament_id = t3.tournament_id";
         if (isset($startDate) && isset($endDate)) {
+//         if (NULL !== $startDate) {
             $sql .= "                                   AND t3.tournament_date BETWEEN :startDate6 AND :endDate6 ";
         }
         $sql .=
@@ -784,6 +755,7 @@ class ResultsRepository extends BaseRepository {
             "                                  FROM poker_results r4 " .
             "                                  INNER JOIN poker_tournaments t4 ON r4.tournament_id = t4.tournament_id";
         if (isset($startDate) && isset($endDate)) {
+//         if (NULL !== $startDate) {
             $sql .= "                                  AND t4.tournament_date BETWEEN :startDate7 AND :endDate7 ";
         }
         $sql .=
@@ -793,39 +765,45 @@ class ResultsRepository extends BaseRepository {
             "                       LEFT JOIN (SELECT tournament_id, player_id, COUNT(result_paid_addon_flag) AS NumAddons " .
             "                                  FROM poker_results r7 WHERE result_paid_addon_flag = '" . Constant::FLAG_YES . "' GROUP BY tournament_id, player_id) na ON r.tournament_id = na.tournament_id AND r.player_id = na.player_id) a " .
             "                 ) c " .
-            "           GROUP BY c.player_id) e ON b.player_id = e.player_id " .
-            "LEFT JOIN (SELECT p.player_id, t.NumTourneysLeftSeason FROM poker_players p CROSS JOIN (SELECT COUNT(*) - 1 AS NumTourneysLeftSeason FROM poker_tournaments t1 WHERE t1.tournament_date BETWEEN :startDate8 AND :endDate1) t ON p.player_active_flag = '" . Constant::FLAG_YES_DATABASE . "') g ON b.player_id = g.player_id " .
-            "LEFT JOIN (SELECT p.player_id, t.ChampQualCount FROM poker_players p CROSS JOIN (SELECT s.season_championship_qualification_count AS ChampQualCount FROM poker_seasons s WHERE s.season_start_date = :startDate1) t ON p.player_active_flag = '" . Constant::FLAG_YES_DATABASE . "') h ON b.player_id = h.player_id " .
-            "WHERE b.player_id IN (SELECT DISTINCT player_id FROM poker_results WHERE status_code = '" . Constant::CODE_STATUS_FINISHED . "')) d ";
+            "           GROUP BY c.player_id) e ON b.player_id = e.player_id ";
+        if (NULL !== $startDate) {
+            $sql .=
+                "LEFT JOIN (SELECT p.player_id, t.NumTourneysLeftSeason FROM poker_players p CROSS JOIN (SELECT COUNT(*) AS NumTourneysLeftSeason FROM poker_tournaments t1 WHERE t1.tournament_date BETWEEN :startDate8 AND :endDate1) t) g ON b.player_id = g.player_id " .
+                "LEFT JOIN (SELECT p.player_id, t.ChampQualCount FROM poker_players p CROSS JOIN (SELECT s.season_championship_qualification_count AS ChampQualCount FROM poker_seasons s WHERE s.season_start_date = :startDate1) t) h ON b.player_id = h.player_id ";
+        }
+        $sql .= "WHERE b.player_id IN (SELECT DISTINCT player_id FROM poker_results WHERE status_code = '" . Constant::CODE_STATUS_FINISHED . "')) d ";
         if (!$stats) {
             $sql .= "ORDER BY ROUND(d.earnings, 0) DESC";
         }
-//         echo $sql;
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($startDate) && isset($endDate)) {
-            $currentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $currentDate);
+//         if (NULL !== $startDate) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate3", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate3", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate4", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate4", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate5", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate5", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate6", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate6", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate7", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate7", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate8", $currentDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate3", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate3", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate4", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate4", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate5", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate5", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate6", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate6", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate7", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate7", value: $endDateFormatted, type: PDO::PARAM_STR);
+        }
+//         if (isset($currentDate)) {
+        if (NULL !== $startDate) {
+            $currentDateFormatted = DateTimeUtility::formatDatabaseDate(value: $currentDate);
+            $statement->bindValue(param: "startDate8", value: $currentDateFormatted, type: PDO::PARAM_STR);
         }
         if ($championship) {
             if (isset($queryAndBindParams[1])) {
                 foreach ($queryAndBindParams[1] as $key => $value) {
-                    $statement->bindValue($key, DateTimeUtility::formatDatabaseDate(value: $value), PDO::PARAM_STR);
+                    $statement->bindValue(param: $key, value: DateTimeUtility::formatDatabaseDate(value: $value), type: PDO::PARAM_STR);
                 }
             }
         }
@@ -837,7 +815,7 @@ class ResultsRepository extends BaseRepository {
     }
 
     public function updateRegistrationOrder(int $tournamentId, int $resultRegistrationOrder): int {
-        return $this->getEntityManager()->getConnection()->executeStatement("UPDATE poker_results SET result_registration_order = result_registration_order - 1 WHERE tournament_id = ? AND result_registration_order > ?", [$tournamentId, $resultRegistrationOrder], [PDO::PARAM_INT, PDO::PARAM_INT]);
+        return $this->getEntityManager()->getConnection()->executeStatement(sql: "UPDATE poker_results SET result_registration_order = result_registration_order - 1 WHERE tournament_id = ? AND result_registration_order > ?", params: [$tournamentId, $resultRegistrationOrder], types: [PDO::PARAM_INT, PDO::PARAM_INT]);
     }
 
     public function updateFinish(?int $rebuyCount, ?string $rebuyPaidFlag, ?string $addonPaidFlag, ?string $addonFlag, ?string $statusCode, ?int $place, ?int $playerIdKo, int $tournamentId, ?int $playerId): int {
@@ -891,27 +869,27 @@ class ResultsRepository extends BaseRepository {
             array_push($paramTypes, PDO::PARAM_INT);
         }
         array_push($paramTypes, PDO::PARAM_INT);
-        return $this->getEntityManager()->getConnection()->executeStatement($sql, $params, $paramTypes);
+        return $this->getEntityManager()->getConnection()->executeStatement(sql: $sql, params: $params, types: $paramTypes);
     }
 
     public function deleteForTournament(int $tournamentId) {
-        return $this->getEntityManager()->getConnection()->executeStatement("DELETE FROM poker_results WHERE tournament_id = ?", [$tournamentId], [PDO::PARAM_INT]);
+        return $this->getEntityManager()->getConnection()->executeStatement(sql: "DELETE FROM poker_results WHERE tournament_id = ?", params: [$tournamentId], types: [PDO::PARAM_INT]);
     }
 
     public function deleteForTournamentAndPlayer(int $tournamentId, int $playerId) {
-        return $this->getEntityManager()->getConnection()->executeStatement("DELETE FROM poker_results WHERE tournament_id = ? AND player_id = ?", [$tournamentId, $playerId], [PDO::PARAM_INT, PDO::PARAM_INT]);
+        return $this->getEntityManager()->getConnection()->executeStatement(sql: "DELETE FROM poker_results WHERE tournament_id = ? AND player_id = ?", params: [$tournamentId, $playerId], types: [PDO::PARAM_INT, PDO::PARAM_INT]);
     }
 
     public function updateForCancellation(int $tournamentId, int $registerOrder) {
-        return $this->getEntityManager()->getConnection()->executeStatement("UPDATE poker_results SET result_registration_order = result_registration_order - 1 WHERE tournament_id = ? AND result_registration_order > ?", [$tournamentId, $registerOrder], [PDO::PARAM_INT, PDO::PARAM_INT]);
+        return $this->getEntityManager()->getConnection()->executeStatement(sql: "UPDATE poker_results SET result_registration_order = result_registration_order - 1 WHERE tournament_id = ? AND result_registration_order > ?", params: [$tournamentId, $registerOrder], types: [PDO::PARAM_INT, PDO::PARAM_INT]);
     }
 
     public function getMaxRegistrationOrder(int $tournamentId) {
-        $qb = $this->createQueryBuilder("r");
-        return $qb->addSelect("IFNULL(MAX(r.resultRegistrationOrder) + 1, 1) AS resultRegistrationOrderMax")
-                  ->where("r.tournaments = :tournamentId")
-                  ->setParameters(new ArrayCollection(array(new Parameter("tournamentId", $tournamentId))))
-                  ->getQuery()->getResult();
+        return $this->createQueryBuilder(alias: "r")
+                    ->addSelect(select: "IFNULL(MAX(r.resultRegistrationOrder) + 1, 1) AS resultRegistrationOrderMax")
+                    ->where(predicates: "r.tournaments = :tournamentId")
+                    ->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "tournamentId", value: $tournamentId))))
+                    ->getQuery()->getResult();
     }
 
     public function getSeasonStats(DateTime $startDate, DateTime $endDate) {
@@ -1012,28 +990,28 @@ class ResultsRepository extends BaseRepository {
         if (isset($startDate) && isset($endDate)) {
             $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
             $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
-            $statement->bindValue("startDate1", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate1", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate2", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate2", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate3", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate3", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate4", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate4", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate5", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate5", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate6", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate6", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate7", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate7", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate8", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate8", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate9", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate9", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate10", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate10", $endDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("startDate11", $startDateFormatted, PDO::PARAM_STR);
-            $statement->bindValue("endDate11", $endDateFormatted, PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate3", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate3", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate4", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate4", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate5", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate5", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate6", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate6", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate7", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate7", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate8", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate8", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate9", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate9", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate10", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate10", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate11", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate11", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
         return $statement->executeQuery()->fetchAllAssociative();
     }

@@ -14,10 +14,10 @@ function getEntityManager() : EntityManager
     if ($entityManager === null)
     {
         $config = ORMSetup::createAttributeMetadataConfiguration(paths: array("src", "src/Entity"), isDevMode: true);
-        $config->addCustomDateTimeFunction('DATEADD', DateAdd::class);
-        $config->addCustomDateTimeFunction('IFNULL', IfNull::class);
-        $config->addCustomDateTimeFunction('ROUND', Round::class);
-        $config->addCustomDateTimeFunction('YEAR', Year::class);
+        $config->addCustomDateTimeFunction(name: 'DATEADD', className: DateAdd::class);
+        $config->addCustomDateTimeFunction(name: 'IFNULL', className: IfNull::class);
+        $config->addCustomDateTimeFunction(name: 'ROUND', className: Round::class);
+        $config->addCustomDateTimeFunction(name: 'YEAR', className: Year::class);
         if ($_SERVER["SERVER_NAME"] == Constant::URL || $_SERVER["SERVER_NAME"] == Constant::URL_WWW) {
             $username = Constant::DATABASE_USER_NAME_SERVER;
             $password = Constant::DATABASE_PASSWORD_SERVER;

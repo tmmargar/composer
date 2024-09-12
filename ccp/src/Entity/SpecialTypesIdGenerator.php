@@ -7,10 +7,9 @@ class SpecialTypesIdGenerator extends AbstractIdGenerator
 {
   public function generateId(EntityManagerInterface $em, $entity)
   {
-    $queryBuilder = $em->createQueryBuilder();
-    $queryBuilder->select("MAX(st.specialTypeId) + 1")->from(Constant::ENTITY_SPECIAL_TYPES, "st");
-    $query = $queryBuilder->getQuery();
-    $result = $query->getSingleScalarResult();
-    return $result;
+    return $em->createQueryBuilder()
+              ->select(select: "MAX(st.specialTypeId) + 1")
+              ->from(from: Constant::ENTITY_SPECIAL_TYPES, alias: "st")
+              ->getQuery()->getSingleScalarResult();
   }
 }

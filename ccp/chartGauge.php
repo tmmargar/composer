@@ -5,28 +5,28 @@ use Poker\Ccp\Model\Constant;
 use Poker\Ccp\Utility\SessionUtility;
 require_once "init.php";
 if (!defined("REPORT_ID_PARAM_NAME")) {define("PLAYER_ID_PARAM_NAME", "playerId");}
-$playerId = (int) ((isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME])) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue("userid"));
+$playerId = (int) ((isset($_POST[PLAYER_ID_PARAM_NAME]) ? $_POST[PLAYER_ID_PARAM_NAME] : isset($_GET[PLAYER_ID_PARAM_NAME])) ? $_GET[PLAYER_ID_PARAM_NAME] : SessionUtility::getValue(name: "userid"));
 $output = "";
 $output .= " <script src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
 $startDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_START_DATE);
 $endDate = SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_END_DATE);
-$resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForDates(startDate: $startDate, endDate: $endDate);
-if (0 < count($resultList)) {
-    $tournamentsTotal = count($resultList) == 0 ? 1 : count($resultList);
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_TOURNAMENTS)->getCountForDates(startDate: $startDate, endDate: $endDate);
+if (0 < count(value: $resultList)) {
+    $tournamentsTotal = count(value: $resultList) == 0 ? 1 : count(value: $resultList);
     $labelIncrement = $tournamentsTotal / 4;
     $labelPlayed1 = $labelIncrement;
     $labelPlayed2 = $labelIncrement * 2;
     $labelPlayed3 = $labelIncrement * 3;
     $labelPlayed4 = $tournamentsTotal;
 }
-$resultList2 = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getCountForUserAndDates(playerId: $playerId, startDate: $startDate, endDate: $endDate);
-if (0 < count($resultList2)) {
-    $tournamentsPlayed = count($resultList2);
+$resultList2 = $entityManager->getRepository(entityName: Constant::ENTITY_TOURNAMENTS)->getCountForUserAndDates(playerId: $playerId, startDate: $startDate, endDate: $endDate);
+if (0 < count(value: $resultList2)) {
+    $tournamentsPlayed = count(value: $resultList2);
 } else {
     $tournamentsPlayed = 0;
 }
 if (0 < count(value: $resultList)) {
-    $tournamentsLeft = count($resultList) == 0 ? 1 : count($resultList);
+    $tournamentsLeft = count(value: $resultList) == 0 ? 1 : count(value: $resultList);
     $yellowFrom = 0;
     $yellowTo = $tournamentsLeft / 2;
     $redFrom = $yellowTo;

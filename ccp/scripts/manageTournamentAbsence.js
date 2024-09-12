@@ -8,7 +8,9 @@ export const inputLocal = {
     input.enableView();
   },
   setDefaults : function() {
-    input.insertSelectedBefore({objIdSelected: "tournamentId", objIdAfter: "mode", width: "85%"});
+    if (document.querySelector("#tournamentId")) {
+      input.insertSelectedBefore({objIdSelected: "tournamentId", objIdAfter: "mode", width: "85%"});
+    }
   },
   setPlayerIds : function() {
     let playerIds = "";

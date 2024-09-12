@@ -9,10 +9,8 @@ class InventoryTypesIdGenerator extends AbstractIdGenerator
 {
   public function generateId(EntityManagerInterface $em, $entity)
   {
-    $queryBuilder = $em->createQueryBuilder();
-    $queryBuilder->select("IFNULL(MAX(it.inventoryTypeId), 0) + 1")->from(Constant::ENTITY_INVENTORY_TYPES, "it");
-    $query = $queryBuilder->getQuery();
-    $result = $query->getSingleScalarResult();
-    return $result;
+    return $em->createQueryBuilder()
+               ->select(select: "IFNULL(MAX(it.inventoryTypeId), 0) + 1")->from(from: Constant::ENTITY_INVENTORY_TYPES, alias: "it")
+               ->getQuery()->getSingleScalarResult();
   }
 }

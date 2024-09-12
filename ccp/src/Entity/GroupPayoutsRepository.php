@@ -5,12 +5,11 @@ use Doctrine\ORM\Query\Parameter;
 use PDO;
 class GroupPayoutsRepository extends BaseRepository {
     public function getById(?int $groupId, ?int $payoutId) {
-        //         case "groupPayoutSelectAll":
-        //         case "groupPayoutSelectOneById":
-        $qb = $this->createQueryBuilder("gp");
+        $qb = $this->createQueryBuilder(alias: "gp");
         if (isset($groupId) && isset($payoutId)) {
-            $qb = $qb->where("gp.groups = :groupId")->andWhere("gp.payouts = :payoutId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("groupId", $groupId), new Parameter("payoutId", $payoutId))));
+            $qb = $qb->where(predicates: "gp.groups = :groupId")
+                     ->andWhere("gp.payouts = :payoutId");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "groupId", value: $groupId), new Parameter(name: "payoutId", value: $payoutId))));
         }
         return $qb->getQuery()->getResult();
     }
@@ -25,12 +24,12 @@ class GroupPayoutsRepository extends BaseRepository {
                 "WHERE gp.group_id = :groupId " .
                 "AND gp.payout_id = :payoutId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($groupId)) {
-            $statement->bindValue("groupId", $groupId, PDO::PARAM_INT);
+            $statement->bindValue(param: "groupId", value: $groupId, type: PDO::PARAM_INT);
         }
         if (isset($payoutId)) {
-            $statement->bindValue("payoutId", $payoutId, PDO::PARAM_INT);
+            $statement->bindValue(param: "payoutId", value: $payoutId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();

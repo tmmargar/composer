@@ -7,24 +7,20 @@ use PDO;
 use Poker\Ccp\Utility\DateTimeUtility;
 class NotificationsRepository extends BaseRepository {
     public function getByDate(DateTime $date) {
-//      case "notifcationSelectAll":
-//      " WHERE :tournamentDate BETWEEN notification_start_date AND notification_end_date ";
-        $qb = $this->createQueryBuilder("n");
+        $qb = $this->createQueryBuilder(alias: "n");
         $dateFormatted = DateTimeUtility::formatDatabaseDateTime(value: $date);
         if (isset($date)) {
-            $qb = $qb->where(":notificationDate BETWEEN n.notificationStartDate AND n.notificationEndDate");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("notificationDate", $dateFormatted))));
+            $qb = $qb->where(predicates: ":notificationDate BETWEEN n.notificationStartDate AND n.notificationEndDate");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "notificationDate", value: $dateFormatted))));
         }
         return $qb->getQuery()->getResult();
     }
 
     public function getById(?int $notificationId) {
-        //         case "notifcationSelectAll":
-        //         case "notifcationSelectById":
-        $qb = $this->createQueryBuilder("n");
+        $qb = $this->createQueryBuilder(alias: "n");
         if (isset($notificationId)) {
-            $qb = $qb->where("n.notificationId = :notificationId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("notificationId", $notificationId))));
+            $qb = $qb->where(predicates: "n.notificationId = :notificationId");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "notificationId", value: $notificationId))));
         }
         return $qb->getQuery()->getResult();
     }
@@ -36,9 +32,9 @@ class NotificationsRepository extends BaseRepository {
         if (isset($notificationId)) {
             $sql .= "WHERE notification_id = :notificationId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($notificationId)) {
-            $statement->bindValue("notificationId", $notificationId, PDO::PARAM_INT);
+            $statement->bindValue(param: "notificationId", value: $notificationId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();

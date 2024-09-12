@@ -183,6 +183,9 @@ class Players
         return $this->playerApprovalDate;
     }
 
+    /**
+     * @return Players|NULL
+     */
     public function getPlayerApproval(): ?Players {
         return $this->playerApproval;
     }
@@ -194,9 +197,13 @@ class Players
         return $this->playerRejectionDate;
     }
 
+    /**
+     * @return Players|NULL
+     */
     public function getPlayerRejection(): ?Players {
         return $this->playerRejection;
     }
+
     /**
      * @return string
      */
@@ -348,6 +355,10 @@ class Players
         return $this;
     }
 
+    /**
+     * @param Players $playerApproval
+     * @return self
+     */
     public function setPlayerApproval(?Players $playerApproval): self {
         $this->playerApproval = $playerApproval;
         return $this;
@@ -361,11 +372,15 @@ class Players
         return $this;
     }
 
-
+    /**
+     * @param Players $playerRejection
+     * @return self
+     */
     public function setPlayerRejection(?Players $playerRejection): self {
         $this->playerRejection = $playerRejection;
         return $this;
     }
+
     /**
      * @param string $playerActiveFlag
      */

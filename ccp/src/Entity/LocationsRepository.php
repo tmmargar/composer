@@ -5,14 +5,12 @@ use Doctrine\ORM\Query\Parameter;
 use PDO;
 class LocationsRepository extends BaseRepository {
     public function getById(?int $locationId) {
-//         case "locationSelectAll":
-//         case "locationSelectById":
-        $qb = $this->createQueryBuilder("l");
+        $qb = $this->createQueryBuilder(alias: "l");
         if (isset($locationId)) {
-            $qb = $qb->where("l.locationId = :locationId");
-            $qb->setParameters(new ArrayCollection(array(new Parameter("locationId", $locationId))));
+            $qb = $qb->where(predicates: "l.locationId = :locationId");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "locationId", value: $locationId))));
         }
-        $qb = $qb->addOrderBy("l.locationName", "ASC");
+        $qb = $qb->addOrderBy(sort: "l.locationName", order: "ASC");
         return $qb->getQuery()->getResult();
     }
 
@@ -23,9 +21,9 @@ class LocationsRepository extends BaseRepository {
         if (isset($locationId)) {
             $sql .= "WHERE l.location_id = :locationId";
         }
-        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($locationId)) {
-            $statement->bindValue("locationId", $locationId, PDO::PARAM_INT);
+            $statement->bindValue(param: "locationId", value: $locationId, type: PDO::PARAM_INT);
         }
         if ($indexed) {
             return $statement->executeQuery()->fetchAllNumeric();

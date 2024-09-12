@@ -78,6 +78,7 @@ abstract class Constant {
   public const CODE_STATUS_PAID = "P";
   public const CODE_STATUS_REGISTERED = "R";
   public const DELIMITER_DEFAULT = ", ";
+  public const DELIMITER_VALUE_DEFAULT = "::";
   public const DESCRIPTION_CHAMPIONSHIP = "Championship";
   public const DESCRIPTION_MAIN_EVENT = "Main Event";
   public const DISPLAY_ADDON = "+a";

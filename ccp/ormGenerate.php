@@ -3,7 +3,7 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 require_once "bootstrapGenerate.php";
 // ConsoleRunner::run(new SingleManagerProvider($entityManager));
-$tool = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
+$tool = new \Doctrine\ORM\Tools\SchemaTool(em: $entityManager);
 $classes = array(
     $entityManager->getClassMetadata('Poker\Ccp\Entity\Fees'),
     $entityManager->getClassMetadata('Poker\Ccp\Entity\GameTypes'),
@@ -20,7 +20,7 @@ $classes = array(
     $entityManager->getClassMetadata('Poker\Ccp\Entity\StatusCodes'),
     $entityManager->getClassMetadata('Poker\Ccp\Entity\Structures'),
     $entityManager->getClassMetadata('Poker\Ccp\Entity\TournamentAbsences'),
-    $entityManager->getClassMetadata('Poker\Ccp\Entity\Tournaments')
+    $entityManager->getClassMetadata('Poker\Ccp\Entity\Tournaments'),
     $entityManager->getClassMetadata('Poker\Ccp\Entity\blobtest')
 );
 $tool->dropSchema($classes);

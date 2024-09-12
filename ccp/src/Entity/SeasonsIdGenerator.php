@@ -8,10 +8,9 @@ class SeasonsIdGenerator extends AbstractIdGenerator
 {
   public function generateId(EntityManagerInterface $em, $entity)
   {
-    $queryBuilder = $em->createQueryBuilder();
-    $queryBuilder->select("MAX(se.seasonId) + 1")->from(Constant::ENTITY_SEASONS, "se");
-    $query = $queryBuilder->getQuery();
-    $result = $query->getSingleScalarResult();
-    return $result;
+      return $em->createQueryBuilder()
+                ->select(select: "MAX(se.seasonId) + 1")
+                ->from(from: Constant::ENTITY_SEASONS, alias: "se")
+                ->getQuery()->getSingleScalarResult();
   }
 }

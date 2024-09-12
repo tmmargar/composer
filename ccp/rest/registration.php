@@ -19,7 +19,7 @@ $tournamentDate = isset($_GET["tournamentDate"]) ? $_GET["tournamentDate"] : "";
 $max = $_GET["max"] == "Y" ? true : false;
 $entityManager = getEntityManager();
 // date (YYYY-MM-DD) and true if max false if not
-$resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getRegistrationList(tournamentDate: new DateTime(datetime: $tournamentDate), max: $max);
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_TOURNAMENTS)->getRegistrationList(tournamentDate: new DateTime(datetime: $tournamentDate), max: $max);
 if (0 < count($resultList)) {
     $count = 0;
     $registered = false;

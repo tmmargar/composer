@@ -178,17 +178,19 @@ export const reportsInputLocal = {
     return action;
   },
   championshipCount : function(tableId) {
-    let qualified = 0;
-    let eligible = 0;
-    document.querySelectorAll("#" + tableId + " tbody tr td:nth-of-type(2)").forEach(cell => {
-        if (cell.classList.contains("championshipQualified")) {
-            qualified++;
-        } else if (cell.classList.contains("championshipEligible")) {
-            eligible++;
-        }
-    });
-    document.querySelector(".dataTables_scrollHeadInner thead tr:nth-of-type(1) th:nth-of-type(2)").innerHTML += "<br>" + qualified + "q / " + eligible + "e";
-    $("#dataTblSummary").DataTable().draw();
+      if (document.querySelector("#season").value != "ALL") {
+        let qualified = 0;
+        let eligible = 0;
+        document.querySelectorAll("#" + tableId + " tbody tr td:nth-of-type(2)").forEach(cell => {
+            if (cell.classList.contains("championshipQualified")) {
+                qualified++;
+            } else if (cell.classList.contains("championshipEligible")) {
+                eligible++;
+            }
+        });
+        document.querySelector(".dataTables_scrollHeadInner thead tr:nth-of-type(1) th:nth-of-type(2)").innerHTML += "<br>" + qualified + "q / " + eligible + "e";
+        $("#dataTblSummary").DataTable().draw();
+      }
   }
 };
 let documentReadyCallback = () => {

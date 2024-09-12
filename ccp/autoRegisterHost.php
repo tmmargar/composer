@@ -18,7 +18,7 @@ $output .=
     "  let aryMessages = [];\n";
 $output .= isset($mode) ? "  aryMessages.push(\"###Run at " . DateTimeUtility::formatDisplayLong(value: $now) . "###\");\n" : "\r";
 $dateTime = new DateTime();
-$resultList = $entityManager->getRepository(Constant::ENTITY_TOURNAMENTS)->getRegisterHost(startDate: $dateTime, endDate: $dateTime);
+$resultList = $entityManager->getRepository(entityName: Constant::ENTITY_TOURNAMENTS)->getRegisterHost(startDate: $dateTime, endDate: $dateTime);
 if (count($resultList) == 0) {
     $output .= isset($mode) ? "  aryMessages.push(\"No tournaments needing auto host registration or host is already registered\");\n" : "\r";
 } else {
@@ -26,20 +26,20 @@ if (count($resultList) == 0) {
         $player = $tournaments->getLocations()->getPlayers();
         $params = array($tournaments->getTournamentId(), $player->getPlayerId(), "N/A");
         $re = new Results();
-        $re->setPlayers($player);
-        $re->setResultAddonFlag(Constant::FLAG_NO);
-        $re->setResultPaidAddonFlag(Constant::FLAG_NO);
-        $re->setResultPaidBuyinFlag(Constant::FLAG_NO);
-        $re->setResultPaidRebuyFlag(Constant::FLAG_NO);
-        $re->setResultPlaceFinished(0);
-        $re->setResultRebuyCount(0);
-        $re->setResultRegistrationFood("N/A");
-        $re->setResultRegistrationOrder(1);
-        $statusCode = $entityManager->find(Constant::ENTITY_STATUS_CODES, Constant::CODE_STATUS_REGISTERED);
-        $re->setStatusCodes($statusCode);
-        $tournaments = $entityManager->find(Constant::ENTITY_TOURNAMENTS, $tournaments->getTournamentId());
-        $re->setTournaments($tournaments);
-        $entityManager->persist($re);
+        $re->setPlayers(players: $player);
+        $re->setResultAddonFlag(resultAddonFlag: Constant::FLAG_NO);
+        $re->setResultPaidAddonFlag(resultPaidAddonFlag: Constant::FLAG_NO);
+        $re->setResultPaidBuyinFlag(resultPaidBuyinFlag: Constant::FLAG_NO);
+        $re->setResultPaidRebuyFlag(resultPaidRebuyFlag: Constant::FLAG_NO);
+        $re->setResultPlaceFinished(resultPlaceFinished: 0);
+        $re->setResultRebuyCount(resultRebuyCount: 0);
+        $re->setResultRegistrationFood(resultRegistrationFood: "N/A");
+        $re->setResultRegistrationOrder(resultRegistrationOrder: 1);
+        $statusCode = $entityManager->find(className: Constant::ENTITY_STATUS_CODES, id: Constant::CODE_STATUS_REGISTERED);
+        $re->setStatusCodes(statusCodes: $statusCode);
+        $tournaments = $entityManager->find(className: Constant::ENTITY_TOURNAMENTS, id: $tournaments->getTournamentId());
+        $re->setTournaments(tournaments: $tournaments);
+        $entityManager->persist(entity: $re);
         try {
             $entityManager->flush();
         } catch (Exception $e) {
@@ -54,11 +54,11 @@ if (count($resultList) == 0) {
         } else {
             $output .= isset($mode) ? "  aryMessages.push(\"Successfully registered " . $player->getPlayerName() . " for tournament on " . DateTimeUtility::formatDisplayDate(value: $tournaments->getTournamentDate()) . " starting at " . DateTimeUtility::formatDisplayTime(value: $tournaments->getTournamentStartTime()) . "\");\n" : "\r";
         }
-        $emailTournament = new Tournament(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), id: 0, description: NULL, comment: NULL, limitType: NULL, gameType: NULL, specialType: NULL, chipCount: 0, location: NULL, date: NULL, startTime: NULL, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: NULL, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0, earnings: 0);
-        $emailTournament->createFromEntity(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), tournaments: $tournaments);
-        $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($player->getPlayerName()), toEmail: array($player->getPlayerEmail()), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
+        $emailTournament = new Tournament(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), id: 0, description: NULL, comment: NULL, limitType: NULL, gameType: NULL, specialType: NULL, chipCount: 0, location: NULL, date: NULL, startTime: NULL, buyinAmount: 0, maxPlayers: 0, maxRebuys: 0, rebuyAmount: 0, addonAmount: 0, addonChipCount: 0, groupPayout: NULL, rake: 0, registeredCount: 0, buyinsPaid: 0, rebuysPaid: 0, rebuysCount: 0, addonsPaid: 0, enteredCount: 0, earnings: 0);
+        $emailTournament->createFromEntity(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), tournaments: $tournaments);
+        $email = new Email(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array($player->getPlayerName()), toEmail: array($player->getPlayerEmail()), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
         $output .= (isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail(location: $emailTournament->getLocation(), tournament: $emailTournament, feeStatus: "Paid", waitList: 0) . "\");\n" : "\r");
-        $email = new Email(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array(Constant::NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
+        $email = new Email(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), fromName: array(Constant::NAME_STAFF), fromEmail: array(Constant::EMAIL_STAFF()), toName: array(Constant::NAME_STAFF), toEmail: array(Constant::EMAIL_STAFF()), ccName: NULL, ccEmail: NULL, bccName: NULL, bccEmail: NULL, subject: NULL, body: NULL);
         $output .= isset($mode) ? "  aryMessages.push(\"" . $email->sendRegisteredEmail(location: $emailTournament->getLocation(), tournament: $emailTournament, feeStatus: "Paid", waitList: 0, autoRegister: $player->getPlayerName()) . "\");\n" : "\r";
   }
 }

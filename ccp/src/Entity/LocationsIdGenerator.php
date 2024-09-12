@@ -9,10 +9,8 @@ class LocationsIdGenerator extends AbstractIdGenerator
 {
   public function generateId(EntityManagerInterface $em, $entity)
   {
-    $queryBuilder = $em->createQueryBuilder();
-    $queryBuilder->select("MAX(l.locationId) + 1")->from(Constant::ENTITY_LOCATIONS, "l");
-    $query = $queryBuilder->getQuery();
-    $result = $query->getSingleScalarResult();
-    return $result;
+    return $em->createQueryBuilder()
+              ->select(select: "MAX(l.locationId) + 1")->from(from: Constant::ENTITY_LOCATIONS, alias: "l")
+              ->getQuery()->getSingleScalarResult();
   }
 }
