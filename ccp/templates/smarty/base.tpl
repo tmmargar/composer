@@ -15,7 +15,7 @@
  <link href="css/menu.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  <link href="css/display.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
  {block name=style}{/block}
- <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.6.3.js"></script>
+ <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/rowgroup/1.3.0/js/dataTables.rowGroup.min.js"></script>
  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>

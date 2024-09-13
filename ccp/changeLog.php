@@ -7,6 +7,13 @@ $smarty->assign("heading", "");
 $smarty->assign("style", "");
 $outputChange =
   "<h1>Change Log</h1>\n" .
+  "<section class=\"version\" id=\"1.3.4\">" .
+  " <h3>Version 1.3.4</h3>\n" .
+  " <b><time datetime=\"2024-9-12\">Sep 12, 2024</time></b>\n" .
+  " <ul>\n" .
+  "  <li>Updated composer depedencies, jQuery</li>\n" .
+  " </ul>\n" .
+  "</section>\n" .
   "<section class=\"version\" id=\"1.3.3\">" .
   " <h3>Version 1.3.3</h3>\n" .
   " <b><time datetime=\"2024-9-11\">Sep 11, 2024</time></b>\n" .
