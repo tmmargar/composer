@@ -17,9 +17,6 @@ if (0 < count(value: $resultList)) {
             $output .= "   <td>" . $value . "</td>\n";
         }
         $output .= "  </tr>\n";
-        if ($count == 0) {
-            $output .= "  </thead>\n";
-        }
         $count++;
     }
     $output .= "</tbody>\n</table>\n";
