@@ -136,7 +136,7 @@ class HtmlTable extends HtmlBase {
                             $output .= "     <th colspan=\"1\" rowspan=\"1\">" . $this->html[1][$idx] . "</th>\n";
                         }
                     }
-                    if (isset($this->hiddenAdditional)) {
+                    if (isset($this->hiddenId) || isset($this->hiddenAdditional)) {
                         $output .= "<th></th>\n";
                     }
                     $output .= "      </tr>\n";

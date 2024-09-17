@@ -78,11 +78,8 @@ if ("ALL" == $seasonId) {
 }
 $group = (isset($_POST[GROUP_PARAM_NAME]) ? $_POST[GROUP_PARAM_NAME] : isset($_GET[GROUP_PARAM_NAME])) ? $_GET[GROUP_PARAM_NAME] : NULL;
 $style = "";
-if ($reportId == REPORT_ID_SUMMARY) {
-    $style .= "<style media=\"all\" type=\"text/css\">body {max-width: unset;}</style>\n";
-}
 $smarty->assign("heading", "");
-$smarty->assign("style", $style);
+$smarty->assign("style", "");
 $smarty->assign("formName", "frmReports");
 $smarty->assign("action", $_SERVER["SCRIPT_NAME"]);
 if (!isset($reportId)) {
@@ -210,7 +207,7 @@ if (!isset($reportId)) {
             $resultHeaders = $entityManager->getRepository(Constant::ENTITY_RESULTS)->getOrderedSummary(currentDate: new DateTime(), startDate: $startDate, endDate: $endDate, championship: $championship, stats: false, indexed: false);
             $colFormats = array(array(1, "number", 0), array(2, "number", 0), array(3, "number", 0), array(4, "number", 0), array(5, "number", 0), array(6, "number", 0), array(7, "percentage", 2), array(8, "number", 2), array(9, "number", 0), array(10, "number", 0), array(11, "currency", 0), array(12, "currency", 0), array(13, "currency", 0), array(14, "currency", 0), array(15, "currency", 0), array(16, "currency", 0), array(17, "currency", 0), array(18, "currency", 0));
             $hideColIndexes = array(5, 19);
-            $colSpan = array(array("Final Tables", "Finish", "Money Out", "Money In"), array(6, 8, 11, 16), array(array(6), array(9, 10), array(12, 13, 14), array(15, 17, 18)));
+            $colSpan = array(array("Final Tables", "Finish", "Money Out", "Money In"), array(6, 8, 11, 16), array(array(7), array(9, 10), array(12, 13, 14), array(15, 17, 18)));
             $width = "100%";
             break;
         case REPORT_ID_WINNERS:

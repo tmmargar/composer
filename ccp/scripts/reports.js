@@ -33,7 +33,7 @@ export const reportsInputLocal = {
       } else if (reportId == "summary") {
         dataTableId = "dataTblSummary";
         if (document.querySelector("#" + dataTableId)) {
-          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name" }, { "orderSequence": [ "desc", "asc" ], "render" : function (data, type, row, meta) { if (type === "display") { return display.formatNeeded({value: data, meta: meta, tableId: "dataTblSummary"}); } else { return data; } } }, { "visible": false }, { "visible": false }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, {}, {}, {}, {}, {}, {}, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[14, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{ "type" : "name", "width": "11%" }, { "orderSequence": [ "desc", "asc" ], "render" : function (data, type, row, meta) { if (type === "display") { return display.formatNeeded({value: data, meta: meta, tableId: "dataTblSummary"}); } else { return data; } }, "width": "8%" }, { "visible": false }, { "visible": false }, { "orderSequence": [ "desc", "asc" ], "width": "4%" }, { "orderSequence": [ "desc", "asc" ], "width": "3%" }, { "orderSequence": [ "desc", "asc" ], "width": "6%" }, { "orderSequence": [ "desc", "asc" ], "width": "5%" }, {"width": "5%"}, {"width": "5%"}, {"width": "6%"}, {"width": "6%"}, {"width": "6%"}, {"width": "6%"}, { "orderSequence": [ "desc", "asc" ], "width": "7%" }, { "orderSequence": [ "desc", "asc" ], "width": "6%" }, { "orderSequence": [ "desc", "asc" ], "width": "6%" }, { "orderSequence": [ "desc", "asc" ], "width": "6%" }], aryOrder: [[14, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "winners") {
         dataTableId = "dataTblWinners";
@@ -178,7 +178,7 @@ export const reportsInputLocal = {
     return action;
   },
   championshipCount : function(tableId) {
-      if (document.querySelector("#season").value != "ALL") {
+      if (document.querySelector("#reportId").value == "summary" && document.querySelector("#season").value != "ALL") {
         let qualified = 0;
         let eligible = 0;
         document.querySelectorAll("#" + tableId + " tbody tr td:nth-of-type(2)").forEach(cell => {
@@ -188,7 +188,7 @@ export const reportsInputLocal = {
                 eligible++;
             }
         });
-        document.querySelector(".dataTables_scrollHeadInner thead tr:nth-of-type(1) th:nth-of-type(2)").innerHTML += "<br>" + qualified + "q / " + eligible + "e";
+        document.querySelector(".dt-scroll-headInner thead tr:nth-of-type(1) th:nth-of-type(2)").innerHTML += "<br>" + qualified + "q / " + eligible + "e";
         $("#dataTblSummary").DataTable().draw();
       }
   }
@@ -196,6 +196,10 @@ export const reportsInputLocal = {
 let documentReadyCallback = () => {
   reportsInputLocal.initializeDataTable();
   reportsInputLocal.championshipCount("dataTblSummary");
+  if (document.querySelector("#reportId").value != "summary") {
+    document.querySelector("body").style.width = "650px";
+    $(".dataTable").DataTable().draw();
+  }
 };
 if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
   documentReadyCallback();

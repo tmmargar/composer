@@ -7,7 +7,7 @@ body {
   font-family: 'Josefin Sans', sans-serif;
   /*font-size: 1.2em;*/
   margin: 0 auto;
-  max-width: 700px;
+  max-width: 1700px;
   min-height: 100%;
   padding: 1em;
 }
@@ -18,15 +18,7 @@ body {
 .linkText {
   vertical-align: super;
 }
-@media all and (max-width: 1100px) {
-  body {
-    max-width: unset;
-  }
-}
 @media all and (max-width: 600px) {
-  body {
-    max-width: unset;
-  }
   .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
     text-align: right !important;
   }

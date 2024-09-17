@@ -34,8 +34,10 @@ export const inputLocal = {
   disableCheckboxAll : function({hasFlag, name, countNotCheckedPaid} = {}) {
     // if need to check flag and flag is set or no need to check flag (0 for rebuy and "" for addon)
     if ((hasFlag && document.querySelector("#" + name + "Flag").value != "0" && document.querySelector("#" + name + "Flag").value != "") || !hasFlag) {
-      // if checkbox count is same as count passed in then disable check all checkbox
-      document.querySelector("#" + name + "CheckAll").disabled = document.querySelectorAll('[id^="' + name + '_"]').length == countNotCheckedPaid;
+      if (document.querySelector("#" + name + "CheckAll")) {
+        // if checkbox count is same as count passed in then disable check all checkbox
+        document.querySelector("#" + name + "CheckAll").disabled = document.querySelectorAll('[id^="' + name + '_"]').length == countNotCheckedPaid;
+      }
     }
   },
   disableCheckboxes : function({hasFlag, obj, name, id} = {}) {

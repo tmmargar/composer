@@ -13,3 +13,6 @@ table.dataTable tbody td {
 table.dataTable>tbody>tr.child ul.dtr-details>li {
   padding: 0;
 }
+.dt-type-numeric {
+  text-align: center !important;
+}
