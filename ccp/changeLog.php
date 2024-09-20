@@ -7,6 +7,14 @@ $smarty->assign("heading", "");
 $smarty->assign("style", "");
 $outputChange =
   "<h1>Change Log</h1>\n" .
+  "<section class=\"version\" id=\"1.3.6\">" .
+  " <h3>Version 1.3.6</h3>\n" .
+  " <b><time datetime=\"2024-9-19\">Sep 19, 2024</time></b>\n" .
+  " <ul>\n" .
+  "  <li>Added auto reminder for championship</li>\n" .
+  "  <li>Change jquery, datatables, font awesome to load from composer</li>\n" .
+  " </ul>\n" .
+  "</section>\n" .
   "<section class=\"version\" id=\"1.3.5\">" .
   " <h3>Version 1.3.5</h3>\n" .
   " <b><time datetime=\"2024-9-16\">Sep 16, 2024</time></b>\n" .

@@ -7,16 +7,17 @@
  <link href="../images/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
  <link href="../images/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
  <link href="../images/site.webmanifest" rel="manifest">
- <link href="../css/reset.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.min.css">
- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.5.0/css/rowGroup.dataTables.min.css">
- <link href="../css/datatablesLocal.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
- <link href="../css/menu.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
- <link href="../css/display.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet">
+ <link href="css/reset.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet" type="text/css">
+ <link href="vendor/datatables.net/datatables.net-dt/css/dataTables.dataTables.min.css" rel="stylesheet" type="text/css">
+ <link href="vendor/datatables.net/datatables.net-rowgroup-dt/css/rowGroup.dataTables.min.css" rel="stylesheet" type="text/css">
+ <link href="vendor/components/font-awesome/css/all.css" rel="stylesheet" type="text/css">
+ <link href="css/datatablesLocal.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet" type="text/css">
+ <link href="css/menu.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet" type="text/css">
+ <link href="css/display.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet" type="text/css">
  {block name=style}{/block}
- <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
- <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/2.1.6/js/dataTables.min.js"></script>
- <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/rowgroup/1.5.0/js/dataTables.rowGroup.min.js"></script>
+ <script type="text/javascript" language="javascript" src="../vendor/components/jquery/jquery.min.js"></script>
+ <script type="text/javascript" language="javascript" src="vendor/datatables.net/datatables.net/js/dataTables.min.js"></script>
+ <script type="text/javascript" language="javascript" src="vendor/datatables.net/datatables.net-rowgroup/js/dataTables.rowGroup.min.js"></script>
  {if !isset($jqueryLocalAdditional) or $jqueryLocalAdditional ne 'N'}
  <script src="../scripts/jqueryLocalAdditional.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" type="module"></script>
  {/if}
