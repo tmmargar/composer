@@ -621,9 +621,9 @@ class ResultsRepository extends BaseRepository {
         }
     }
 
-    public function getOrderedSummary(?DateTime $currentDate, ?DateTime $startDate, ?DateTime $endDate, bool $championship, bool $stats, bool $indexed) {
+    public function getOrderedSummary(?DateTime $currentDate, ?DateTime $startDate, ?DateTime $endDate, bool $championship, bool $stats, bool $email, bool $indexed) {
         $sql = "SELECT ";
-        if ($stats) {
+        if ($stats || $email) {
             $sql .= "player_id, ";
         }
         $sql .=
@@ -772,9 +772,16 @@ class ResultsRepository extends BaseRepository {
                 "LEFT JOIN (SELECT p.player_id, t.ChampQualCount FROM poker_players p CROSS JOIN (SELECT s.season_championship_qualification_count AS ChampQualCount FROM poker_seasons s WHERE s.season_start_date = :startDate1) t) h ON b.player_id = h.player_id ";
         }
         $sql .= "WHERE b.player_id IN (SELECT DISTINCT player_id FROM poker_results WHERE status_code = '" . Constant::CODE_STATUS_FINISHED . "')) d ";
-        if (!$stats) {
+        if ($email) {
+            $sql .=
+                "WHERE IF(d.tourneys >= d.ChampQualCount, 0, d.ChampQualCount - d.tourneys) > 0 " .
+                "AND IF(d.tourneys >= d.ChampQualCount, 0, d.ChampQualCount - d.tourneys) <= d.NumTourneysLeftSeason " .
+                "ORDER BY IF(d.tourneys >= d.ChampQualCount, 0, d.ChampQualCount - d.tourneys) DESC";
+        }
+        if (!$stats & !$email) {
             $sql .= "ORDER BY ROUND(d.earnings, 0) DESC";
         }
+//         echo $sql;
         $statement = $this->getEntityManager()->getConnection()->prepare(sql: $sql);
         if (isset($startDate) && isset($endDate)) {
 //         if (NULL !== $startDate) {

@@ -213,6 +213,20 @@ class Email extends Base {
         return $result;
     }
 
+    public function sendReminderChampionshipQualificationEmail(int $needed, int $left): string {
+        $result = "";
+        $url = Constant::PATH() . "registrationList.php";
+        for ($idx = 0; $idx < count(value: $this->fromName); $idx ++) {
+            $subject = $needed . " / " . $left . " tournaments needed to qualify for championship";
+            $this->setSubject(subject: $subject);
+            $body = $this->getBody() . "<br />" . $this->toName[$idx] . ",<br />";
+            $body .= "&nbsp;&nbsp;You need to play " . $needed . " of the remaining  " . $left . " tournaments in order to qualify for the championship. <a href=\"" . $url . "\">Click here</a> to view the remaining tournaments";
+            $this->setBody(body: $body);
+            $result .= $this->sendEmail();
+        }
+        return $result;
+    }
+
     public function sendReminderEmail(Location $location, Tournament $tournament, int $waitListCount): string {
         $result = "";
         $url = "";
@@ -248,7 +262,6 @@ class Email extends Base {
         }
         return $result;
     }
-
     public function sendCancelledEmail(Location $location, Tournament $tournament): string {
         $result = "";
         $url = "";

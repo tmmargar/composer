@@ -9,7 +9,7 @@ export const dataTable = {
     });
   },
   getSelectedRows : function({jQueryTable} = {}) {
-    return jQueryTable.$("tr.selected");
+    return $("tr.selected");
   },
   getSelectedRowsData : function({jQueryTableApi} = {}) {
     return jQueryTableApi.rows(".selected").data();

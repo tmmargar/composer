@@ -172,7 +172,8 @@ if (SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_ADMINISTRATOR) !=
     $htmlMenuReportScheduledJobs = new HtmlMenu(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: NULL, text: "Scheduled Jobs");
     $htmlLinkAutoRegisterHost = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), href: "autoRegisterHost.php", id: NULL, paramName: array(Constant::FIELD_NAME_MODE), paramValue: array(Constant::MODE_VIEW), tabIndex: - 1, text: "Run auto register host", title: NULL);
     $htmlLinkAutoReminder = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), href: "autoReminder.php", id: NULL, paramName: array(Constant::FIELD_NAME_MODE), paramValue: array(Constant::MODE_VIEW), tabIndex: - 1, text: "Run auto reminder", title: NULL);
-    $htmlLinkScheduledJobsArray = array($htmlLinkAutoRegisterHost,$htmlLinkAutoReminder);
+    $htmlLinkAutoReminderChampionship = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), href: "autoReminderChampionship.php", id: NULL, paramName: array(Constant::FIELD_NAME_MODE), paramValue: array(Constant::MODE_VIEW), tabIndex: - 1, text: "Run auto reminder championship", title: NULL);
+    $htmlLinkScheduledJobsArray = array($htmlLinkAutoRegisterHost,$htmlLinkAutoReminder,$htmlLinkAutoReminderChampionship);
     $htmlMenuReportScheduledJobs->setItems(items: $htmlLinkScheduledJobsArray);
     $htmlLinkAdministrationArray = array($htmlMenuReportGames,$htmlMenuReportPlayers,$htmlMenuReportPayouts,$htmlMenuReportInventories,$htmlLinkEmail,$htmlMenuReportScheduledJobs);
     $htmlMenuReportAdministration->setItems(items: $htmlLinkAdministrationArray);
