@@ -15,9 +15,6 @@
  <link href="css/menu.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet" type="text/css">
  <link href="css/display.css?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" rel="stylesheet" type="text/css">
  {block name=style}{/block}
- <script type="text/javascript" language="javascript" src="../vendor/components/jquery/jquery.min.js"></script>
- <script type="text/javascript" language="javascript" src="vendor/datatables.net/datatables.net/js/dataTables.min.js"></script>
- <script type="text/javascript" language="javascript" src="vendor/datatables.net/datatables.net-rowgroup/js/dataTables.rowGroup.min.js"></script>
  {if !isset($jqueryLocalAdditional) or $jqueryLocalAdditional ne 'N'}
  <script src="../scripts/jqueryLocalAdditional.js?v={$smarty.now|date_format:'%m/%d/%Y %H:%M:%S'}" type="module"></script>
  {/if}

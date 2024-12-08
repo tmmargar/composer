@@ -1,4 +1,5 @@
 "use script";
+import "../vendor/components/jquery/jquery.js";
 import { display } from "./display.js";
 export const input = {
   championshipText : function() {

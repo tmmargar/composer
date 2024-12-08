@@ -1,4 +1,5 @@
 "use script";
+import "../vendor/components/jquery/jquery.js";
 import { dataTable, display, input } from "./import.js";
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id.includes("modify")) {

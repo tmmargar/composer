@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>jQuery ES6 modules test page</title>
+</head>
+<body>
+  <div id="message"></div>
+  <script type="module">
+    import "./vendor/components/jquery/jquery.js";
+    $('#message').text('Hi from jQuery!');
+    import "./vendor/datatables.net/datatables.net/js/dataTables.js";
+    let table = new DataTable('#tbl', {
+        // config options...
+    });
+  const msg = "HI";
+  console.log(`${msg} from template`);
+  </script>
+  <table id="tbl">
+   <thead>
+    <tr><th>hdr1</th><th>hdr2</th></tr>
+   </thead>
+   <tbody>
+    <tr><td>col1</td><td>col2</td></tr>
+   </tbody>
+  </table>
+</body>
+</html>

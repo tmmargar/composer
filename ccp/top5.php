@@ -632,6 +632,7 @@ if (!isset($reportId) || "" == $reportId) {
                 if (0 < count(value: $resultList)) {
                     $output .=
                         "<script type=\"module\">\n" .
+                        "  import \"./vendor/components/jquery/jquery.js\";\n" .
                         "  $(document).ready(function() {\$(\"#title" . ucfirst(string: $reportId) . "\").text($(\"#title" . ucfirst($reportId) . "\").text() + ' (' + " . count(value: $resultList) . " + ')');});\n" .
                         "</script>\n";
                     $ctr = 0;

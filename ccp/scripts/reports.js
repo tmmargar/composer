@@ -1,4 +1,5 @@
 "use strict";
+import "../vendor/components/jquery/jquery.js";
 import { dataTable, display, input } from "./import.js";
 export const reportsInputLocal = {
   initializeDataTable : function() {

@@ -47,6 +47,9 @@ while ($ctr < count(value: $resultList)) {
             $output .= "   var gauge" . $nameCode . " = new google.visualization.Gauge(document.getElementById('gaugeInventory" . $nameCode . "'));\n";
             $output .= "   gauge" . $nameCode . ".draw(gaugeData" . $nameCode . ", gaugeOptions" . $nameCode . ");\n";
             $output .= "  }\n";
+            $output .= " </script>\n";
+            $output .= "<script type=\"module\">\n";
+            $output .= "import \"./vendor/components/jquery/jquery.js\";\n";
             $output .= "$(window).on(\"resize\", function(event) {\n";
             $output .= "  drawGauge();\n";
             $output .= "});\n";
