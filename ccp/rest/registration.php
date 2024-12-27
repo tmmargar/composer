@@ -13,7 +13,12 @@ $tournamentId = (isset($_POST[TOURNAMENT_ID_PARAMETER_NAME]) ? $_POST[TOURNAMENT
 $urlAction = $_SERVER["SCRIPT_NAME"] . "?tournamentId=" . $tournamentId;
 $smarty->assign("action", $urlAction);
 $smarty->assign("heading", "Registration");
-$output .= "<script type=\"module\">\n" . "  import { dataTable, display, input } from \"../scripts/import.js\";\n" . "  let aryMessages = [];\n" . "  let aryErrors = [];\n" . "</script>\n";
+$output .=
+    "<script type=\"module\">\n" .
+    "  import { dataTable, display, input } from \"../scripts/import.js\";\n" .
+    "  let aryMessages = [];\n" .
+    "  let aryErrors = [];\n" .
+    "</script>\n";
 $mode = isset($_POST[Constant::FIELD_NAME_MODE]) ? $_POST[Constant::FIELD_NAME_MODE] : Constant::MODE_VIEW;
 $tournamentDate = isset($_GET["tournamentDate"]) ? $_GET["tournamentDate"] : "";
 $max = $_GET["max"] == "Y" ? true : false;

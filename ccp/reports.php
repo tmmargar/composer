@@ -161,10 +161,10 @@ if (!isset($reportId)) {
                 $width = "100%";
                 $output .= "<div class=\"center\" style=\"width: " . $width . ";\">\n";
                 if (count(value: $arrayIndex) > 0) {
-                    $output .= "<a class=\"link\" title=\"Previous\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] - 1] . "\"><span class=\"linkText\">Previous</span><i class=\"fa fa-caret-left\"></i></a>\n";
+                    $output .= "<a class=\"link\" title=\"Previous\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] + 1] . "\"><span class=\"linkText\">Previous</span><i class=\"fa fa-caret-left\"></i></a>\n";
                 }
                 if ($arrayIndex[0] < (count(value: $resultListIds) - 1)) {
-                    $output .= "<a class=\"link\" title=\"Next\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] + 1] . "\"><i class=\"fa fa-caret-right\"></i><span class=\"linkText\">Next</span></a>\n";
+                    $output .= "<a class=\"link\" title=\"Next\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] - 1] . "\"><i class=\"fa fa-caret-right\"></i><span class=\"linkText\">Next</span></a>\n";
                 }
                 $output .= "</div>\n";
                 $output .= "<strong>Game details: " . $resultList[0]["description"] . ", " . $resultList[0]["limit"] . " " . $resultList[0]["type"] . " " . $resultList[0]["comment"] . " at " . $resultList[0]["location"] . "</strong>";
@@ -258,13 +258,13 @@ if (!isset($reportId)) {
             }
         }
         $output .= "</select>\n";
-        $hiddenSeasonStartDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SEASON_START_DATE_FIELD_NAME, maxLength: NULL, name: SEASON_START_DATE_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $seasonStartDate, wrap: NULL);
+        $hiddenSeasonStartDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SEASON_START_DATE_FIELD_NAME, maxLength: NULL, name: SEASON_START_DATE_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $seasonStartDate, wrap: NULL, noValidate: false);
         $output .= $hiddenSeasonStartDate->getHtml();
-        $hiddenSeasonEndDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SEASON_END_DATE_FIELD_NAME, maxLength: NULL, name: SEASON_END_DATE_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $seasonEndDate, wrap: NULL);
+        $hiddenSeasonEndDate = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: SEASON_END_DATE_FIELD_NAME, maxLength: NULL, name: SEASON_END_DATE_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $seasonEndDate, wrap: NULL, noValidate: false);
         $output .= $hiddenSeasonEndDate->getHtml();
         if (REPORT_ID_SUMMARY == $reportId) {
             $output .= "&nbsp;&nbsp;Include Championships: \n";
-            $checkboxChampionship = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: $championship, class: NULL, cols: NULL, disabled: false, id: "championship", maxLength: NULL, name: "championship", import: NULL, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_CHECKBOX, value: Constant::FLAG_YES, wrap: NULL);
+            $checkboxChampionship = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: $championship, class: NULL, cols: NULL, disabled: false, id: "championship", maxLength: NULL, name: "championship", import: NULL, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_CHECKBOX, value: Constant::FLAG_YES, wrap: NULL, noValidate: false);
             $output .= $checkboxChampionship->getHtml();
         }
         $output .= "</div>\n";
@@ -276,9 +276,9 @@ if (!isset($reportId)) {
     } else {
         $output .= $outputTable;
     }
-    $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array(REPORT_ID_FIELD_NAME . "2"), cols: NULL, disabled: false, id: REPORT_ID_FIELD_NAME, maxLength: NULL, name: REPORT_ID_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $reportId, wrap: NULL);
+    $hiddenReportId = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array(REPORT_ID_FIELD_NAME . "2"), cols: NULL, disabled: false, id: REPORT_ID_FIELD_NAME, maxLength: NULL, name: REPORT_ID_FIELD_NAME, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $reportId, wrap: NULL, noValidate: false);
     $output .= $hiddenReportId->getHtml();
-    $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: NULL, name: Constant::FIELD_NAME_MODE, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: NULL);
+    $hiddenMode = new FormControl(debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_MODE, maxLength: NULL, name: Constant::FIELD_NAME_MODE, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $mode, wrap: NULL, noValidate: false);
     $output .= $hiddenMode->getHtml();
     $output .= "</div>\n";
     $outputDialog = "";

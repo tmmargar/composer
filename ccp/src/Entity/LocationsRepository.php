@@ -14,6 +14,16 @@ class LocationsRepository extends BaseRepository {
         return $qb->getQuery()->getResult();
     }
 
+    public function getByPlayerId(int $playerId) {
+        $qb = $this->createQueryBuilder(alias: "l")
+                   ->innerJoin(join: "l.players", alias: "p");
+        if (isset($playerId)) {
+            $qb = $qb->where(predicates: "p.playerId = :playerId");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "playerId", value: $playerId))));
+        }
+        return $qb->getQuery()->getResult();
+    }
+
     public function getTableOutput(?int $locationId, bool $indexed) {
         $sql =
             "SELECT l.location_id AS id, l.location_name AS name, l.player_id AS playerId, CONCAT(p.player_first_name, ' ', p.player_last_name) AS host, l.location_address AS address, l.location_city AS city, UPPER(l.location_state) AS state, l.location_zip_code AS zip, l.location_map_link AS map, p.player_active_flag AS active, (SELECT COUNT(*) FROM poker_tournaments t WHERE t.location_id = l.location_id) AS trnys " .

@@ -12,6 +12,7 @@ export const inputLocal = {
       document.querySelector("[id^='seasonFee_']").min = 1;
     }
     if ("create" == document.querySelector("#mode").value) {
+      document.querySelector("[id^='seasonDescription_']").value = "S" + (parseInt(document.querySelector("#seasonMaxId").value) + 1);
       document.querySelector("[id^='seasonStartDate_']").value = (new Date().getFullYear() + 1) + "-01-01T00:00";
       document.querySelector("[id^='seasonEndDate_']").value = (new Date().getFullYear() + 1) + "-12-31T23:59";
       document.querySelector("#seasonChampionshipQualify_").value = 8;
@@ -24,7 +25,7 @@ export const inputLocal = {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
-    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
+    const selectedRows = dataTable.getSelectedRows();
     let ids = "";
     for (let selectedRow of selectedRows) {
       ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";

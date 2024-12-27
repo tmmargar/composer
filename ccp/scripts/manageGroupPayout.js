@@ -14,7 +14,7 @@ export const inputLocal = {
     return groupId + "::" + payoutId;
   },
   setIds : function() {
-    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
+    const selectedRows = dataTable.getSelectedRows();
     let ids = "";
     for (let selectedRow of selectedRows) {
       ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";

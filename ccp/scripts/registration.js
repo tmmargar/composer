@@ -3,7 +3,9 @@ import { dataTable, display, input } from "./import.js";
 export const inputLocal = {
   validate : function() {
     const food = document.querySelector("#food");
-    food.setCustomValidity(food.validity.valueMissing ? "You must enter a dish to pass" : "");
+    if (food) {
+        food.setCustomValidity(food.validity.valueMissing ? "You must enter a dish to pass" : "");
+    }
   }
 };
 document.addEventListener("click", (event) => {

@@ -5,7 +5,7 @@
 #----------------------------------------------------------------cp:ppd
 AuthType Basic
 AuthName "Protected 'public_html/new/rest'"
-AuthUserFile "/home/chipch5/.htpasswds/public_html/new/rest/passwd"
+AuthUserFile "/home/chipch6/.htpasswds/public_html/new/rest/passwd"
 Require valid-user
 #----------------------------------------------------------------cp:ppd
 # End section managed by cPanel: Password Protected Directories -cp:ppd

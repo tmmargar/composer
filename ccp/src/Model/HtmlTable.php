@@ -295,14 +295,14 @@ class HtmlTable extends HtmlBase {
                 }
                 if (isset($this->hiddenId)) {
                     $output .= "<td>\n";
-                    $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("hide"), cols: NULL, disabled: false, id: $this->hiddenId . "_" . $row[0], maxLength: NULL, name: $this->hiddenId . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[0], wrap: NULL);
+                    $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("hide"), cols: NULL, disabled: false, id: $this->hiddenId . "_" . $row[0], maxLength: NULL, name: $this->hiddenId . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[0], wrap: NULL, noValidate: false);
                     $output .= $hiddenTemp->getHtml();
                     $output .= "</td>\n";
                 }
                 if (isset($this->hiddenAdditional)) {
                     for ($index = 0; $index < count(value: $this->hiddenAdditional); $index++) {
                         $output .= "<td>\n";
-                        $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("hide"), cols: NULL, disabled: false, id: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], maxLength: NULL, name: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[$this->hiddenAdditional[$index][1]], wrap: NULL);
+                        $hiddenTemp = new FormControl(debug: $this->isDebug(), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: array("hide"), cols: NULL, disabled: false, id: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], maxLength: NULL, name: $this->hiddenAdditional[$index][0] . "_" . $row[$this->hiddenAdditional[$index][1]], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[$this->hiddenAdditional[$index][1]], wrap: NULL, noValidate: false);
                         $output .= $hiddenTemp->getHtml();
                         $output .= "</td>\n";
                     }

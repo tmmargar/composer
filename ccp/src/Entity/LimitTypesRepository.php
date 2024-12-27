@@ -14,6 +14,15 @@ class LimitTypesRepository extends BaseRepository {
         return $qb->getQuery()->getResult();
     }
 
+    public function getByName(string $limitTypeName) {
+        $qb = $this->createQueryBuilder(alias: "lt");
+        if (isset($limitTypeName)) {
+            $qb = $qb->where(predicates: "lt.limitTypeName = :limitTypeName");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "limitTypeName", value: $limitTypeName))));
+        }
+        return $qb->getQuery()->getResult();
+    }
+
     public function getTableOutput(?int $limitTypeId, bool $indexed) {
         $sql =
             "SELECT limit_type_id AS id, limit_type_name AS name " .

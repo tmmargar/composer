@@ -9,7 +9,7 @@ export const reportsInputLocal = {
       if (reportId == "results") {
         dataTableId = "dataTblTournamentResults";
         if (document.querySelector("#" + dataTableId)) {
-          dataTable.initialize({tableId: dataTableId, aryColumns: [null, { "type" : "name" }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }, { "type" : "name" }, { "searchable": false, "visible": false }], aryOrder: [[0, "asc" ]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
+          dataTable.initialize({tableId: dataTableId, aryColumns: [{"width": "3%"}, { "type" : "name", "width": "38%" }, { "orderSequence": [ "desc", "asc" ], "width": "10%" }, { "orderSequence": [ "desc", "asc" ], "width": "10%" }, { "orderSequence": [ "desc", "asc" ], "width": "10%" }, { "orderSequence": [ "desc", "asc" ], "width": "5%" }, { "type" : "name", "width": "24%" }, { "searchable": false, "visible": false, "width": "1%" }], aryOrder: [[0, "asc" ]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
         }
       } else if (reportId == "pointsTotal") {
         dataTableId = "dataTblTotalPoints";
@@ -55,7 +55,7 @@ export const reportsInputLocal = {
         let aryNew = [];
         aryParam.forEach(function(item, index, array) {
           const aryItem = item.split(" ");
-          aryNew[index] = params.get("group") ? parseInt(aryItem) - 1 : aryItem;
+          aryNew[index] = aryItem;
         });
         let aryCols = [];
         let colIndex = 0;
@@ -118,18 +118,21 @@ export const reportsInputLocal = {
               const objColumn2 = document.createElement("td");
               objColumn2.classList.add("number");
               objColumn2.classList.add("positive");
+              objColumn2.classList.add("dt-type-numeric");
               objColumn2.innerHTML = feesTotalSumFormatted;
               objColumn2.style.fontWeight = "900";
               objRow.appendChild(objColumn2);
               const objColumn3 = document.createElement("td");
               objColumn3.classList.add("number");
               objColumn3.classList.add("positive");
+              objColumn3.classList.add("dt-type-numeric");
               objColumn3.innerHTML = feesPaidSumFormatted;
               objColumn3.style.fontWeight = "900";
               objRow.appendChild(objColumn3);
               const objColumn4 = document.createElement("td");
               objColumn4.classList.add("number");
               objColumn4.classList.add("positive");
+              objColumn4.classList.add("dt-type-numeric");
               objColumn4.innerHTML = feesBalanceSumFormatted;
               objColumn4.style.fontWeight = "900";
               objRow.appendChild(objColumn4);
@@ -179,7 +182,7 @@ export const reportsInputLocal = {
     return action;
   },
   championshipCount : function(tableId) {
-      if (document.querySelector("#reportId").value == "summary" && document.querySelector("#season").value != "ALL") {
+      if (document.querySelector("#reportId").value == "summary" && document.querySelector("#season").value != "ALL" && document.querySelector("#" + tableId) !== null) {
         let qualified = 0;
         let eligible = 0;
         document.querySelectorAll("#" + tableId + " tbody tr td:nth-of-type(2)").forEach(cell => {
@@ -198,7 +201,7 @@ let documentReadyCallback = () => {
   reportsInputLocal.initializeDataTable();
   reportsInputLocal.championshipCount("dataTblSummary");
   if (document.querySelector("#reportId").value != "summary") {
-    document.querySelector("body").style.width = "650px";
+    document.querySelector("body").style.width = "700px";
     $(".dataTable").DataTable().draw();
   }
 };

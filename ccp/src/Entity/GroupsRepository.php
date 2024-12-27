@@ -13,6 +13,15 @@ class GroupsRepository extends BaseRepository {
         return $qb->getQuery()->getResult();
     }
 
+    public function getByName(string $groupName) {
+        $qb = $this->createQueryBuilder(alias: "g");
+        if (isset($groupName)) {
+            $qb = $qb->where(predicates: "g.groupName = :groupName");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "groupName", value: $groupName))));
+        }
+        return $qb->getQuery()->getResult();
+    }
+
     public function getTableOutput(?int $groupId, bool $indexed) {
         $sql =
             "SELECT group_id AS id, group_name AS name " .

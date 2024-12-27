@@ -79,7 +79,7 @@ $resultHeaders = $entityManager->getRepository(entityName: Constant::ENTITY_PLAY
 if (0 < count(value: $result)) {
     $count = count(value: $result[0]);
     $output .= "<div class=\"buttons center\">\n";
-    $buttonSave = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: true, id: Constant::TEXT_SAVE . "_2", maxLength: NULL, name: Constant::TEXT_SAVE . "_2", onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL);
+    $buttonSave = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: true, id: Constant::TEXT_SAVE . "_2", maxLength: NULL, name: Constant::TEXT_SAVE . "_2", onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL, noValidate: false);
     $output .= $buttonSave->getHtml();
     $output .= "</div>\n";
     $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"dataTbl display\" id=\"dataTblSignupApproval\">\n";
@@ -103,9 +103,9 @@ if (0 < count(value: $result)) {
         }
         $output .= "  <tr>\n";
         for ($index = 1; $index < $count; $index ++) {
-            $hiddenPlayer = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_PLAYER . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_PLAYER . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[1], wrap: NULL);
-            $hiddenEmail = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_EMAIL . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_EMAIL . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[2], wrap: NULL);
-            $hiddenUsername = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_PLAYERNAME . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_PLAYERNAME . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[3], wrap: NULL);
+            $hiddenPlayer = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_PLAYER . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_PLAYER . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[1], wrap: NULL, noValidate: false);
+            $hiddenEmail = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_EMAIL . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_EMAIL . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[2], wrap: NULL, noValidate: false);
+            $hiddenUsername = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: Constant::FIELD_NAME_PLAYERNAME . "_" . $row[0], maxLength: NULL, name: Constant::FIELD_NAME_PLAYERNAME . "_" . $row[0], onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: $row[3], wrap: NULL, noValidate: false);
             $output .= "   <td>" . $row[$index] . ($index == 1 ? $hiddenPlayer->getHtml() : ($index == 2 ? $hiddenEmail->getHtml() : ($index == 3 ? $hiddenUsername->getHtml() : ""))) . "</td>\n";
         }
         $output .= "   <td class=\"center\"><input id=\"approvePlayer_" . $row[0] . "\" name=\"approvePlayer_" . $row[0] . "\" type=\"checkbox\" value=\"1\" /></td>\n";
@@ -116,13 +116,13 @@ if (0 < count(value: $result)) {
     $output .= " </tbody>\n";
     $output .= "</table>\n";
     $output .= "<div class=\"buttons center\">\n";
-    $buttonSave = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: true, id: Constant::TEXT_SAVE, maxLength: NULL, name: Constant::TEXT_SAVE, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL);
+    $buttonSave = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: Constant::ACCESSKEY_SAVE, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: true, id: Constant::TEXT_SAVE, maxLength: NULL, name: Constant::TEXT_SAVE, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_SUBMIT, value: Constant::TEXT_SAVE, wrap: NULL, noValidate: false);
     $output .= $buttonSave->getHtml();
     $output .= "</div>\n";
 } else {
     $output .= "<br />\nNo users require approval";
 }
-$hiddenMode = new FormControl(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), NULL, NULL, false, NULL, NULL, NULL, false, Constant::FIELD_NAME_MODE, NULL, Constant::FIELD_NAME_MODE, NULL, NULL, false, NULL, NULL, NULL, NULL, FormControl::TYPE_INPUT_HIDDEN, $mode, NULL);
+$hiddenMode = new FormControl(SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), NULL, NULL, false, NULL, NULL, NULL, false, Constant::FIELD_NAME_MODE, NULL, Constant::FIELD_NAME_MODE, NULL, NULL, false, NULL, NULL, NULL, NULL, FormControl::TYPE_INPUT_HIDDEN, $mode, NULL, noValidate: false);
 $output .= $hiddenMode->getHtml();
 $smarty->assign("content", $output);
 $smarty->display("manage.tpl");

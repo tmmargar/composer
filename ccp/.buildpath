@@ -36,7 +36,7 @@
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/doctrine/deprecations/lib/Doctrine/Deprecations">
+	<buildpathentry kind="src" path="vendor/doctrine/deprecations/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>

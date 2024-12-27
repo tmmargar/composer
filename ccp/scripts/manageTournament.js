@@ -9,7 +9,7 @@ export const inputLocal = {
     return result;
   },
   defaultDescription : function() {
-    return "S" + (new Date().getFullYear() - input.firstYear() + 1) + " - T";
+    return "S" + document.querySelector("#seasonMaxId").value + " - T" + (parseInt(document.querySelector("#countTournament").value) + 1);
   },
   initializeDataTable : function() {
     dataTable.initialize({tableId: "dataTbl", aryColumns: [{ "orderSequence": [ "desc", "asc" ], "width": "3%" },
@@ -18,7 +18,8 @@ export const inputLocal = {
         render: function (data, type, row) {
           // row[2] is comment, row[18] is special type
           if (type === 'display') {
-            const title = " title=\"" + row[18] + "\"";
+            const titleText = "" != row[2] ? row[2] + ("" != row[18] ? " - " + row[18] : "") : row[18];
+            const title = " title=\"" + titleText + "\"";
             const specialType = "" != row[18] ? " (" + row[18] + ")" : "";
             return "<span" + title + ">" + data + specialType + "</span>";
           }
@@ -52,7 +53,7 @@ export const inputLocal = {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
-    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
+    const selectedRows = dataTable.getSelectedRows();
     let ids = "";
     for (let selectedRow of selectedRows) {
       ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";
@@ -171,10 +172,11 @@ document.addEventListener("click", (event) => {
     input.restorePreviousValue({selectors: ["[id^='tournamentDescription_']", "[id^='tournamentComment_']", "[id^='tournamentLimitTypeId_']", "[id^='tournamentGameTypeId_']", "[id^='tournamentSpecialTypeId_']", "[id^='tournamentLocationId_']", "[id^='tournamentStartDateTime_']", "[id^='tournamentBuyinAmount_']", "[id^='tournamentMaxPlayers_']", "[id^='tournamentRebuyAmount_']", "[id^='tournamentRebuys_']", "[id^='tournamentAddonAmount_']", "[id^='tournamentAddonChipCount_']", "[id^='tournamentGroupId_']"]});
   } else if (event.target && (event.target.id.includes("modify") || event.target.id.includes("delete"))) {
     inputLocal.setIds();
-  } else if (event.target && event.target.id.includes("confirmDelete")) {
+  } else if (event.target && (event.target.id.includes("save") || event.target.id.includes("confirmDelete"))) {
     if (!inputLocal.confirmAction()) {
       event.preventDefault();
       event.stopPropagation();
+      document.querySelector("#mode").value = document.querySelector("#mode").value.replace("save", "");
     }
   }
 });

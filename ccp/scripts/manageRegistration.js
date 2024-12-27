@@ -49,7 +49,7 @@ document.querySelectorAll("#dataTbl tbody tr")?.forEach(row => row.addEventListe
 }));
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id.includes("register")) {
-    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
+    const selectedRows = dataTable.getSelectedRows();
     if (selectedRows.length == 0) {
       display.showErrors({errors: [ "You must select a row to register / un-register" ]});
       event.preventDefault();

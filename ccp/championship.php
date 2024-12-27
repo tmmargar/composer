@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace ccp;
 use Poker\Ccp\Model\Constant;
 use Poker\Ccp\Utility\SessionUtility;
+use Poker\Ccp\Utility\DateTimeUtility;
 require_once "init.php";
 $smarty->assign("title", "Chip Chair and a Prayer Championship");
 $smarty->assign("formName", "frmChampionship");
@@ -102,7 +103,7 @@ if (0 < $count) {
   // }
     $playerCount = $totalPlayers;
     $maxIndex = $numTables;
-    while ($index < ($totalPlayers)) {
+    while (($index+1) < ($totalPlayers)) {
         $index++;
         $playerCount--;
         // echo "<br>setting aryNames[".$index."] = EMPTY";
@@ -115,13 +116,13 @@ if (0 < $count) {
             $maxIndex--;
         }
     }
-      $topThird = ceil(num: $playerCount / 3);
-      $topThirdChipCount = 11000;
-      $middleThird = ceil(num: $playerCount / 3);
-      $middleThirdChipCount = 10000;
-      $bottomThird = floor(num: $playerCount / 3);
-      $bottomThirdChipCount = 9000;
-      $ctr = 0;
+    $topThird = ceil(num: $playerCount / 3);
+    $topThirdChipCount = 11000;
+    $middleThird = ($playerCount % 3) <= 1 ? floor(num: $playerCount / 3) : ceil(num: $playerCount / 3);
+    $middleThirdChipCount = 10000;
+    $bottomThird = floor(num: $playerCount / 3);
+    $bottomThirdChipCount = 9000;
+    $ctr = 0;
     while ($ctr < count(value: $aryNames)) {
         if ($ctr < $topThird) {
             $aryNames[$ctr] .= " (" . $topThirdChipCount . " chips)";
@@ -255,7 +256,8 @@ if (0 < $count) {
         }
     }
 } else {
-    $output .= "<div class=\"center\">No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " . SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for " . date(format: "Y") . "</div>\n";
+    $season = $entityManager->getRepository(entityName: Constant::ENTITY_SEASONS)->getActives();
+    $output .= "<div class=\"center\">No one has qualified with at least " . SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments yet or " . SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_CHAMPIONSHIP_QUALIFY) . " tournaments have not been completed for season starting " . DateTimeUtility::formatDisplayDate(value: $season->getSeasonStartDate()) . "</div>\n";
 }
 $smarty->assign("content", $output);
 $smarty->display("championship.tpl");

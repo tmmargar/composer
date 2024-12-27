@@ -14,6 +14,15 @@ class GameTypesRepository extends BaseRepository {
         return $qb->getQuery()->getResult();
     }
 
+    public function getByName(string $gameTypeName) {
+        $qb = $this->createQueryBuilder(alias: "gt");
+        if (isset($gameTypeName)) {
+            $qb = $qb->where(predicates: "gt.gameTypeName = :gameTypeName");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "gameTypeName", value: $gameTypeName))));
+        }
+        return $qb->getQuery()->getResult();
+    }
+
     public function getTableOutput(?int $gameTypeId, bool $indexed) {
         $sql =
             "SELECT game_type_id AS id, game_type_name AS name " .

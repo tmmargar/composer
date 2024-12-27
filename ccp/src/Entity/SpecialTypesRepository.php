@@ -14,6 +14,15 @@ class SpecialTypesRepository extends BaseRepository {
                   ->getQuery()->getResult();
     }
 
+    public function getByName(string $specialTypeDescription) {
+        $qb = $this->createQueryBuilder(alias: "st");
+        if (isset($specialTypeDescription)) {
+            $qb = $qb->where("st.specialTypeDescription = :specialTypeDescription");
+            $qb->setParameters(parameters: new ArrayCollection(elements: array(new Parameter(name: "specialTypeDescription", value: $specialTypeDescription))));
+        }
+        return $qb->getQuery()->getResult();
+    }
+
     public function getTableOutput(?int $specialTypeId, bool $indexed) {
         $sql =
             "SELECT special_type_id AS id, special_type_description AS description, special_type_multiplier as multiplier " .

@@ -67,7 +67,7 @@ class Tournaments
     private string $tournamentRake; // per documentation must be string not float
 
     #[Column(name: "tournament_map", length: 255, nullable: true)]
-    private string $tournamentMap;
+    private ?string $tournamentMap;
 
     #[ManyToOne(inversedBy: "tournaments")]
     #[JoinColumn(name: "group_id", referencedColumnName: "group_id")]
@@ -202,7 +202,7 @@ class Tournaments
     /**
      * @return string
      */
-    public function getTournamentMap(): string {
+    public function getTournamentMap(): ?string {
         return $this->tournamentMap;
     }
 
@@ -281,7 +281,7 @@ class Tournaments
     /**
      * @param string $tournamentComment
      */
-    public function setTournamentComment(?String $tournamentComment): self {
+    public function setTournamentComment(?string $tournamentComment): self {
         $this->tournamentComment = $tournamentComment;
         return $this;
     }
@@ -369,7 +369,7 @@ class Tournaments
     /**
      * @param string $tournamentMap
      */
-    public function setTournamentMap(string $tournamentMap): self {
+    public function setTournamentMap(?string $tournamentMap): self {
         $this->tournamentMap = $tournamentMap;
         return $this;
     }

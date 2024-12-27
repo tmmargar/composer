@@ -3,7 +3,7 @@ import "../vendor/components/jquery/jquery.js";
 import { dataTable, display, input } from "./import.js";
 document.addEventListener("click", (event) => {
   if (event.target && event.target.id.includes("modify")) {
-    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
+    const selectedRows = dataTable.getSelectedRows();
     if (selectedRows.length == 0) {
       display.showErrors({errors: [ "You must select a row to modify" ]});
       event.preventDefault();
@@ -16,7 +16,7 @@ document.addEventListener("click", (event) => {
       document.querySelector("#mode").value = event.target.value.toLowerCase();
     }
   } else if (event.target && event.target.id.includes("delete")) {
-    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
+    const selectedRows = dataTable.getSelectedRows();
     if (selectedRows.length == 0) {
       display.showErrors({errors: [ "You must select a row to delete" ]});
       event.preventDefault();

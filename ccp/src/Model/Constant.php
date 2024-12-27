@@ -182,14 +182,14 @@ abstract class Constant {
   public const FOLDER_SESSION = "sessions";
   public const FOLDER_MAP = "maps";
   public const PATH_HOME_LOCAL = "C:/Users/n082832/git/composer/ccp";
-  public const PATH_HOME_SERVER = "/home/chipch5/public_html";
+  public const PATH_HOME_SERVER = "/home/chipch6/public_html";
   public const DATABASE_HOST_NAME = "localhost";
-  public const DATABASE_NAME  = "chipch5_stats";
+  public const DATABASE_NAME  = "chipch6_stats";
   public const DATABASE_PASSWORD_LOCAL = "toor";
-  public const DATABASE_PASSWORD_SERVER = "app_chipch5";
+  public const DATABASE_PASSWORD_SERVER = "app_chipch6";
   public const DATABASE_PORT = 3306;
   public const DATABASE_USER_NAME_LOCAL = "root";
-  public const DATABASE_USER_NAME_SERVER = "chipch5_app";
+  public const DATABASE_USER_NAME_SERVER = "chipch6_app";
   public static function CONTEXT_ROOT(): string {
     return self::FLAG_LOCAL() ? "/ccp/" : "/new/";
   }
@@ -212,6 +212,6 @@ abstract class Constant {
     return (self::FLAG_LOCAL() ? "" : self::PATH_HOME_SERVER . self::CONTEXT_ROOT()) . self::FOLDER_SESSION;
   }
   public static function SERVER_EMAIL(): string {
-    return self::FLAG_LOCAL() ? "localhost" : "ecngx303.inmotionhosting.com";
+    return self::FLAG_LOCAL() ? "localhost" : "amsngx368.inmotionhosting.com";
   }
 }

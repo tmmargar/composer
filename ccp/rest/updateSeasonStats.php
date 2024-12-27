@@ -10,8 +10,8 @@ $resultList = $entityManager->getRepository(entityName: Constant::ENTITY_RESULTS
 if (0 < count(value: $resultList)) {
     $count = 0;
     $output .= " <table id=\"output\">\n";
+    $output .= "  <tbody>\n";
     foreach ($resultList as $result) {
-        $output .= "  <tbody>\n";
         $output .= "  <tr>\n";
         foreach ($result as $value) {
             $output .= "   <td>" . $value . "</td>\n";

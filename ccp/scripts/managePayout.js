@@ -99,7 +99,7 @@ export const inputLocal = {
     return selectedRow.children[0].innerHTML;
   },
   setIds : function() {
-    const selectedRows = dataTable.getSelectedRows({jQueryTable: $("#dataTbl").dataTable()});
+    const selectedRows = dataTable.getSelectedRows();
     let ids = "";
     for (let selectedRow of selectedRows) {
       ids += inputLocal.setId({selectedRow: selectedRow}) + ", ";

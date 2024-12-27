@@ -10,7 +10,7 @@ namespace Poker\Ccp\classes;
 // spl_autoload_register(function($class_name) {
 function CcpAutoload($class_name) {
   $class_name = str_replace(search: "\\", replace: "/", subject: $class_name);
-  $rootDir = $_SERVER['HTTP_HOST'] == "www.chipchairprayer.com" ? "/home/chipch5/public_html/new/" : "";
+  $rootDir = $_SERVER['HTTP_HOST'] == "www.chipchairprayer.com" ? "/home/chipch6/public_html/new/" : "";
   $dirs = array($rootDir,$rootDir . "src/classes/entity/",$rootDir . "src/classes/test/",$rootDir . "src/classes/common/PHPMailer/",$rootDir . "src/classes/common/Psr/",$rootDir . "src/classes/common/smarty/",$rootDir . "src/classes/common/smarty/libs/",$rootDir . "src/classes/utility/",$rootDir . "src/classes/utility/test/");
   foreach ($dirs as $dir) {
     // added ../ to support rest subfolder

@@ -11,7 +11,7 @@ export const dataTable = {
       }
     });
   },
-  getSelectedRows : function({jQueryTable} = {}) {
+  getSelectedRows : function() {
     return $("tr.selected");
   },
   getSelectedRowsData : function({jQueryTableApi} = {}) {
@@ -21,7 +21,6 @@ export const dataTable = {
     dataTable.initializeCommon({tableSelector: "#" + tableId, aryColumns: aryColumns, aryOrder: aryOrder, aryRowGroup: aryRowGroup, autoWidth: autoWidth, paging: paging, scrollCollapse: scrollCollapse, scrollResize: scrollResize, scrollY: scrollY, searching: searching});
   },
   initializeCommon : function({tableSelector, aryColumns = null, aryOrder = [], aryRowGroup = false, autoWidth = false, paging = false, scrollCollapse = true, scrollResize = true, scrollY = "", searching = true} = {}) {
-      // div table, div info summary and pagination end div end div -- "dom": '<<t>ip>'
     $(tableSelector).DataTable({ "autoWidth": autoWidth, "columns": aryColumns, "destroy": true, "language": {"info": "Showing _START_ to _END_ of _TOTAL_", "infoEmpty": ""}, "layout": { topStart: null, topEnd: null, bottomStart: "info", bottomEnd: null }, "order": aryOrder, "paging": paging, "responsive": true, "rowGroup": aryRowGroup, "rowReorder": { selector: 'td:nth-child(2)' }, "scrollCollapse": scrollCollapse, "scrollResize": scrollResize, "scrollY": scrollY, "searching": searching });
   },
   initializeBySelector : function({tableSelector, aryColumns = null, aryOrder = [], aryRowGroup = false, autoWidth = false, paging = false, scrollCollapse = true, scrollResize = true, scrollY = "", searching = true} = {}) {
