@@ -46,7 +46,7 @@ class Players
     private string $playerPhone; // per documentation must be string not float
 
     #[Column(name: "player_administrator_flag", length: 1, nullable: false)]
-    private string $playerAdministratorFlag;
+    private bool $playerAdministratorFlag;
 
     #[Column(name: "player_registration_date", type: "date", nullable: false)]
     private DateTime $playerRegistrationDate;
@@ -66,7 +66,7 @@ class Players
     private ?Players $playerRejection;
 
     #[Column(name: "player_active_flag", length: 1, nullable: false)]
-    private string $playerActiveFlag;
+    private bool $playerActiveFlag;
 
     #[Column(name: "player_selector", length: 16, nullable: true)]
     private ?string $playerSelector;
@@ -163,9 +163,9 @@ class Players
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getPlayerAdministratorFlag(): string {
+    public function getPlayerAdministratorFlag(): bool {
         return $this->playerAdministratorFlag;
     }
 
@@ -205,9 +205,9 @@ class Players
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getPlayerActiveFlag(): string {
+    public function getPlayerActiveFlag(): bool {
         return $this->playerActiveFlag;
     }
 
@@ -332,9 +332,9 @@ class Players
     }
 
     /**
-     * @param string $playerAdministratorFlag
+     * @param bool $playerAdministratorFlag
      */
-    public function setPlayerAdministratorFlag(string $playerAdministratorFlag): self {
+    public function setPlayerAdministratorFlag(bool $playerAdministratorFlag): self {
         $this->playerAdministratorFlag = $playerAdministratorFlag;
         return $this;
     }
@@ -382,9 +382,9 @@ class Players
     }
 
     /**
-     * @param string $playerActiveFlag
+     * @param bool $playerActiveFlag
      */
-    public function setPlayerActiveFlag(string $playerActiveFlag): self {
+    public function setPlayerActiveFlag(bool $playerActiveFlag): self {
         $this->playerActiveFlag = $playerActiveFlag;
         return $this;
     }

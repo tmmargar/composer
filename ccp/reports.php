@@ -163,7 +163,7 @@ if (!isset($reportId)) {
                 if (count(value: $arrayIndex) > 0) {
                     $output .= "<a class=\"link\" title=\"Previous\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] + 1] . "\"><span class=\"linkText\">Previous</span><i class=\"fa fa-caret-left\"></i></a>\n";
                 }
-                if ($arrayIndex[0] < (count(value: $resultListIds) - 1)) {
+                if ($arrayIndex[0] > 0 && $arrayIndex[0] < (count(value: $resultListIds) - 1)) {
                     $output .= "<a class=\"link\" title=\"Next\" href=\"reports.php?reportId=results&amp;tournamentId=" . $resultListIds[$arrayIndex[0] - 1] . "\"><i class=\"fa fa-caret-right\"></i><span class=\"linkText\">Next</span></a>\n";
                 }
                 $output .= "</div>\n";

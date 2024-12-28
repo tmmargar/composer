@@ -49,8 +49,8 @@ if (Constant::MODE_SIGNUP == $mode) {
                 "  let aryMessages = [];\n";
             $nameValues = explode(" ", $name);
             $pl = new Players();
-            $pl->setPlayerActiveFlag(playerActiveFlag: "0");
-            $pl->setPlayerAdministratorFlag(playerAdministratorFlag: "0");
+            $pl->setPlayerActiveFlag(playerActiveFlag: false);
+            $pl->setPlayerAdministratorFlag(playerAdministratorFlag: false);
             $pl->setPlayerEmail(playerEmail: $emailAddress);
             $pl->setPlayerExpires(playerExpires: NULL);
             $pl->setPlayerFirstName(playerFirstName: $nameValues[0]);

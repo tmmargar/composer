@@ -46,7 +46,7 @@ if (Constant::MODE_SAVE_VIEW == $mode) {
         $playerApproval = $entityManager->find(className: Constant::ENTITY_PLAYERS, id: (int) SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_PLAYERID));
         $player->setPlayerApproval(playerApproval: $playerApproval);
         $player->setPlayerApprovalDate(playerApprovalDate: new DateTime());
-        $player->setPlayerActiveFlag(playerActiveFlag: "1");
+        $player->setPlayerActiveFlag(playerActiveFlag: true);
         $entityManager->persist(entity: $player);
         try {
             $entityManager->flush();

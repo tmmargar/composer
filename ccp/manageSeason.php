@@ -30,7 +30,7 @@ define("SEASON_CHAMPIONSHIP_QUALIFY_FIELD_NAME", "seasonChampionshipQualify");
 define("DEFAULT_VALUE_CHAMPIONSHIP_QUALIFY", 8);
 define("DEFAULT_VALUE_FINAL_TABLE_PLAYERS", 8);
 define("DEFAULT_VALUE_FINAL_TABLE_BONUS_POINTS", 3);
-define("DEFAULT_VALUE_SEASON_ACTIVE", "0");
+define("DEFAULT_VALUE_SEASON_ACTIVE", false);
 $smarty->assign("title", "Manage Season");
 $smarty->assign("heading", "Manage Season");
 $smarty->assign("style", "<link href=\"css/manageSeason.css\" rel=\"stylesheet\">");
@@ -73,7 +73,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
             $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxFee->getHtml() . "</div>\n";
             $resultList2 = $entityManager->getRepository(entityName: Constant::ENTITY_SEASONS)->getActives();
             $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . SEASON_ACTIVE_FIELD_NAME . "_" . $id . "\">" . SEASON_ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </label></div>\n";
-            $checkboxActive = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: ((0 < count($seasons)) && Constant::FLAG_YES_DATABASE == $seasons[0]->getSeasonActiveFlag() ? true : false), class: NULL, cols: NULL, disabled: ((0 < count($seasons)) && (NULL === $resultList2)) || ((0 < count($seasons)) && (NULL !== $resultList2) && Constant::FLAG_YES_DATABASE == $seasons[0]->getSeasonActiveFlag())  ? false : true, id: SEASON_ACTIVE_FIELD_NAME . "_" . $id, maxLength: NULL, name: SEASON_ACTIVE_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_CHECKBOX, value: (string) Constant::FLAG_YES_DATABASE, wrap: NULL, noValidate: false);
+            $checkboxActive = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: ((0 < count($seasons)) && Constant::FLAG_YES_DATABASE == $seasons[0]->getSeasonActiveFlag() ? true : false), class: NULL, cols: NULL, disabled: ((0 < count($seasons)) && (NULL === $resultList2)) || ((0 < count($seasons)) && (NULL !== $resultList2) && $seasons[0]->getSeasonActiveFlag())  ? false : true, id: SEASON_ACTIVE_FIELD_NAME . "_" . $id, maxLength: NULL, name: SEASON_ACTIVE_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_CHECKBOX, value: (string) Constant::FLAG_YES_DATABASE, wrap: NULL, noValidate: false);
             $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $checkboxActive->getHtml() . "</div>\n";
             $hiddenRow = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: NULL, class: NULL, cols: NULL, disabled: false, id: HIDDEN_ROW_FIELD_NAME . "_" . $id, maxLength: NULL, name: HIDDEN_ROW_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_HIDDEN, value: ((0 < count($seasons)) ? $seasons[0]->getSeasonId() : ""), wrap: NULL, noValidate: false);
             $output .= $hiddenRow->getHtml();
@@ -128,7 +128,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
                 $season->setSeasonFinalTableBonusPoints(seasonFinalTableBonusPoints: $seasonFinalTablePlayersBonusPoints);
                 $season->setSeasonFinalTablePlayers(seasonFinalTablePlayers: $seasonFinalTablePlayers);
                 $season->setSeasonFee(seasonFee: $seasonFee);
-                $season->setSeasonActiveFlag(seasonActiveFlag: (isset($seasonActive) ? $seasonActive : 0));
+                $season->setSeasonActiveFlag(seasonActiveFlag: (isset($seasonActive) ? $seasonActive : false));
                 $entityManager->persist(entity: $season);
                 try {
                     $entityManager->flush();
@@ -144,7 +144,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
                 $season->setSeasonFinalTableBonusPoints(seasonFinalTableBonusPoints: $seasonFinalTablePlayersBonusPoints);
                 $season->setSeasonFinalTablePlayers(seasonFinalTablePlayers: $seasonFinalTablePlayers);
                 $season->setSeasonFee(seasonFee: $seasonFee);
-                $season->setSeasonActiveFlag(seasonActiveFlag: (isset($seasonActive) ? $seasonActive : 0));
+                $season->setSeasonActiveFlag(seasonActiveFlag: (isset($seasonActive) ? $seasonActive : false));
                 $entityManager->persist(entity: $season);
                 try {
                     $entityManager->flush();
@@ -164,7 +164,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
     }
     $seasons = $entityManager->getRepository(entityName: Constant::ENTITY_SEASONS)->getActives();
     if (NULL !== $seasons) {
-        $season = new Season(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), id: 0, description: "", startDate: NULL, endDate: NULL, championshipQualify: 0, finalTablePlayers: 0, finalTableBonusPoints: 0, fee: 0, active: "0");
+        $season = new Season(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), id: 0, description: "", startDate: NULL, endDate: NULL, championshipQualify: 0, finalTablePlayers: 0, finalTableBonusPoints: 0, fee: 0, active: false);
         $season->createFromEntity(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), seasons: $seasons);
         SessionUtility::regenerateAllSessions(seasonNew: $season);
     }

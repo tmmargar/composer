@@ -16,8 +16,8 @@ export const inputLocal = {
       document.querySelector("[id^='seasonStartDate_']").value = (new Date().getFullYear() + 1) + "-01-01T00:00";
       document.querySelector("[id^='seasonEndDate_']").value = (new Date().getFullYear() + 1) + "-12-31T23:59";
       document.querySelector("#seasonChampionshipQualify_").value = 8;
-      document.querySelector("[id^='seasonFinalTablePlayers_']").value = 8;
-      document.querySelector("[id^='seasonFinalTableBonusPoints_']").value = 3;
+      document.querySelector("[id^='seasonFinalTablePlayers_']").value = 9;
+      document.querySelector("[id^='seasonFinalTableBonusPoints_']").value = 5;
       document.querySelector("#seasonFee_").value = 30;
     }
   },

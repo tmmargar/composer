@@ -7,14 +7,14 @@ class Location extends Base {
     private Locations $locations;
     public function createFromEntity(bool $debug, Locations $locations): Location {
         $this->locations = $locations;
-        $player = new Player(debug: false, id: 0, name: "", username: "", password: "", email: "", phone: NULL, administrator: "0", registrationDate: new DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: "0", resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
+        $player = new Player(debug: false, id: 0, name: "", username: "", password: "", email: "", phone: NULL, administrator: false, registrationDate: new DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: false, resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
         $player->createFromEntity(debug: $debug, players: $locations->getPlayers());
         return $this->create(debug: $debug, id: $locations->getLocationId(), name: $locations->getLocationName(), address: $locations->getLocationAddress(), city: $locations->getLocationCity(), state: $locations->getLocationState(), zipCode: $locations->getLocationZipCode(), player: $player, count: count($locations->getTournaments()), active: $locations->getPlayers()->getPlayerActiveFlag(), map: $locations->getLocationMap(), mapName: $locations->getLocationMapLink(), tournamentCount: 0);
     }
-    public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $name, protected string $address, protected string $city, protected string $state, protected int $zipCode, protected ?Player $player, protected int $count, protected string $active, protected $map, protected ?string $mapName, protected int $tournamentCount) {
+    public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $name, protected string $address, protected string $city, protected string $state, protected int $zipCode, protected ?Player $player, protected int $count, protected bool $active, protected $map, protected ?string $mapName, protected int $tournamentCount) {
         parent::__construct(debug: $debug, id: $id);
     }
-    private function create(bool $debug, string|int|NULL $id, string $name, string $address, string $city, string $state, int $zipCode, ?Player $player, int $count, string $active, $map, ?string $mapName, int $tournamentCount): Location {
+    private function create(bool $debug, string|int|NULL $id, string $name, string $address, string $city, string $state, int $zipCode, ?Player $player, int $count, bool $active, $map, ?string $mapName, int $tournamentCount): Location {
         parent::__construct(debug: $debug, id: $id);
         $this->name = $name;
         $this->address = $address;

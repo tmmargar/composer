@@ -45,7 +45,7 @@ class Seasons
     private int $seasonFee;
 
     #[Column(name: "season_active_flag", nullable: false)]
-    private string $seasonActiveFlag;
+    private bool $seasonActiveFlag;
 
     #[OneToMany(targetEntity: Fees::class, mappedBy: "seasons")]
     #[JoinColumn(name: "season_id", referencedColumnName: "season_id")]
@@ -113,9 +113,9 @@ class Seasons
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getSeasonActiveFlag(): string {
+    public function getSeasonActiveFlag(): bool {
         return $this->seasonActiveFlag;
     }
 
@@ -191,9 +191,9 @@ class Seasons
     }
 
     /**
-     * @param string $seasonActiveFlag
+     * @param bool $seasonActiveFlag
      */
-    public function setSeasonActiveFlag(string $seasonActiveFlag): self {
+    public function setSeasonActiveFlag(bool $seasonActiveFlag): self {
         $this->seasonActiveFlag = $seasonActiveFlag;
         return $this;
     }

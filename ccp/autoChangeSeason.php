@@ -26,9 +26,9 @@ if (NULL === $resultList) {
     $maxId = $entityManager->getRepository(entityName: Constant::ENTITY_SEASONS)->getMaxId()[1];
     $resultList = $entityManager->getRepository(entityName: Constant::ENTITY_SEASONS)->getById(seasonId: $maxId);
     $seNew = $resultList[0];
-    $seCurrent->setSeasonActiveFlag("0");
+    $seCurrent->setSeasonActiveFlag(false);
     $entityManager->persist(entity: $seCurrent);
-    $seNew->setSeasonActiveFlag("1");
+    $seNew->setSeasonActiveFlag(true);
     $entityManager->persist(entity: $seNew);
     try {
         $entityManager->flush();

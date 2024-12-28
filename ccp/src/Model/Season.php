@@ -9,10 +9,10 @@ class Season extends Base {
         $this->seasons = $seasons;
         return $this->create(debug: $debug, id: $seasons->getSeasonId(), description: $seasons->getSeasonDescription(), startDate: $seasons->getSeasonStartDate(), endDate: $seasons->getSeasonEndDate(), championshipQualify: $seasons->getSeasonChampionshipQualificationCount(), finalTablePlayers: $seasons->getSeasonFinalTablePlayers(), finalTableBonusPoints: $seasons->getSeasonFinalTableBonusPoints(), fee: $seasons->getSeasonFee(), active: $seasons->getSeasonActiveFlag());
     }
-    public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $description, protected ?DateTime $startDate, protected ?DateTime $endDate, protected int $championshipQualify, protected int $finalTablePlayers, protected int $finalTableBonusPoints, protected int $fee, protected string $active) {
+    public function __construct(protected bool $debug, protected string|int|NULL $id, protected string $description, protected ?DateTime $startDate, protected ?DateTime $endDate, protected int $championshipQualify, protected int $finalTablePlayers, protected int $finalTableBonusPoints, protected int $fee, protected bool $active) {
         parent::__construct(debug: $debug, id: $id);
     }
-    private function create(bool $debug, string|int|NULL $id, string $description, ?DateTime $startDate, ?DateTime $endDate, int $championshipQualify, int $finalTablePlayers, int $finalTableBonusPoints, int $fee, string $active): Season {
+    private function create(bool $debug, string|int|NULL $id, string $description, ?DateTime $startDate, ?DateTime $endDate, int $championshipQualify, int $finalTablePlayers, int $finalTableBonusPoints, int $fee, bool $active): Season {
         parent::__construct(debug: $debug, id: $id);
         $this->description = $description;
         $this->startDate = $startDate;

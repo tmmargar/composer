@@ -17,7 +17,7 @@ class Tournament extends Base {
         if (null !== $tournaments->getSpecialTypes()) {
             $specialType->createFromEntity(debug: $debug, specialTypes: $tournaments->getSpecialTypes());
         }
-        $location = new Location(debug: false, id: NULL, name: "", address: "", city: "", state: "", zipCode: 00000, player: NULL, count: 0, active: "0", map: NULL, mapName: NULL, tournamentCount: 0);
+        $location = new Location(debug: false, id: NULL, name: "", address: "", city: "", state: "", zipCode: 00000, player: NULL, count: 0, active: false, map: NULL, mapName: NULL, tournamentCount: 0);
         $location->createFromEntity(debug: $debug, locations: $tournaments->getLocations());
         $groupPayout = new GroupPayout(debug: false, id: NULL, group: NULL, payouts: array());
         $groupPayout->createFromEntity(debug: $debug, groupPayouts: $tournaments->getGroups()->getGroupPayouts()[0]);

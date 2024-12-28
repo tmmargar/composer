@@ -15,6 +15,8 @@ $outputChange =
   "  <li>Hosting change related info</li>\n" .
   "  <li>Fix championship seating</li>\n" .
   "  <li>Add interface to load tournaments for a year</li>\n" .
+  "  <li>Add job to change active season</li>\n" .
+  "  <li>Change flags to boolean (tinyint)</li>\n" .
   " </ul>\n" .
   "</section>\n" .
   "<section class=\"version\" id=\"1.3.6\">" .

@@ -15,10 +15,10 @@ class Player extends Base {
         $phone = new Phone(debug: $debug, id: NULL, value: $players->getPlayerPhone());
         return $this->create(debug: $debug, id: $players->getPlayerId(), name: $players->getPlayerName(), username: $players->getPlayerUsername(), password: $players->getPlayerPassword(), email: $players->getPlayerEmail(), phone: $phone, administrator: $players->getPlayerAdministratorFlag(), registrationDate: $players->getPlayerRegistrationDate(), approvalDate: $players->getPlayerApprovalDate(), approvalUserid: $players->getPlayerApproval()?->getPlayerId(), approvalName: $players->getPlayerApproval()?->getPlayerName(), rejectionDate: $players->getPlayerRejectionDate(), rejectionUserid: $players->getPlayerRejection()?->getPlayerId(), rejectionName: $players->getPlayerRejection()?->getPlayerName(), active: $players->getPlayerActiveFlag(), resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
     }
-    public function __construct(protected bool $debug, protected string|int $id, protected string $name, protected ?string $username, protected ?string $password, protected ?string $email, protected ?Phone $phone, protected string $administrator, protected ?DateTime $registrationDate, protected ?DateTime $approvalDate, protected ?int $approvalUserid, protected ?string $approvalName, protected ?DateTime $rejectionDate, protected ?int $rejectionUserid, protected ?string $rejectionName, protected string $active, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken, protected $rememberExpires) {
+    public function __construct(protected bool $debug, protected string|int $id, protected string $name, protected ?string $username, protected ?string $password, protected ?string $email, protected ?Phone $phone, protected bool $administrator, protected ?DateTime $registrationDate, protected ?DateTime $approvalDate, protected ?int $approvalUserid, protected ?string $approvalName, protected ?DateTime $rejectionDate, protected ?int $rejectionUserid, protected ?string $rejectionName, protected bool $active, protected $resetSelector, protected $resetToken, protected $resetExpires, protected $rememberSelector, protected $rememberToken, protected $rememberExpires) {
         return $this->create(debug: $debug, id: $id, name: $name, username: $username, password: $password, email: $email, phone: $phone, administrator: $administrator, registrationDate: $registrationDate, approvalDate: $approvalDate, approvalUserid: $approvalUserid, approvalName: $approvalName, rejectionDate: $rejectionDate, rejectionUserid: $rejectionUserid, rejectionName: $rejectionName, active: $active, resetSelector: $resetSelector, resetToken: $resetToken, resetExpires: $resetExpires, rememberSelector: $rememberSelector, rememberToken: $rememberToken, rememberExpires: $rememberExpires);
     }
-    private function create(bool $debug, string|int $id, string $name, ?string $username, ?string $password, ?string $email, ?Phone $phone, string $administrator, DateTime $registrationDate, ?DateTime $approvalDate, ?int $approvalUserid, ?string $approvalName, ?DateTime $rejectionDate, ?int $rejectionUserid, ?string $rejectionName, string $active, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires): Player {
+    private function create(bool $debug, string|int $id, string $name, ?string $username, ?string $password, ?string $email, ?Phone $phone, bool $administrator, DateTime $registrationDate, ?DateTime $approvalDate, ?int $approvalUserid, ?string $approvalName, ?DateTime $rejectionDate, ?int $rejectionUserid, ?string $rejectionName, bool $active, $resetSelector, $resetToken, $resetExpires, $rememberSelector, $rememberToken, $rememberExpires): Player {
         parent::__construct(debug: $debug, id: $id);
         $nameFull = explode(separator: " ", string: $name);
         $this->setFirstName(firstName: $nameFull[0]);
@@ -63,7 +63,7 @@ class Player extends Base {
     public function getPassword(): ?string {
         return $this->password;
     }
-    public function getAdministrator(): string {
+    public function getAdministrator(): bool {
         return $this->administrator;
     }
     public function getRegistrationDate(): ?DateTime {
@@ -87,7 +87,7 @@ class Player extends Base {
     public function getRejectionName(): ?string {
         return $this->rejectionName;
     }
-    public function getActive(): string {
+    public function getActive(): bool {
         return $this->active;
     }
     public function getResetSelector() {
@@ -141,7 +141,7 @@ class Player extends Base {
         $this->password = $password;
         return $this;
     }
-    public function setAdministrator(string $administrator): Player {
+    public function setAdministrator(bool $administrator): Player {
         $this->administrator = $administrator;
         return $this;
     }
@@ -173,7 +173,7 @@ class Player extends Base {
         $this->rejectionName = $rejectionName;
         return $this;
     }
-    public function setActive(string $active): Player {
+    public function setActive(bool $active): Player {
         $this->active = $active;
         return $this;
     }

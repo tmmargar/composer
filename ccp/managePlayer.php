@@ -38,10 +38,10 @@ define("APPROVAL_DATE_FIELD_NAME", "approvalDate");
 define("APPROVAL_PLAYER_FIELD_NAME", "approvalPlayer");
 define("REJECTION_DATE_FIELD_NAME", "rejectionDate");
 define("REJECTION_PLAYER_FIELD_NAME", "rejectionPlayer");
-define("DEFAULT_VALUE_ADMINISTRATOR", 0);
+define("DEFAULT_VALUE_ADMINISTRATOR", false);
 define("DEFAULT_VALUE_PHONE", 0);
-define("DEFAULT_VALUE_ACTIVE_CREATE", 1);
-define("DEFAULT_VALUE_ACTIVE", 0);
+define("DEFAULT_VALUE_ACTIVE_CREATE", true);
+define("DEFAULT_VALUE_ACTIVE", false);
 define("DEFAULT_VALUE_NUM_ROWS", 20);
 $smarty->assign("title", "Manage Player");
 $smarty->assign("heading", "Manage Player");
@@ -99,10 +99,10 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
             $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $textBoxPhone->getHtml() . "</div>";
             if (SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_ADMINISTRATOR) == Constant::FLAG_YES_DATABASE) {
                 $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . ADMINISTRATOR_FIELD_NAME . "_" . $id . "\">" . ADMINISTRATOR_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-                $checkboxAdministrator = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: ((count($resultList) > 0) && Constant::FLAG_YES_DATABASE == $resultList[$ctr]->getPlayerAdministratorFlag() ? true : false), class: NULL, cols: NULL, disabled: false, id: ADMINISTRATOR_FIELD_NAME . "_" . $id, maxLength: NULL, name: ADMINISTRATOR_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_CHECKBOX, value: (string) Constant::FLAG_YES_DATABASE, wrap: NULL, noValidate: false);
+                $checkboxAdministrator = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: ((count($resultList) > 0) && $resultList[$ctr]->getPlayerAdministratorFlag() ? true : false), class: NULL, cols: NULL, disabled: false, id: ADMINISTRATOR_FIELD_NAME . "_" . $id, maxLength: NULL, name: ADMINISTRATOR_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_CHECKBOX, value: (string) Constant::FLAG_YES_DATABASE, wrap: NULL, noValidate: false);
                 $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $checkboxAdministrator->getHtml() . "</div>";
                 $output .= " <div class=\"responsive-cell responsive-cell-label responsive-cell--head\"><label for=\"" . ACTIVE_FIELD_NAME . "_" . $id . "\">" . ACTIVE_FIELD_LABEL . ($id != "" ? " " . $id : "") . ": </div>\n";
-                $checkboxActive = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: (((count($resultList) > 0) && Constant::FLAG_YES_DATABASE == $resultList[$ctr]->getPlayerActiveFlag() || Constant::MODE_CREATE == $mode) ? true : false), class: NULL, cols: NULL, disabled: false, id: ACTIVE_FIELD_NAME . "_" . $id, maxLength: NULL, name: ACTIVE_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_CHECKBOX, value: (string) Constant::FLAG_YES_DATABASE, wrap: NULL, noValidate: false);
+                $checkboxActive = new FormControl(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), accessKey: NULL, autoComplete: NULL, autoFocus: false, checked: (((count($resultList) > 0) && $resultList[$ctr]->getPlayerActiveFlag() || Constant::MODE_CREATE == $mode) ? true : false), class: NULL, cols: NULL, disabled: false, id: ACTIVE_FIELD_NAME . "_" . $id, maxLength: NULL, name: ACTIVE_FIELD_NAME . "_" . $id, onClick: NULL, placeholder: NULL, readOnly: false, required: NULL, rows: NULL, size: NULL, suffix: NULL, type: FormControl::TYPE_INPUT_CHECKBOX, value: (string) Constant::FLAG_YES_DATABASE, wrap: NULL, noValidate: false);
                 $output .= " <div class=\"responsive-cell responsive-cell-value\">" . $checkboxActive->getHtml() . "</div>";
             }
             if (Constant::MODE_MODIFY == $mode) {
@@ -158,8 +158,8 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
         $active = (int) (isset($_POST[ACTIVE_FIELD_NAME . "_" . $id]) ? $_POST[ACTIVE_FIELD_NAME . "_" . $id] : (Constant::MODE_SAVE_CREATE == $mode ? DEFAULT_VALUE_ACTIVE_CREATE : DEFAULT_VALUE_ACTIVE));
         if (Constant::MODE_SAVE_CREATE == $mode) {
             $pl = new Players();
-            $pl->setPlayerActiveFlag(playerActiveFlag: (string) $active);
-            $pl->setPlayerAdministratorFlag(playerAdministratorFlag: (string) $administrator);
+            $pl->setPlayerActiveFlag(playerActiveFlag: (bool) $active);
+            $pl->setPlayerAdministratorFlag(playerAdministratorFlag: (bool) $administrator);
             $pl->setPlayerApprovalDate(playerApprovalDate: new DateTime());
             $playerApproval = $entityManager->find(className: Constant::ENTITY_PLAYERS, id: (int) SessionUtility::getValue(name: "userid"));
             $pl->setPlayerApproval(playerApproval: $playerApproval);
@@ -179,8 +179,8 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
         } elseif (Constant::MODE_SAVE_MODIFY == $mode) {
             $tempPlayerId = (int) ((isset($_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id])) ? $_POST[HIDDEN_ROW_FIELD_NAME . "_" . $id] : 0);
             $pl = $entityManager->find(className: Constant::ENTITY_PLAYERS, id: $tempPlayerId);
-            $pl->setPlayerActiveFlag(playerActiveFlag: (string) $active);
-            $pl->setPlayerAdministratorFlag(playerAdministratorFlag: (string) $administrator);
+            $pl->setPlayerActiveFlag(playerActiveFlag: (bool) $active);
+            $pl->setPlayerAdministratorFlag(playerAdministratorFlag: (bool) $administrator);
             $pl->setPlayerEmail(playerEmail: $email);
             $pl->setPlayerFirstName(playerFirstName: $firstName);
             $pl->setPlayerLastName(playerLastName: $lastName);
