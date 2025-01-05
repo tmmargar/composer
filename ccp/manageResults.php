@@ -206,7 +206,7 @@ if (Constant::MODE_CREATE == $mode || Constant::MODE_MODIFY == $mode) {
                             } else {
                                 $nameKnockedOutBy = "";
                             }
-                            $knockedOutBy = new Player(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), id: (int) $result["player_id_ko"], name: $nameKnockedOutBy, username: NULL, password: NULL, email: NULL, phone: NULL, administrator: false, registrationDate: new DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: isset($result["knockedOutActive"]) ? $result["knockedOutActive"] : false, resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
+                            $knockedOutBy = new Player(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), id: (int) $result["player_id_ko"], name: $nameKnockedOutBy, username: NULL, password: NULL, email: NULL, phone: NULL, administrator: false, registrationDate: new DateTime(), approvalDate: NULL, approvalUserid: NULL, approvalName: NULL, rejectionDate: NULL, rejectionUserid: NULL, rejectionName: NULL, active: isset($result["knockedOutActive"]) ? (bool) $result["knockedOutActive"] : false, resetSelector: NULL, resetToken: NULL, resetExpires: NULL, rememberSelector: NULL, rememberToken: NULL, rememberExpires: NULL);
                             $buyinPaid2 = new BooleanString($result["result_paid_buyin_flag"]);
                             $rebuyPaid2 = new BooleanString($result["result_paid_rebuy_flag"]);
                             $addonPaid2 = new BooleanString($result["addon"]);
