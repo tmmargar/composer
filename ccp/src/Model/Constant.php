@@ -29,6 +29,7 @@ abstract class Constant {
   public const ACCESSKEY_GAME_TYPE = "g";
   public const ACCESSKEY_GROUP = "o";
   public const ACCESSKEY_GO = "g";
+  public const ACCESSKEY_INPUT = "i";
   public const ACCESSKEY_KNOCKOUT_ID = "k";
   public const ACCESSKEY_LAST_NAME = "l";
   public const ACCESSKEY_LIMIT_TYPE = "l";
@@ -119,6 +120,7 @@ abstract class Constant {
   public const MODE_CREATE = "create";
   public const MODE_DELETE = "delete";
   public const MODE_EMAIL = "email";
+  public const MODE_INPUT = "input";
   public const MODE_LOGIN = "login";
   public const MODE_MODIFY = "modify";
   public const MODE_RESET_PASSWORD = "resetPassword";
