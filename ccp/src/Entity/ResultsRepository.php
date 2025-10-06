@@ -629,15 +629,15 @@ class ResultsRepository extends BaseRepository {
         $sql .=
             "name, d.tourneys AS '#', " . (NULL !== $startDate ? "d.NumTourneysLeftSeason" : 0) . " AS 'left', " . (NULL !== $startDate ? "IF(d.tourneys >= d.ChampQualCount, 0, d.ChampQualCount - d.tourneys)" : 0) . " AS needed, " .
             "IFNULL(d.Points, 0) AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', " .
-            "-(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount)) AS buyins, -(IFNULL(d.rebuys, 0)) AS rebuys, " .
-            "-(IFNULL(d.addons, 0)) AS addons, -(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount)) + -(IFNULL(d.rebuys, 0)) + -(IFNULL(d.addons, 0)) AS 'total', " .
+            "-d.buyins AS Buyins, -(IFNULL(d.rebuys, 0)) AS rebuys, " .
+            "-(IFNULL(d.addons, 0)) AS addons, -d.buyins + -(IFNULL(d.rebuys, 0)) + -(IFNULL(d.addons, 0)) AS 'total', " .
             "d.earnings,  " .
-            "d.earnings - IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount) - IFNULL(d.rebuys, 0) - IFNULL(d.addons, 0) AS 'net(+/-)', " .
+            "d.earnings - d.buyins - IFNULL(d.rebuys, 0) - IFNULL(d.addons, 0) AS 'net(+/-)', " .
             "d.earnings / d.numTourneys AS '$ / trny', " .
-            "(d.earnings - IF(d.numTourneys IS NULL, 0, d.numTourneys * d.tournament_buyin_amount) - IFNULL(d.rebuys, 0) - IFNULL(d.addons, 0)) / d.numTourneys AS 'Net / Trny', " .
+            "(d.earnings - d.buyins - IFNULL(d.rebuys, 0) - IFNULL(d.addons, 0)) / d.numTourneys AS 'Net / Trny', " .
             "player_active_flag " .
             "FROM (SELECT a.player_id, a.name, a.player_active_flag, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, IFNULL(b.Earnings, 0) AS earnings, a.NumTourneys, " .
-            "             e.result_place_finished, e.NumPlayers, e.Points, e.Rebuys, e.Addons, e.NumRebuys, e.tournament_buyin_amount";
+            "             e.Points, e.buyins, e.Rebuys, e.Addons, e.NumRebuys ";
         if (NULL !== $startDate) {
             $sql .= ", IF(g.NumTourneysLeftSeason > 0, g.NumTourneysLeftSeason - 1, g.NumTourneysLeftSeason) AS NumTourneysLeftSeason, h.ChampQualCount";
         }
@@ -727,10 +727,10 @@ class ResultsRepository extends BaseRepository {
             $sql .= ") cc ";
         }
         $sql .= "                       GROUP BY player_id, name) b ON a.player_id = b.player_id " .
-            "LEFT JOIN (SELECT c.player_id, c.result_place_finished, c.NumPlayers, SUM((c.numPlayers - c.result_place_finished + 1) * IFNULL(c.special_type_multiplier, 1) + IF(c.result_place_finished BETWEEN 1 AND c.season_final_table_players, c.season_final_table_bonus_points, 0)) AS Points, " .
-            "                                                     SUM(IFNULL(c.NumRebuys, 0) * c.tournament_rebuy_amount) AS Rebuys, " .
+            "LEFT JOIN (SELECT c.player_id, SUM((c.numPlayers - c.result_place_finished + 1) * IFNULL(c.special_type_multiplier, 1) + IF(c.result_place_finished BETWEEN 1 AND c.season_final_table_players, c.season_final_table_bonus_points, 0)) AS Points, " .
+            "                                                     SUM(c.tournament_buyin_amount) AS buyins, SUM(IFNULL(c.NumRebuys, 0) * c.tournament_rebuy_amount) AS Rebuys, " .
             "                                                     SUM(IFNULL(c.NumAddons, 0) * c.tournament_addon_amount) AS Addons, " .
-            "                                                     c.NumRebuys, c.tournament_buyin_amount " .
+            "                                                     c.NumRebuys " .
             "           FROM (SELECT a.tournament_id, a.tournament_description, a.player_id, a.result_place_finished, a.NumPlayers, a.NumRebuys, a.tournament_buyin_amount, a.tournament_rebuy_amount, a.tournament_addon_amount, a.NumAddons, a.special_type_description, a.special_type_multiplier, a.season_final_table_players, a.season_final_table_bonus_points " .
             "                 FROM (SELECT r.tournament_id, t.tournament_description, r.player_id, r.result_place_finished, np.NumPlayers, nr.NumRebuys, t.tournament_buyin_amount, t.tournament_rebuy_amount, t.tournament_addon_amount, na.NumAddons, st.special_type_description, st.special_type_multiplier, se.season_final_table_players, se.season_Final_table_bonus_points " .
             "                       FROM poker_results r INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id";
@@ -963,7 +963,7 @@ class ResultsRepository extends BaseRepository {
             "                             GROUP BY player_id, yr) xx " .
             "                       GROUP BY xx.player_id, xx.name) cc " .
             "                 GROUP BY player_id, name) b ON a.player_id = b.player_id " .
-            "      LEFT JOIN (SELECT c.player_id, c.result_place_finished, c.NumPlayers, IF(c.result_place_finished IS NULL, 0, SUM((c.numPlayers - c.result_place_finished + 1) * IFNULL(c.special_type_multiplier, 1) + IF(c.result_place_finished BETWEEN 1 AND c.season_final_table_players, c.season_final_table_bonus_points, 0))) AS Points, SUM(IFNULL(c.NumRebuys, 0) * c.tournament_rebuy_amount) AS Rebuys, SUM(IFNULL(c.NumAddons, 0) * c.tournament_addon_amount) AS Addons, IFNULL(c.NumRebuys, 0) AS NumRebuys, c.BuyinAmount " .
+            "      LEFT JOIN (SELECT c.player_id, c.result_place_finished, c.NumPlayers, IF(c.result_place_finished IS NULL, 0, SUM((c.numPlayers - c.result_place_finished + 1) * IFNULL(c.special_type_multiplier, 1) + IF(c.result_place_finished BETWEEN 1 AND c.season_final_table_players, c.season_final_table_bonus_points, 0))) AS Points, SUM(IFNULL(c.NumRebuys, 0) * c.tournament_rebuy_amount) AS Rebuys, SUM(IFNULL(c.NumAddons, 0) * c.tournament_addon_amount) AS Addons, IFNULL(c.NumRebuys, 0) AS NumRebuys " .
             "                 FROM (SELECT a.tournament_id, a.tournament_description, a.player_id, a.result_place_finished, a.NumPlayers, a.NumRebuys, a.tournament_buyin_amount AS BuyinAmount, a.tournament_rebuy_amount, a.tournament_addon_amount, a.NumAddons, a.special_type_description, a.special_type_multiplier, a.season_final_table_players, a.season_final_table_bonus_points " .
             "                       FROM (SELECT r.tournament_id, t.tournament_description, r.player_id, r.result_place_finished, np.NumPlayers, nr.NumRebuys, t.tournament_buyin_amount, t.tournament_rebuy_amount, t.tournament_addon_amount, na.NumAddons, st.special_type_description, st.special_type_multiplier, se.season_final_table_players, se.season_final_table_bonus_points " .
             "                             FROM poker_results r INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id AND t.tournament_date BETWEEN :startDate7 AND :endDate7 " .
