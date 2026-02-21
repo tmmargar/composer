@@ -901,9 +901,9 @@ class ResultsRepository extends BaseRepository {
 
     public function getSeasonStats(DateTime $startDate, DateTime $endDate) {
         $sql =
-            "SELECT SUBSTRING_INDEX(NAME, ' ', 1) AS first_name, SUBSTRING_INDEX(NAME, ' ', -1) AS last_name, d.tourneys AS '#', IFNULL(d.Points, 0) AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', -(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount)) AS buyins, -IFNULL(d.rebuys, 0) AS rebuys, -IFNULL(d.addons, 0) AS addons, -(IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount)) + -IFNULL(d.rebuys, 0) + -IFNULL(d.addons, 0) AS 'total', d.earnings, d.earnings - IF(d.numTourneys IS NULL, 0, d.numTourneys * d.buyinAmount) - IFNULL(d.rebuys, 0) - IFNULL(d.addons, 0) AS 'net(+/-)', d.kos AS 'KOs', d.kos / d.numTourneys AS 'Avg KO', d.koMax AS 'Most KO', IFNULL(d.wins, 0) AS wins, IFNULL(d.wins, 0) / d.numTourneys AS AvgWins " .
+            "SELECT SUBSTRING_INDEX(NAME, ' ', 1) AS first_name, SUBSTRING_INDEX(NAME, ' ', -1) AS last_name, d.tourneys AS '#', IFNULL(d.Points, 0) AS pts, d.Points / d.numTourneys AS AvgPoints, d.FTs AS 'count', d.pctFTs AS '%', d.avgPlace AS 'avg', d.high AS 'best', d.low AS 'worst', -IFNULL(d.buyins, 0) AS buyins, -IFNULL(d.rebuys, 0) AS rebuys, -IFNULL(d.addons, 0) AS addons, -IFNULL(d.buyins, 0) + -IFNULL(d.rebuys, 0) + -IFNULL(d.addons, 0) AS 'total', d.earnings, d.earnings - IFNULL(d.buyins, 0) - IFNULL(d.rebuys, 0) - IFNULL(d.addons, 0) AS 'net(+/-)', d.kos AS 'KOs', d.kos / d.numTourneys AS 'Avg KO', d.koMax AS 'Most KO', IFNULL(d.wins, 0) AS wins, IFNULL(d.wins, 0) / d.numTourneys AS AvgWins " .
             "FROM (SELECT a.player_id, a.name, a.active, a.Tourneys, a.FTs, a.PctFTs, a.AvgPlace, a.Low, a.High, IFNULL(b.earnings, 0) AS earnings, a.NumTourneys, " .
-            "             e.result_place_finished, e.NumPlayers, e.Points, e.Rebuys, e.Addons, e.NumRebuys, e.BuyinAmount, km.kos, km.koMax, w.wins " .
+            "             e.Points, e.buyins, e.Rebuys, e.Addons, e.NumRebuys, km.kos, km.koMax, w.wins " .
             "      FROM (SELECT p.player_id, CONCAT(p.player_first_name, ' ', p.player_last_name) AS name, IFNULL(nt.NumTourneys, 0) AS Tourneys, IFNULL(nft.NumFinalTables, 0) AS FTs, IF(nt.NumTourneys IS NULL, 0, IFNULL(nft.NumFinalTables, 0) / nt.NumTourneys) AS PctFTs, IF(nt.NumTourneys IS NULL, 0, IFNULL(nt.TotalPlaces, 0) / nt.NumTourneys) AS AvgPlace, IFNULL(nt.MaxPlace, 0) AS Low, IFNULL(nt.MinPlace, 0) AS High, IFNULL(nt.NumTourneys, 0) AS NumTourneys, p.player_active_flag AS active " .
             "            FROM poker_players p LEFT JOIN (SELECT r1.player_id, COUNT(*) AS NumTourneys, SUM(r1.result_place_finished) AS TotalPlaces, MAX(r1.result_place_finished) AS MaxPlace, MIN(r1.result_place_finished) AS MinPlace " .
             "                                         FROM poker_results r1 INNER JOIN poker_tournaments t1 ON r1.tournament_id = t1.tournament_id " .
@@ -963,7 +963,7 @@ class ResultsRepository extends BaseRepository {
             "                             GROUP BY player_id, yr) xx " .
             "                       GROUP BY xx.player_id, xx.name) cc " .
             "                 GROUP BY player_id, name) b ON a.player_id = b.player_id " .
-            "      LEFT JOIN (SELECT c.player_id, c.result_place_finished, c.NumPlayers, IF(c.result_place_finished IS NULL, 0, SUM((c.numPlayers - c.result_place_finished + 1) * IFNULL(c.special_type_multiplier, 1) + IF(c.result_place_finished BETWEEN 1 AND c.season_final_table_players, c.season_final_table_bonus_points, 0))) AS Points, SUM(IFNULL(c.NumRebuys, 0) * c.tournament_rebuy_amount) AS Rebuys, SUM(IFNULL(c.NumAddons, 0) * c.tournament_addon_amount) AS Addons, IFNULL(c.NumRebuys, 0) AS NumRebuys " .
+            "      LEFT JOIN (SELECT c.player_id, IF(c.result_place_finished IS NULL, 0, SUM((c.numPlayers - c.result_place_finished + 1) * IFNULL(c.special_type_multiplier, 1) + IF(c.result_place_finished BETWEEN 1 AND c.season_final_table_players, c.season_final_table_bonus_points, 0))) AS Points, SUM(c.buyinAmount) AS buyins, SUM(IFNULL(c.NumRebuys, 0) * c.tournament_rebuy_amount) AS Rebuys, SUM(IFNULL(c.NumAddons, 0) * c.tournament_addon_amount) AS Addons, IFNULL(c.NumRebuys, 0) AS NumRebuys " .
             "                 FROM (SELECT a.tournament_id, a.tournament_description, a.player_id, a.result_place_finished, a.NumPlayers, a.NumRebuys, a.tournament_buyin_amount AS BuyinAmount, a.tournament_rebuy_amount, a.tournament_addon_amount, a.NumAddons, a.special_type_description, a.special_type_multiplier, a.season_final_table_players, a.season_final_table_bonus_points " .
             "                       FROM (SELECT r.tournament_id, t.tournament_description, r.player_id, r.result_place_finished, np.NumPlayers, nr.NumRebuys, t.tournament_buyin_amount, t.tournament_rebuy_amount, t.tournament_addon_amount, na.NumAddons, st.special_type_description, st.special_type_multiplier, se.season_final_table_players, se.season_final_table_bonus_points " .
             "                             FROM poker_results r INNER JOIN poker_tournaments t ON r.tournament_id = t.tournament_id AND t.tournament_date BETWEEN :startDate7 AND :endDate7 " .
@@ -1021,5 +1021,46 @@ class ResultsRepository extends BaseRepository {
             $statement->bindValue(param: "endDate11", value: $endDateFormatted, type: PDO::PARAM_STR);
         }
         return $statement->executeQuery()->fetchAllAssociative();
+    }
+    
+    public function getBubbles(?DateTime $startDate, ?DateTime $endDate, bool $indexed) {
+        $sql =
+            "SELECT CONCAT(b.player_first_name, ' ', b.player_last_name) AS Name, b.numberBubble AS 'Bubbles', b.NumTourneys AS Trnys, b.numberBubble / b.NumTourneys AS Pct " .
+            "FROM (SELECT a.tournament_id, a.place_bubble, r.player_id, pl.player_first_name, pl.player_last_name, COUNT(*) AS numberBubble, nt.NumTourneys " .
+            "      FROM (SELECT np.tournament_id, p.payout_id, MAX(s.structure_place) + 1 AS place_bubble " .
+            "            FROM (SELECT r.tournament_id, COUNT(*) AS numPlayers FROM poker_results r WHERE r.result_place_finished > 0 AND r.status_code IN ('" . Constant::CODE_STATUS_REGISTERED ."', '" . Constant::CODE_STATUS_FINISHED ."') GROUP BY r.tournament_id) np " .
+            "            INNER JOIN poker_tournaments t on np.tournament_id = t.tournament_id " .
+            "            INNER JOIN poker_group_payouts gp ON t.group_id = gp.group_id " .
+            "            INNER JOIN poker_payouts p ON gp.payout_id = p.payout_id AND np.numPlayers BETWEEN p.payout_min_players AND p.payout_max_players " .
+            "            INNER JOIN poker_structures s ON p.payout_id = s.payout_id ";
+        if (isset($startDate) && isset($endDate)) {
+            $sql .= "            WHERE t.tournament_date BETWEEN :startDate1 AND :endDate1 ";
+        }
+        $sql .= 
+            "     GROUP BY np.tournament_id) a " .
+            "     INNER JOIN poker_results r ON a.tournament_id = r.tournament_id AND a.place_bubble = r.result_place_finished " .
+            "     INNER JOIN poker_players pl ON r.player_id = pl.player_id AND pl.player_active_flag = '1' " .
+            "     INNER JOIN (SELECT r1.player_id, COUNT(*) AS NumTourneys " .
+            "                 FROM poker_results r1 INNER JOIN poker_tournaments t1 ON r1.tournament_id = t1.tournament_id AND r1.result_place_finished > 0 ";
+        if (isset($startDate) && isset($endDate)) {
+            $sql .= "                 AND t1.tournament_date BETWEEN :startDate2 AND :endDate2 ";
+        }
+        $sql .=
+            "                 GROUP BY r1.player_id) nt ON r.player_id = nt.player_id " .
+            "     GROUP BY r.player_id) b";
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        if (isset($startDate) && isset($endDate)) {
+            $startDateFormatted = DateTimeUtility::formatDatabaseDate(value: $startDate);
+            $endDateFormatted = DateTimeUtility::formatDatabaseDate(value: $endDate);
+            $statement->bindValue(param: "startDate1", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate1", value: $endDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "startDate2", value: $startDateFormatted, type: PDO::PARAM_STR);
+            $statement->bindValue(param: "endDate2", value: $endDateFormatted, type: PDO::PARAM_STR);
+        }
+        if ($indexed) {
+            return $statement->executeQuery()->fetchAllNumeric();
+        } else {
+            return $statement->executeQuery()->fetchAllAssociative();
+        }
     }
 }

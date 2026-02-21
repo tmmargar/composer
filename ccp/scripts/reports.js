@@ -151,6 +151,11 @@ export const reportsInputLocal = {
             table.draw();
           });
         }
+      } else if (reportId == "bubbles") {
+        dataTableId = "dataTblBubbles";
+        if (document.querySelector("#" + dataTableId)) {
+          dataTable.initialize({tableId: dataTableId, aryColumns: [null, { "orderSequence": [ "desc", "asc" ], }, { "orderSequence": [ "desc", "asc" ] }, { "orderSequence": [ "desc", "asc" ] }], aryOrder: [[3, "desc"], [2, "desc"], [0, "asc"]], aryRowGroup: false, autoWidth: false, paging: false, scrollCollapse: true, scrollResize: true, scrollY: "600px", searching: true });
+        }
       }
     });
     return dataTableId;

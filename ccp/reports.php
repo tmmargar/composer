@@ -27,6 +27,7 @@ define("REPORT_ID_WINNERS", "winners");
 define("REPORT_ID_FINISHES", "finishes");
 define("REPORT_ID_CHAMPIONSHIP", "championship");
 define("REPORT_ID_FEES", "fees");
+define("REPORT_ID_BUBBLES", "bubbles");
 define("SORT_ID_PARAM_NAME", "sort");
 define("GROUP_PARAM_NAME", "group");
 define("SEASON_START_DATE_PARAM_NAME", "seasonStartDate");
@@ -122,6 +123,9 @@ if (!isset($reportId)) {
             break;
         case REPORT_ID_FEES:
             $title = "Fees";
+            break;
+        case REPORT_ID_BUBBLES:
+            $title = "Bubbles";
             break;
         default:
             $output = "No value provided for report id";
@@ -238,6 +242,13 @@ if (!isset($reportId)) {
             $hideColIndexes = array(0);
             $width = "100%";
             $link = array(array(4), array("#", array("seasonId"), array(0), 4, "fee_detail_link"));
+            break;
+        case REPORT_ID_BUBBLES:
+            $result = $entityManager->getRepository(entityName: Constant::ENTITY_RESULTS)->getBubbles(startDate: $startDate, endDate: $endDate, indexed: true);
+            $resultHeaders = $entityManager->getRepository(entityName: Constant::ENTITY_RESULTS)->getBubbles(startDate: $startDate, endDate: $endDate, indexed: false);
+            $colFormats = array(array(1, "number", 0), array(2, "number", 0), array(3, "percentage", 2));
+            //$hideColIndexes = array(0);
+            $width = "100%";
             break;
     }
     if ("show" == $seasonSelection) {

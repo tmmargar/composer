@@ -40,7 +40,7 @@ if (NAME_FIELD_REMINDER == $mode) {
         "  import { dataTable, display, input } from \"./scripts/import.js\";\n" .
         "  let aryMessages = [];\n";
     $output .= isset($mode) ? "  aryMessages.push(\"###Run at " . DateTimeUtility::formatDisplayLong(value: $now) . "###\");\n" : "\r";
-    $daysArray = isset($_POST[NAME_FIELD_DAYS]) && $_POST[NAME_FIELD_DAYS] > 0 ? [$_POST[NAME_FIELD_DAYS]] : [14, 7, 2];
+    $daysArray = isset($_GET[NAME_FIELD_DAYS]) && $_GET[NAME_FIELD_DAYS] > 0 && $_GET[NAME_FIELD_DAYS] <> 999 ? [$_GET[NAME_FIELD_DAYS]] : [14, 7, 2];
 //     print_r($daysArray); die();
     foreach ($daysArray as $days) {
         $days = (int) $days;
