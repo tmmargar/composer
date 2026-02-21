@@ -189,7 +189,7 @@ $htmlLinkMyProfileArray = array($htmlLinkEdit,$htmlLinkLogout,$htmlLinkResetPass
 $htmlMenuReportMyProfile->setItems(items: $htmlLinkMyProfileArray);
 array_push($levels, $htmlMenuReportMyProfile);
 $year = DateTimeUtility::formatYear(value: new \DateTime());
-$htmlLinkRules = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "rules/ccp_rules_" . $year . ".pdf", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Rules", title: NULL);
+$htmlLinkRules = new HtmlLink(accessKey: NULL, class: NULL, debug: SessionUtility::getValue(SessionUtility::OBJECT_NAME_DEBUG), href: "rules/ccp_rules.pdf", id: NULL, paramName: NULL, paramValue: NULL, tabIndex: - 1, text: "Rules", title: NULL);
 array_push($levels, $htmlLinkRules);
 // echo print_r($levels, true);
 $htmlMenuRoot = new HtmlMenu(debug: SessionUtility::getValue(name: SessionUtility::OBJECT_NAME_DEBUG), id: NULL, items: $levels, text: NULL);
